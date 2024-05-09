@@ -1,23 +1,35 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./src/**/*.{html,js}"],
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     container: {
-      padding:{
-        default: '15px'
+      padding: {
+        default: "15px",
       },
     },
-    screens:{
-      sm: '640px',
-      md: '768px',
-      lg: '960px',
-      xl: '1200px',
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "960px",
+      xl: "1200px",
     },
     fontFamily: {
-      primary: 'DM Serif Display',
-      secondary: 'Jost',
+      primary: "Poppins",
+      secondary: "Lexend",
     },
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          default: "#0D0D0D",
+          hover: "#F2E205"
+        },
+        secondary: "#736B62",
+        accent: {
+          default: "#EAF205",
+          secondary: "#BF9D7E",
+        },
+      },
+    },
   },
   plugins: [],
-}
+};
