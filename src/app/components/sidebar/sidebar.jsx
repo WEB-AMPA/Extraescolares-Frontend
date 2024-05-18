@@ -4,6 +4,8 @@ import {
   faUser,
   faHome,
   faClipboardList,
+  faClipboard,
+  faCoffee,
   faWallet,
   faSignOutAlt,
   faBars,
@@ -16,9 +18,12 @@ import {
   faUserTie // Para Coordinadores
 } from '@fortawesome/free-solid-svg-icons';
 
+import './sidebar.css'
+
 function Sidebar() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [usersDropdownVisible, setUsersDropdownVisible] = useState(false);
+  const [attendanceDropdownVisible, setAttendanceDropdownVisible] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -26,6 +31,10 @@ function Sidebar() {
 
   const toggleUsersDropdown = () => {
     setUsersDropdownVisible(!usersDropdownVisible);
+  };
+
+  const toggleAttendanceDropdown = () => {
+    setAttendanceDropdownVisible(!attendanceDropdownVisible);
   };
 
   return (
@@ -48,49 +57,54 @@ function Sidebar() {
             role="button"
             onClick={toggleSidebar}
             aria-label="dashboard"
-            className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
-          >
-            <FontAwesomeIcon icon={faHome} />
+            className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700" >
+        
+        <div className="grid mr-2 place-items-center">
+      <FontAwesomeIcon icon={faHome} />
+    </div>
             <span>Inicio</span>
           </div>
           <div className="relative">
-            <button
-              type="button"
-              onClick={toggleUsersDropdown}
-              className="flex items-center justify-between w-full px-4 py-3 font-sans text-xl antialiased font-semibold leading-snug text-left transition-colors border-b-0 select-none border-b-blue-gray-100 text-blue-gray-900 hover:bg-gray-100 hover:text-blue-gray-900"
-            >
-              <div className="grid mr-2 place-items-center">
-                <FontAwesomeIcon icon={faUser} />
-              </div>
-              <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-                Usuarios
-              </p>
-              <span className="ml-4">
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  className={`transform duration-300 ${usersDropdownVisible ? 'rotate-180' : ''}`}
-                />
-              </span>
-            </button>
+          <button
+    type="button"
+    onClick={toggleUsersDropdown}
+    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700 w-full"
+  >
+    <div className="grid mr-2 place-items-center">
+      <FontAwesomeIcon icon={faUser} />
+    </div>
+    <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+      Usuarios
+    </p>
+    <span className="ml-auto">
+      <FontAwesomeIcon
+        icon={faChevronDown}
+        className={`transform duration-300 ${usersDropdownVisible ? 'rotate-180' : ''}`}
+      />
+    </span>
+  </button>
             {usersDropdownVisible && (
               <div className="mt-2 space-y-2 pl-8">
                 <a
                   href="#"
-                  className="block px-4 py-3 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                  className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
                 >
                   <FontAwesomeIcon icon={faChalkboardTeacher} />
                   <span className="ml-2">Monitores</span>
                 </a>
                 <a
                   href="#"
-                  className="block px-4 py-3 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                  className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
                 >
                   <FontAwesomeIcon icon={faUsers} />
                   <span className="ml-2">Socios</span>
                 </a>
                 <a
                   href="#"
-                  className="block px-4 py-3 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                  className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
                 >
                   <FontAwesomeIcon icon={faUserTie} />
                   <span className="ml-2">Coordinadores</span>
@@ -102,49 +116,102 @@ function Sidebar() {
             <div
               role="button"
               onClick={toggleSidebar}
-              className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
             >
+            <div className="grid mr-2 place-items-center">
               <FontAwesomeIcon icon={faUserGraduate} />
+              </div>
+
               <span>Alumnos</span>
             </div>
+            <div className="relative">
+  <button
+    type="button"
+    onClick={toggleAttendanceDropdown}
+    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700 w-full"
+  >
+    <div className="grid mr-2 place-items-center">
+      <FontAwesomeIcon icon={faCalendarCheck} />
+    </div>
+    <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+      Asistencia
+    </p>
+    <span className="ml-auto">
+      <FontAwesomeIcon
+        icon={faChevronDown}
+        className={`transform duration-300 ${attendanceDropdownVisible ? 'rotate-180' : ''}`}
+      />
+    </span>
+  </button>
+              {attendanceDropdownVisible && (
+                <div className="mt-2 space-y-2 pl-8">
+                  <a
+                    href="#"
+                    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
+                  >
+                  
+                    <FontAwesomeIcon icon={faClipboard} />
+                    <span className="ml-2">Actividades</span>
+                  </a>
+                  <a
+                    href="#"
+                    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
+                  >
+                    <FontAwesomeIcon icon={faCoffee} />
+                    <span className="ml-2">Desayunos</span>
+                  </a>
+                </div>
+              )}
+            </div>
+
             <div
               role="button"
               onClick={toggleSidebar}
-              className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
             >
+
+<div className="grid mr-2 place-items-center">
               <FontAwesomeIcon icon={faClipboardList} />
+              </div>
+
               <span>Actividades</span>
             </div>
             <div
               role="button"
               onClick={toggleSidebar}
-              className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
             >
-              <FontAwesomeIcon icon={faCalendarCheck} />
-              <span>Asistencia</span>
-            </div>
-            <div
-              role="button"
-              onClick={toggleSidebar}
-              className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
-            >
+             <div className="grid mr-1 place-items-center">
               <FontAwesomeIcon icon={faWallet} />
+              </div>
               <span>Remesas</span>
             </div>
             <div
               role="button"
               onClick={toggleSidebar}
-              className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
             >
-              <FontAwesomeIcon icon={faCog} />
+            <div className="grid mr-2 place-items-center">
+            <FontAwesomeIcon icon={faCog} />
+            </div>
+              
               <span>Ajustes</span>
             </div>
             <div
               role="button"
               onClick={toggleSidebar}
-              className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+
             >
+            <div className="grid mr-2 place-items-center">
               <FontAwesomeIcon icon={faSignOutAlt} />
+              </div>
               <span>Cerrar sesión</span>
             </div>
           </div>
