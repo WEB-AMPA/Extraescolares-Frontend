@@ -1,62 +1,123 @@
 import React, { useState } from "react";
+import { FaUser, FaEnvelope } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./login.css";
-import Axios from "axios";
 
 const ContactForm = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const data = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setUserData({ ...userData, [name.toLowerCase()]: value });
+  };
+
+  const send = async (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:8000/api/contact", {
-      name,
-      email,
-      message,
-    })
-      .then((response) => {
-        if (response.data.status === "success") {
-          setSent(true);
-        } else {
-          setSent(false);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setSent(false);
+    const { name, email, message } = userData;
+
+    const option = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, message }),
+    };
+
+    try {
+      const res = await fetch(
+        "https://react-contact-form-1dae3-default-rtdb.firebaseio.com/Messages.json",
+        option
+      );
+      if (res.ok) {
+        setUserData({ name: "", email: "", message: "" });
+        toast.success("Message sent successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 5000); // 5 seconds
+      } else {
+        toast.error("Failed to send message. Please try again.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("An error occurred. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
       });
+    }
   };
 
   return (
-    <div className="sign-up-container">
-      <form className="sign-up-form" onSubmit={handleSubmit}>
-        <h2>Contact Us</h2>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          placeholder="Enter your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label htmlFor="message">Message:</label>
-        <textarea
-          placeholder="Enter your message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button type="submit">Send Message</button>
-      </form>
-      {sent ? (
-        <div className="success-message">Message sent successfully!</div>
-      ) : null}
+    <div className="wrapper">
+      <div className="form-box login">
+        <form method="POST" onSubmit={send}>
+          <h1>Contáctanos</h1>
+          <p className="pcontact">Para registrarte como nuevo usuario</p>
+          <div className="input-box">
+            <input
+              type="text"
+              name="name"
+              value={userData.name}
+              placeholder="Ingresa tu nombre"
+              required
+              autoComplete="off"
+              onChange={data}
+            />
+            <FaUser className="icon" />
+          </div>
+          <div className="input-box">
+            <input
+              type="email"
+              name="email"
+              placeholder="Ingresa tu email"
+              value={userData.email}
+              autoComplete="off"
+              onChange={data}
+            />
+            <FaEnvelope className="icon" />
+          </div>
+          <div className="input-box">
+            <textarea
+              name="message"
+              value={userData.message}
+              placeholder="Ingresa tu mensaje"
+              autoComplete="off"
+              onChange={data}
+            />
+          </div>
+          <button type="submit">Enviar Mensaje</button>
+        </form>
+      </div>
+      <ToastContainer />
     </div>
   );
 };
