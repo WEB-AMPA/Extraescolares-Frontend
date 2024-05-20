@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/sidebar'
-import Users from '../Usuarios/usuarios';
+import UsersList from '../Usuarios/usuarios';
 
 
 const IntranetLayout = () => {
@@ -9,7 +9,7 @@ const IntranetLayout = () => {
       <Sidebar />
       <div className="content flex-1 p-4">
         <Routes>
-          <Route path="/users" element={<Users />} />
+          <Route path="users" element={<UsersList />} />
         </Routes>
       </div>
     </div>

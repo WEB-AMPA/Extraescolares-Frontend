@@ -86,29 +86,28 @@ function Sidebar() {
   </button>
             {usersDropdownVisible && (
               <div className="mt-2 space-y-2 pl-8">
-                <Link to ="/users"
+                <Link to="/users"
                   className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                 >
                   <FontAwesomeIcon icon={faChalkboardTeacher} />
                   <span className="ml-2">Monitores</span>
                 </Link>
-                <a
-                  href="#"
+                <Link to
+                  ="#"
                   className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                 >
                   <FontAwesomeIcon icon={faUsers} />
                   <span className="ml-2">Socios</span>
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link to="#"
                   className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                 >
                   <FontAwesomeIcon icon={faUserTie} />
                   <span className="ml-2">Coordinadores</span>
-                </a>
+                </Link>
               </div>
             )}
           </div>
@@ -146,23 +145,21 @@ function Sidebar() {
   </button>
               {attendanceDropdownVisible && (
                 <div className="mt-2 space-y-2 pl-8">
-                  <a
-                    href="#"
+                  <Link to="#"
                     className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                   >
                   
                     <FontAwesomeIcon icon={faClipboard} />
                     <span className="ml-2">Actividades</span>
-                  </a>
-                  <a
-                    href="#"
+                  </Link>
+                  <Link to ="#"
                     className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                   >
                     <FontAwesomeIcon icon={faCoffee} />
                     <span className="ml-2">Desayunos</span>
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
