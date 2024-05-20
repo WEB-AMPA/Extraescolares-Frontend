@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -85,14 +86,13 @@ function Sidebar() {
   </button>
             {usersDropdownVisible && (
               <div className="mt-2 space-y-2 pl-8">
-                <a
-                  href="#"
+                <Link to ="/users"
                   className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                 >
                   <FontAwesomeIcon icon={faChalkboardTeacher} />
                   <span className="ml-2">Monitores</span>
-                </a>
+                </Link>
                 <a
                   href="#"
                   className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
