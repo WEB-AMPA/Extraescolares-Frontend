@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import "./login.css";
 
@@ -32,9 +32,10 @@ const Login = () => {
         password: password,
       })
       .then((response) => {
-        console.log(response.data);
-        if (response.data.status) {
-          navigate("/");
+        // console.log(response.data);
+       
+        if (response.data) {
+          navigate("/intranet");
         }
       })
       .catch((err) => {
@@ -43,7 +44,7 @@ const Login = () => {
   };
 
   return (
-    <div className="wrapper">
+    <section className="wrapper">
       <div className="form-box login">
         <form onSubmit={handleSubmit}>
           <h1>Iniciar Sesión</h1>
@@ -86,7 +87,7 @@ const Login = () => {
           </div>
         </form>
       </div>
-    </div>
+    </section>
   );
 };
 
