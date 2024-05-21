@@ -19,6 +19,13 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/contactForm" element={<ContactFrom />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
+      {/*   <Route path="/intranet" element={<Intranetlayout />}>
+          {/* Hijos de la ruta /intranet */}
+         {/*  <Route index element={<Users />} />
+          <Route path="users" element={<Users />} />
+          <Route path="alumnos" element={<alumnos />} />
+          <Route path="actividades" element={<actividades />} />
+        </Route> */}
       </Routes>
     </BrowserRouter>
   );

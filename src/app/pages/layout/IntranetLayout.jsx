@@ -1,17 +1,20 @@
-import { Routes, Route } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/sidebar'
-import UsersList from '../Usuarios/usuarios';
+/* import UsersList from '../Usuarios/usuarios'; */
 
 
 const IntranetLayout = () => {
   return (
-    <div className="app-container flex">
+    <div className="min-h-screen grid grid-cols-1 xl:grid-cols-6">
       <Sidebar />
-      <div className="content flex-1 p-4">
-        <Routes>
+      <div className="xl:col-span-5 p-8">
+        <div className="h[90vh] overflow-y-scroll">
+          <Outlet />
+       {/*  <Routes>
           <Route path="users" element={<UsersList />} />
-        </Routes>
-      </div>
+        </Routes> */}
+      </div> 
+    </div>
     </div>
   );
 };
