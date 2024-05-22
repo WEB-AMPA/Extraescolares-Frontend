@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/* 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap");
 
 body {
@@ -14,4 +14,4 @@ body {
   background: url(./background.jpg) no-repeat;
   background-size: cover;
   background-position: center;
-}
+} */

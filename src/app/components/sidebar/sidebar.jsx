@@ -44,7 +44,7 @@ function Sidebar() {
       >
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-center py-4">
-            <img src="/path/to/your/logo.png" alt="Logo" className="h-16 w-auto" />
+            <img src="/logo.png" alt="Logo" className="h-16 w-auto" />
           </div>
 
 
