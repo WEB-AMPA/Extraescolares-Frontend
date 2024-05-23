@@ -1,4 +1,50 @@
-.bg-custom-yellow {
-    background-color: #BF9D7E;
-  }
-  
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* .border-deportivas {
+  border-left: 20px solid #8552f2;
+  border-bottom: 20px solid #8552f2;
+  top: -10px
+}
+
+.border-artisticas {
+  border-bottom: 20px solid #8552f2;
+}
+
+.border-educativas {
+  border-right: 20px solid #8552f2;
+  border-bottom: 20px solid #8552f2;
+  border-right-width: ;
+} */
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.my-button {
+  background-color: #f5a623;
+  border: none;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 1rem 3rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.my-button:hover {
+  background-color: #e69100;
+}
