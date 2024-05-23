@@ -12,7 +12,10 @@ export default {
       padding: {
         default: "15px",
       },
+      color: {
+      button: "#F2E30F",
     },
+  },
     screens: {
       sm: "640px",
       md: "768px",
