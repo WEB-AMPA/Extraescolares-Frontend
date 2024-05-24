@@ -1,9 +1,9 @@
 function Contact() {
   return (
-    <div className="flex items-center justify-center min-h-screen p-6">
+    <div className="flex items-center justify-center h-full p-6">
       <div
-        className="container mx-auto p-6 bg-white"
-        style={{ maxWidth: "800px" }}
+        className="w-full lg:w-2/3 p-6 bg-white rounded-r-lg flex justify-center items-center"
+        style={{ maxWidth: "1000px", minHeight: "100vh" }}
       >
         <div className="flex flex-col lg:flex-row">
           <div
