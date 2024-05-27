@@ -1,116 +1,132 @@
+// Importa useState y useEffect
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
-function ActivitiesAttendance() {
-  const [attendances, setAttendances] = useState([]);
-  const [students, setStudents] = useState([]);
-  const [activities, setActivities] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+const Attendance = () => {
+  const [assignments, setAssignments] = useState([]);
+  const [selectedActivity, setSelectedActivity] = useState('');
+  const [selectedAssignment, setSelectedAssignment] = useState(null); // Nuevo estado para mantener la asignación seleccionada
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
-    fetchAttendances();
-    fetchStudents();
-    fetchActivities();
+    const fetchAssignments = async () => {
+      try {
+        const response = await fetch('http://localhost:3010/api/activitiesStudents');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setAssignments(data);
+      } catch (error) {
+        console.error('Error fetching assignments:', error);
+      }
+    };
+
+    fetchAssignments();
   }, []);
 
-  const fetchAttendances = async () => {
-    try {
-      const response = await axios.get('http://localhost:3010/attendance');
-      setAttendances(response.data);
-    } catch (error) {
-      console.error('Error fetching attendances:', error);
-    }
-  };
-
-  const fetchStudents = async () => {
-    try {
-      const response = await axios.get('http://localhost:3010/api/students');
-      setStudents(response.data);
-    } catch (error) {
-      console.error('Error fetching students:', error);
-    }
-  };
-
-  const fetchActivities = async () => {
-    try {
-      const response = await axios.get('http://localhost:3010/api/activities');
-      setActivities(response.data);
-    } catch (error) {
-      console.error('Error fetching activities:', error);
-    }
-  };
-
-  const handleAttendanceChange = (id, attendance) => {
-    setAttendances(prev =>
-      prev.map(item => (item._id === id ? { ...item, attendance } : item))
+  const handleActivityChange = (e) => {
+    const activityId = e.target.value;
+    setSelectedActivity(activityId);
+    const filteredAssignment = assignments.find(
+      (assignment) => assignment.activity._id === activityId
     );
+    setSelectedAssignment(filteredAssignment); // Establece la asignación seleccionada
   };
 
-  const handleSave = async () => {
+  const handleAttendanceChange = (e) => {
+    const attendance = e.target.value;
+    setSelectedAssignment(prevAssignment => ({ ...prevAssignment, attendance }));
+  };
+
+  const handleSaveAttendance = async () => {
+    if (!selectedActivity) {
+      console.error('Por favor seleccione una actividad.');
+      return;
+    }
+  
     try {
-      for (const attendance of attendances) {
-        if (attendance._id) {
-          await axios.put(`http://localhost:3010/${attendance._id}`, {
-            attendance: attendance.attendance,
-            date: new Date(currentDate).toISOString(),
-            activities_students: attendance.activities_students
-          });
-        } else {
-          await axios.post('http://localhost:3010/register', {
-            attendance: attendance.attendance,
-            date: new Date(currentDate).toISOString(),
-            activities_students: attendance.activities_students
-          });
-        }
+      const response = await fetch('http://localhost:3010/registerAttendance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          date,
+          activity_student: selectedAssignment.activity_student, // Usa el ID de la asignación seleccionada
+          attendance: selectedAssignment.attendance === 'true' ? 1 : 0 
+        })
+      });
+      if (!response.ok) {
+        throw new Error('Error al registrar la asistencia.');
       }
-      alert('Asistencias guardadas exitosamente');
-      fetchAttendances();
+      alert('Asistencia registrada exitosamente.');
     } catch (error) {
-      console.error('Error saving attendances:', error.response?.data || error.message);
-      alert('Hubo un error al guardar las asistencias');
+      alert ('Error registering attendance:', error);
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Registro de Asistencias</h1>
-      <table className="table-auto w-full mb-4">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">Fecha</th>
-            <th className="px-4 py-2">Estudiante</th>
-            <th className="px-4 py-2">Actividad</th>
-            <th className="px-4 py-2">Asistencia</th>
-          </tr>
-        </thead>
-        <tbody>
-          {attendances.map(attendance => (
-            <tr key={attendance._id}>
-              <td className="border px-4 py-2">{new Date(currentDate).toLocaleDateString()}</td>
-              <td className="border px-4 py-2">{attendance.activities_students.student.name}</td>
-              <td className="border px-4 py-2">{attendance.activities_students.activity.name}</td>
-              <td className="border px-4 py-2">
-                <select
-                  value={attendance.attendance}
-                  onChange={e => handleAttendanceChange(attendance._id, e.target.value)}
-                  className="form-select mt-1 block w-full"
-                >
-                  <option value="0">No</option>
-                  <option value="1">Sí</option>
-                </select>
-              </td>
-            </tr>
+    <div>
+      <h1>Registrar Asistencia</h1>
+      <div>
+        <label>Selecciona una actividad:</label>
+        <select
+          value={selectedActivity}
+          onChange={handleActivityChange}
+          required
+        >
+          <option value="">Seleccione una actividad</option>
+          {assignments.map((assignment) => (
+            <option key={assignment.activity._id} value={assignment.activity._id}>
+              {assignment.activity.name}
+            </option>
           ))}
-        </tbody>
-      </table>
-      <button
-        onClick={handleSave}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Guardar Asistencias
-      </button>
+        </select>
+      </div>
+      <div>
+        <label>Fecha:</label>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+      </div>
+      <button onClick={handleSaveAttendance}>Guardar</button>
+
+      {selectedAssignment && (
+        <div>
+          <h2>Tabla de Asistencias</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Actividad</th>
+                <th>Nombre</th>
+                <th>Asistencia</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{date}</td>
+                <td>{selectedAssignment.activity.name}</td>
+                <td>{selectedAssignment.student.name}</td>
+                <td>
+                  <select
+                    value={selectedAssignment.attendance || 'true'}
+                    onChange={handleAttendanceChange}
+                    required
+                  >
+                    <option value="true">Asistió</option>
+                    <option value="false">No asistió</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default ActivitiesAttendance;
+export default Attendance;
