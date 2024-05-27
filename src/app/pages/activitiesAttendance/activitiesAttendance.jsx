@@ -3,12 +3,14 @@ import axios from 'axios';
 
 function ActivitiesAttendance() {
   const [attendances, setAttendances] = useState([]);
-  const [originalAttendance, setOriginalAttendance] = useState({});
-  const [pendingChanges, setPendingChanges] = useState({});
+  const [students, setStudents] = useState([]);
+  const [activities, setActivities] = useState([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     fetchAttendances();
-    fetchOriginalAttendance();
+    fetchStudents();
+    fetchActivities();
   }, []);
 
   const fetchAttendances = async () => {
@@ -20,43 +22,51 @@ function ActivitiesAttendance() {
     }
   };
 
-  const fetchOriginalAttendance = async () => {
+  const fetchStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:3010/attendance');
-      const originalData = response.data.reduce((acc, cur) => {
-        acc[cur._id] = cur.attendance;
-        return acc;
-      }, {});
-      setOriginalAttendance(originalData);
+      const response = await axios.get('http://localhost:3010/api/students');
+      setStudents(response.data);
     } catch (error) {
-      console.error('Error fetching original attendance:', error);
+      console.error('Error fetching students:', error);
+    }
+  };
+
+  const fetchActivities = async () => {
+    try {
+      const response = await axios.get('http://localhost:3010/api/activities');
+      setActivities(response.data);
+    } catch (error) {
+      console.error('Error fetching activities:', error);
     }
   };
 
   const handleAttendanceChange = (id, attendance) => {
-    setPendingChanges(prevChanges => ({
-      ...prevChanges,
-      [id]: attendance
-    }));
+    setAttendances(prev =>
+      prev.map(item => (item._id === id ? { ...item, attendance } : item))
+    );
   };
 
   const handleSave = async () => {
     try {
-      const changedAttendances = Object.entries(pendingChanges)
-        .filter(([id, attendance]) => originalAttendance[id] !== attendance)
-        .map(([id, attendance]) => ({ id, attendance }));
-
-      await Promise.all(
-        changedAttendances.map(({ id, attendance }) =>
-          axios.put(`http://localhost:3010/attendance/${id}`, {
-            attendance
-          })
-        )
-      );
+      for (const attendance of attendances) {
+        if (attendance._id) {
+          await axios.put(`http://localhost:3010/${attendance._id}`, {
+            attendance: attendance.attendance,
+            date: new Date(currentDate).toISOString(),
+            activities_students: attendance.activities_students
+          });
+        } else {
+          await axios.post('http://localhost:3010/register', {
+            attendance: attendance.attendance,
+            date: new Date(currentDate).toISOString(),
+            activities_students: attendance.activities_students
+          });
+        }
+      }
       alert('Asistencias guardadas exitosamente');
-      setPendingChanges({});
+      fetchAttendances();
     } catch (error) {
-      console.error('Error saving attendances:', error);
+      console.error('Error saving attendances:', error.response?.data || error.message);
       alert('Hubo un error al guardar las asistencias');
     }
   };
@@ -76,12 +86,12 @@ function ActivitiesAttendance() {
         <tbody>
           {attendances.map(attendance => (
             <tr key={attendance._id}>
-              <td className="border px-4 py-2">{new Date(attendance.date).toLocaleDateString()}</td>
+              <td className="border px-4 py-2">{new Date(currentDate).toLocaleDateString()}</td>
               <td className="border px-4 py-2">{attendance.activities_students.student.name}</td>
               <td className="border px-4 py-2">{attendance.activities_students.activity.name}</td>
               <td className="border px-4 py-2">
                 <select
-                  value={pendingChanges[attendance._id] || originalAttendance[attendance._id]}
+                  value={attendance.attendance}
                   onChange={e => handleAttendanceChange(attendance._id, e.target.value)}
                   className="form-select mt-1 block w-full"
                 >
@@ -93,7 +103,10 @@ function ActivitiesAttendance() {
           ))}
         </tbody>
       </table>
-      <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">
+      <button
+        onClick={handleSave}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
         Guardar Asistencias
       </button>
     </div>
