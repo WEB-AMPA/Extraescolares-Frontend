@@ -1,8 +1,8 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./app/pages/layout/layout";
+import Layout from "./app/pages/layout/layout-landing";
 import LayoutCentros from "./app/pages/layout/layoutCentros";
-import AboutUs from "./app/pages/about-us/about-us";
+import AboutUs from "./app/pages/layout/layout-about-us";
 
 
 function App() {
