@@ -5,6 +5,8 @@ import LayoutCentros from "./app/pages/layout/layoutCentros";
 import ActivitiesAttendance from "./app/pages/activitiesAttendance/activitiesAttendance";
 import Activities from "./app/pages/activities/activities";
 import CalendarPage from "./app/pages/activitiesCalendar/activitiesCalendar";
+import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
+
 function App() {
   return (
     <BrowserRouter>
@@ -14,6 +16,8 @@ function App() {
         <Route path="/activities" element={<Activities />} />
         <Route path="/attendances" element={<ActivitiesAttendance />} />
         <Route path="/calendar/:studentId" element={<CalendarPage />} />
+        <Route path = "/breakfast" element={<BreakfastAttendancePage />} />
+
       </Routes>
     </BrowserRouter>
   );
