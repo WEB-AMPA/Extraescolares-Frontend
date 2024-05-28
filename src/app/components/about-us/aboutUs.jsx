@@ -2,7 +2,7 @@ import React from 'react';
 
 const AboutUs = () => {
     return (
-        <div className="about-us-container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 flex flex-col md:flex-row items-center md:justify-between">
+        <div className="about-us-container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 flex flex-col md:flex-row items-center md:justify-between">
             <div className="md:w-1/2 flex justify-center">
                 <img src="/about-us.jpg" alt="Club Deportivo Ciudad de los Ángeles" className="object-cover h-auto" />
             </div>

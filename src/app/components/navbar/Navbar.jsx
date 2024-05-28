@@ -3,7 +3,7 @@ import logo from "../../../../public/logo.png";
 
 function Navbar() {
   return (
-    <nav className="navbar bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+    <nav className="navbar fixed top-0 w-full z-50 bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src={logo} className="h-16 w-23" alt="Flowbite Logo" />
