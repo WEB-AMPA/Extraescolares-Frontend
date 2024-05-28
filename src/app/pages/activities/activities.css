@@ -1,0 +1,36 @@
+.activities-section {
+  background-color: rgba(133, 82, 242, 0.14);
+}
+
+.activity-card {
+  padding: 1rem;
+}
+
+.image-container {
+  overflow: hidden;
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.5rem;
+}
+
+.image-container:hover {
+  transform: scale(1.05);
+}
+
+.bg-purple-light {
+  background-color: rgba(133, 82, 242, 0.14);
+}
+
+.bg-yellow-500 {
+  background-color: #f2e30f;
+}
+
+.bg-yellow-600 {
+  background-color: #d4c10f;
+}

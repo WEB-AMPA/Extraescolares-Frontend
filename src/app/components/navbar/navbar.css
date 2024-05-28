@@ -1,0 +1,9 @@
+/* Navbar.css */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Asegura que el navbar esté sobre cualquier otro contenido */
+  }
+  
