@@ -38,7 +38,7 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
         const attendanceRecords = students
             .filter(student => student.attendance !== 'none')
             .map(student => ({
-                date,
+                date: date,
                 student_id: student._id,
                 attendance: student.attendance === 'present' ? 1 : 0,
             }));
@@ -51,9 +51,11 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
         }
     
         try {
-            await axios.post('http://localhost:3010/register/breakfast-attendance/', attendanceRecords);
+            for (const record of attendanceRecords) {
+                await axios.post('http://localhost:3010/breakfast-attendance/', record);
+            }
             onAttendanceAdded(attendanceRecords);
-            setError(''); // Clear error message after successful save
+            setError('');
         } catch (error) {
             setError('Error saving attendance. Please try again.');
             console.error('Error saving attendance:', error);

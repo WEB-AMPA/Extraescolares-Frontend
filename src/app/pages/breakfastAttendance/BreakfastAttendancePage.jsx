@@ -1,7 +1,7 @@
 
 import AttendanceTable from '../../components/breakfastAttendanceComponents/AttendanceTable';
 
-const App = () => {
+const breakfast = () => {
     const handleAttendanceAdded = (data) => {
         console.log('Attendance added:', data);
     };
@@ -13,4 +13,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default breakfast;

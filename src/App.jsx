@@ -16,7 +16,7 @@ function App() {
         <Route path="/activities" element={<Activities />} />
         <Route path="/attendances" element={<ActivitiesAttendance />} />
         <Route path="/calendar/:studentId" element={<CalendarPage />} />
-        <Route path = "/breakfast" element={<BreakfastAttendancePage />} />
+        <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
 
       </Routes>
     </BrowserRouter>
