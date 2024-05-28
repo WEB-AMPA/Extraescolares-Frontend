@@ -7,28 +7,34 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchStudents = async () => {
+        const fetchStudentsAndAttendances = async () => {
             try {
-                const response = await axios.get('http://localhost:3010/api/students/withbreakfast');
-                console.log('Students with breakfast:', response.data);
-                const studentsWithAttendance = response.data.map(student => ({
-                    ...student,
-                    attendance: 'none', // Initial attendance state
-                }));
+                const responseStudents = await axios.get('http://localhost:3010/api/students/withbreakfast');
+                const date = new Date().toISOString().split('T')[0]; // Formato de fecha YYYY-MM-DD
+                const responseAttendances = await axios.get(`http://localhost:3010/breakfast-attendance/date/${date}`);
+                
+                const studentsWithAttendance = responseStudents.data.map(student => {
+                    const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);
+                    return {
+                        ...student,
+                        attendance: studentAttendance ? (studentAttendance.attendance === 1 ? 'present' : 'absent') : 'none'
+                    };
+                });
+
                 setStudents(studentsWithAttendance);
             } catch (error) {
-                setError('Error fetching students. Please try again.');
-                console.error('Error fetching students:', error);
+                setError('Error fetching students or attendances. Please try again.');
+                console.error('Error fetching students or attendances:', error);
             }
         };
 
-        fetchStudents();
+        fetchStudentsAndAttendances();
     }, []);
 
     const handleAttendanceChange = (studentId, attendance) => {
         setStudents((prevStudents) =>
             prevStudents.map((student) =>
-                student.id === studentId ? { ...student, attendance } : student
+                student._id === studentId ? { ...student, attendance } : student
             )
         );
     };
@@ -92,12 +98,12 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
                             <td className="px-6 py-4">
                                 <select
                                     value={student.attendance}
-                                    onChange={(e) => handleAttendanceChange(student.id, e.target.value)}
+                                    onChange={(e) => handleAttendanceChange(student._id, e.target.value)}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 >
-                                    <option value="none">Select</option>
-                                    <option value="present">Present</option>
-                                    <option value="absent">Absent</option>
+                                    <option value="none">Seleccionar</option>
+                                    <option value="present">Sí</option>
+                                    <option value="absent">No</option>
                                 </select>
                             </td>
                         </tr>
