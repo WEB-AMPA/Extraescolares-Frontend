@@ -4,13 +4,13 @@ import axios from 'axios';
 
 const AttendanceTable = ({ onAttendanceAdded }) => {
     const [students, setStudents] = useState([]);
+    const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchStudentsAndAttendances = async () => {
             try {
                 const responseStudents = await axios.get('http://localhost:3010/api/students/withbreakfast');
-                const date = new Date().toISOString().split('T')[0]; // Formato de fecha YYYY-MM-DD
                 const responseAttendances = await axios.get(`http://localhost:3010/breakfast-attendance/date/${date}`);
                 
                 const studentsWithAttendance = responseStudents.data.map(student => {
@@ -29,7 +29,11 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
         };
 
         fetchStudentsAndAttendances();
-    }, []);
+    }, [date]);
+
+    const handleDateChange = (event) => {
+        setDate(event.target.value);
+    };
 
     const handleAttendanceChange = (studentId, attendance) => {
         setStudents((prevStudents) =>
@@ -40,7 +44,6 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
     };
 
     const handleSaveAll = async () => {
-        const date = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
         const attendanceRecords = students
             .filter(student => student.attendance !== 'none')
             .map(student => ({
@@ -48,14 +51,14 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
                 student_id: student._id,
                 attendance: student.attendance === 'present' ? 1 : 0,
             }));
-    
+
         console.log('Attendance Records:', attendanceRecords); // Log the attendance records before sending the request
-    
+
         if (attendanceRecords.length === 0) {
             setError('No attendance records to save.');
             return;
         }
-    
+
         try {
             for (const record of attendanceRecords) {
                 await axios.post('http://localhost:3010/breakfast-attendance/', record);
@@ -67,9 +70,17 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
             console.error('Error saving attendance:', error);
         }
     };
-    
+
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div className="flex justify-end p-6">
+                <input 
+                    type="date" 
+                    value={date} 
+                    onChange={handleDateChange} 
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5"
+                />
+            </div>
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -88,7 +99,7 @@ const AttendanceTable = ({ onAttendanceAdded }) => {
                                     : 'bg-gray-50 dark:bg-gray-800'
                             } border-b dark:border-gray-700`}
                         >
-                            <td className="px-6 py-4">{new Date().toISOString().split('T')[0]}</td>
+                            <td className="px-6 py-4">{date}</td>
                             <th
                                 scope="row"
                                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
