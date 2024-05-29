@@ -1,4 +1,4 @@
-import React from 'react';
+// No import needed since React is not used in this file
 
 import AboutUs from '../../components/about-us/about-us';
 import Mision from '../../components/about-us/mision';
@@ -17,8 +17,7 @@ function About() {
             <Profiles />
             <Footer />
         </div>
-
-    );
-};
+    )
+}
 
 export default About;
