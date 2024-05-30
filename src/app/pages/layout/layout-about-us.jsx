@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AboutUs from '../../components/about-us/aboutUs';
+import AboutUs from '../../components/about-us/about-us';
 import Mision from '../../components/about-us/mision';
 import Equipment from '../../components/about-us/equipment';
 import Profiles from '../../components/about-us/profiles';

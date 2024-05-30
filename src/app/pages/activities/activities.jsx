@@ -9,7 +9,7 @@ function Activities() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto">
           <h1 className="text-4xl font-bold sm:text-4xl">Actividades Extraescolares</h1>
-          <p className="mt-6 text-2xl">
+          <p className="mt-6 text-1xl">
             Ofrecemos una amplia variedad de actividades extraescolares
             diseñadas para enriquecer el desarrollo integral de nuestros
             estudiantes. Estas actividades se agrupan en tres categorías

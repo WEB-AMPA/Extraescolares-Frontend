@@ -1,4 +1,13 @@
-/* import 'tailwindcss/base';
-import 'tailwindcss/components';
-import 'tailwindcss/utilities';
-import './tailwind.config.js'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-poppins;
+}
+
+@layer base {
+  html {
+    font-family: 'Poppins', sans-serif;
+  }
+}
