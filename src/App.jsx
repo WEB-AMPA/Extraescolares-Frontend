@@ -4,7 +4,9 @@ import Layout from "./app/pages/layout/layout";
 import LayoutCentros from "./app/pages/layout/layoutCentros";
 import ActivitiesAttendance from "./app/pages/activitiesAttendance/activitiesAttendance";
 import Activities from "./app/pages/activities/activities";
-import CalendarPage from "./app/pages/activitiesCalendar/activitiesCalendar";
+import BreakfastCalendar from "./app/pages/breakfastCalendar/breakfastCalendar";
+
+// import CalendarActivitiesPage from "./app/pages/activitiesCalendar/CalendarActivitiesPage";
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
 
 function App() {
@@ -15,7 +17,8 @@ function App() {
         <Route path="/centros" element={<LayoutCentros />} />
         <Route path="/activities" element={<Activities />} />
         <Route path="/attendances" element={<ActivitiesAttendance />} />
-        <Route path="/calendar/:studentId" element={<CalendarPage />} />
+        {/* <Route path="/calendarActivities/:studentId" element={<CalendarActivitiesPage />} /> */}
+        <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
         <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
 
       </Routes>
