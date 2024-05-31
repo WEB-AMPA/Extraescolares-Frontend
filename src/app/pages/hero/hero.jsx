@@ -1,22 +1,25 @@
-import "./hero.css";
+import slide1 from "../../../../public/hero1.png";
+import slide2 from "../../../../public/hero2.png";
+import slide3 from "../../../../public/hero3.png";
 
-function Home() {
+function Hero() {
   return (
     <div className="relative w-full h-screen overflow-hidden">
+      <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl font-bold text-white text-center bg-black bg-opacity-50 p-4 rounded z-50">
+        Actividades Extraescolares <br/> Ciudad de los Ángeles
+      </h1>
       <div
         id="default-carousel"
         className="relative w-full h-full"
         data-carousel="slide"
       >
-        {/* Carousel wrapper */}
         <div className="relative h-full overflow-hidden rounded-lg">
-          {/* Item 1 */}
           <div
             className="hidden duration-700 ease-in-out h-full"
             data-carousel-item
           >
             <img
-              src="../../../../public/hero2.png"
+              src={slide1}
               className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
               alt="..."
             />
@@ -27,7 +30,7 @@ function Home() {
             data-carousel-item
           >
             <img
-              src="../../../../public/hero2.png"
+              src={slide2}
               className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
               alt="..."
             />
@@ -38,18 +41,7 @@ function Home() {
             data-carousel-item
           >
             <img
-              src="../../../../public/hero2.png"
-              className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-              alt="..."
-            />
-          </div>
-          {/* Item 4 */}
-          <div
-            className="hidden duration-700 ease-in-out h-full"
-            data-carousel-item
-          >
-            <img
-              src="../../../../public/hero2.png"
+              src={slide3}
               className="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
               alt="..."
             />
@@ -77,20 +69,6 @@ function Home() {
             aria-current="false"
             aria-label="Slide 3"
             data-carousel-slide-to="2"
-          ></button>
-          <button
-            type="button"
-            className="w-3 h-3 rounded-full"
-            aria-current="false"
-            aria-label="Slide 4"
-            data-carousel-slide-to="3"
-          ></button>
-          <button
-            type="button"
-            className="w-3 h-3 rounded-full"
-            aria-current="false"
-            aria-label="Slide 5"
-            data-carousel-slide-to="4"
           ></button>
         </div>
         {/* Slider controls */}
@@ -147,4 +125,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Hero;
