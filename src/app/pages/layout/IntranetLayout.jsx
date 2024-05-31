@@ -10,6 +10,7 @@ const IntranetLayout = () => {
       <div className="content flex-1 p-4">
         <Routes>
           <Route path="users" element={<UsersList />} />
+          
         </Routes>
       </div>
     </div>
