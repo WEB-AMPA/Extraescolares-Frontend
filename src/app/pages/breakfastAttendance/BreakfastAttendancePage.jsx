@@ -1,5 +1,5 @@
 
-import AttendanceTable from '../../components/breakfastAttendanceComponents/AttendanceTable';
+import AttendanceTable from './AttendanceTable';
 
 const breakfast = () => {
     const handleAttendanceAdded = (data) => {
@@ -8,6 +8,7 @@ const breakfast = () => {
 
     return (
         <div className="App">
+        
             <AttendanceTable onAttendanceAdded={handleAttendanceAdded} />
         </div>
     );

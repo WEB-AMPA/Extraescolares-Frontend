@@ -4,7 +4,7 @@ import Layout from "./app/pages/layout/layout";
 import LayoutCentros from "./app/pages/layout/layoutCentros";
 import ActivitiesAttendance from "./app/pages/activitiesAttendance/activitiesAttendance";
 import Activities from "./app/pages/activities/activities";
-import BreakfastCalendar from "./app/pages/breakfastCalendar/breakfastCalendar";
+import BreakfastCalendar from "./app/pages/breakfastAttendance/breakfastCalendar.jsx";
 
 // import CalendarActivitiesPage from "./app/pages/activitiesCalendar/CalendarActivitiesPage";
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
