@@ -1,9 +1,9 @@
 import React from "react";
 import { useContext } from "react";
-import { RecoveryContext } from "../App";
-
+import { RecoveryContext } from "../../../App"; // Corrected import path
 export default function Reset() {
   const { setPage } = useContext(RecoveryContext);
+
   function changePassword() {
     setPage("recovered");
   }
@@ -79,7 +79,7 @@ export default function Reset() {
               onClick={() => changePassword()}
               className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             >
-              Reset passwod
+              Reset password
             </button>
           </div>
         </div>
