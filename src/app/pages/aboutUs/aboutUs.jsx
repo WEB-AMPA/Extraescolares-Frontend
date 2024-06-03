@@ -12,7 +12,7 @@ function AboutUs() {
             <div className="relative h-96 overflow-hidden sm:h-96 lg:h-full">
               <img
                 alt=""
-                src="../../../../public/aboutUs.png"
+                src="/aboutUs.png"
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
