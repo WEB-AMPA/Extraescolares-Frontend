@@ -15,7 +15,6 @@ import AboutUs from "./app/pages/layout/layout-about-us";
 import PrivacyPolicy from "./app/pages/privacyPolicy/privacyPolicy"
 
 
-import ActivitiesAttendance from "./app/pages/activitiesAttendance/activitiesAttendance";
 
 
 
