@@ -4,7 +4,7 @@ import Layout from "./app/pages/layout/layout-landing";
 import LayoutCentros from "./app/pages/layout/layoutCentros";
 import AboutUs from "./app/pages/layout/layout-about-us";
 import PrivacyPolicy from "./app/pages/privacyPolicy/privacyPolicy"
-import IntranetLayout from "./app/pages/layout/IntranetLayout";
+// import IntranetLayout from "./app/pages/layout/IntranetLayout";
 
 function App() {
   return (
