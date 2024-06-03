@@ -129,10 +129,10 @@ function Sidebar() {
 
               {attendanceDropdownVisible && (
                 <div className="mt-2 space-y-2 pl-8">
-                  <Link to="/intranet/actividades"
+                  <Link to="/intranet/asistencia"
                     className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700">
                     <FaClipboard />
-                    <span className="ml-2">Actividades</span>
+                    <span className="ml-2">Asistencia</span>
                   </Link>
                   <Link to="/intranet/desayunos" className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700">
                     <FaCoffee />
