@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 import AboutUs from '../../components/about-us/about-us';
 import Mision from '../../components/about-us/mision';
@@ -19,6 +19,6 @@ function About() {
         </div>
 
     );
-};
+}
 
 export default About;
