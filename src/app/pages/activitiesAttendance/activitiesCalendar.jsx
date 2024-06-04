@@ -5,7 +5,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import axios from 'axios';
 
-function CalendarPage() {
+function ActivitiesCalendar() {
   const { studentId } = useParams();
   const [attendances, setAttendances] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -79,4 +79,4 @@ function CalendarPage() {
   );
 }
 
-export default CalendarPage;
+export default ActivitiesCalendar;
