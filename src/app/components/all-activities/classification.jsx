@@ -11,11 +11,8 @@ const Classification = () => {
             <ul>
               <li>
                 Fútbol, fútbol sala, baloncesto, balonmano, patinaje, tenis,
-                judo, kárate, voleibol, multideporte
-              </li>
-              <li>
-                Juegos populares, ajedrez, baile, danza, funky, hip-hop, zumba,
-                pilates, yoga
+                judo, kárate, voleibol, multideporte, Juegos populares, ajedrez, baile, danza, funky, hip-hop, zumba,
+                pilates, yoga.
               </li>
             </ul>
             <br />
@@ -36,7 +33,7 @@ const Classification = () => {
             <br />
           </div>
         </div>
-        <div className="flex flex-col  w-full max-md:ml-0 max-md:w-full">
+        <div className="flex gap-5 flex-col  w-full max-md:ml-0 max-md:w-full">
           <div className="text-base leading-6 text-black">
             <span className="text-xl font-bold">
               Actividades para Niños/as con Dificultades de Aprendizaje
