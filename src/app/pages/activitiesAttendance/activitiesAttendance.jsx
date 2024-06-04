@@ -96,7 +96,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     };
 
     const handleViewMore = (studentId) => {
-        navigate(`/calendar/${studentId}`);
+        navigate(`calendar/activities/${studentId}`);
     };
 
     return (

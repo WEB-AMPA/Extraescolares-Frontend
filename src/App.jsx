@@ -27,7 +27,7 @@ function App() {
         <Route path="/activities" element={<Activities />} />
         {/* <Route path="/calendarActivities/:studentId" element={<CalendarActivitiesPage />} /> */}
         <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
-        <Route path="/calendar" element={<ActivitiesCalendar/>} />
+        <Route path="/calendar/activities/:studentId" element={<ActivitiesCalendar/>} />
         <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
         
 
