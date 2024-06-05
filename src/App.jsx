@@ -11,20 +11,38 @@ import ActivitiesCalendar from "./app/pages/activitiesAttendance/activitiesCalen
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
 import AboutUs from "./app/pages/layout/layout-about-us";
 import PrivacyPolicy from "./app/pages/privacyPolicy/privacyPolicy"
-import ActivitiesAttendancePage from "./app/pages/activitiesAttendance/activitiesAttendancePage.jsx";
+import Contact from "./app/pages/contact/contact";
+import Login from "./app/components/login/login";
+import IntranetLayout from "./app/pages/layout/IntranetLayout";
+import OTPInput from "./app/components/login/OTPInput.jsx";
+import Recovered from "./app/components/login/Recovered.jsx";
+import Reset from "./app/components/login/Reset.jsx";
+import { createContext, useState } from "react";
+import UsersList from "./app/components/users/UsersList.jsx";
 
-
-
-
-
+export const RecoveryContext = createContext();
 function App() {
+  const [page, setPage] = useState("login");
+  const [email, setEmail] = useState("");
+  const [otp, setOTP] = useState("");
+
+  function NavigateComponents() {
+    if (page === "login") return <Login />;
+    if (page === "otp") return <OTPInput />;
+    if (page === "reset") return <Reset />;
+    return <Recovered />;
+  }
+
   return (
+    <RecoveryContext.Provider
+    value={{ page, setPage, otp, setOTP, email, setEmail }}>
     <BrowserRouter>
-      
       <Routes>
         <Route path="/" element={<Layout />} />
         <Route path="/centros" element={<LayoutCentros />} />
         <Route path="/activities" element={<Activities />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/login" element={<NavigateComponents />} />
         {/* <Route path="/calendarActivities/:studentId" element={<CalendarActivitiesPage />} /> */}
         <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
         <Route path="/calendar/activities/:studentId" element={<ActivitiesCalendar/>} />
@@ -36,6 +54,7 @@ function App() {
         <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
       </Routes>
     </BrowserRouter>
+    </RecoveryContext.Provider>
   );
 }
 

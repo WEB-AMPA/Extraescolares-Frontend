@@ -20,11 +20,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import './sidebar.css'
+import { useLocation } from 'react-router-dom';
 
 function Sidebar() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [usersDropdownVisible, setUsersDropdownVisible] = useState(false);
   const [attendanceDropdownVisible, setAttendanceDropdownVisible] = useState(false);
+
+  const { state } = useLocation()
+  console.log(state);
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -52,7 +56,7 @@ function Sidebar() {
         <div className="p-4 space-y-4">
           {/* Espacio para el logo */}
           <div className="flex items-center justify-center py-4">
-            <img src="/path/to/your/logo.png" alt="Logo" className="h-16 w-auto" />
+            <img src="/logo.png" alt="Logo" className="h-16 w-auto" />
           </div>
           <div
             role="button"
@@ -177,7 +181,7 @@ function Sidebar() {
 
               <span>Actividades</span>
             </div>
-            <div
+            {/* <div
               role="button"
               onClick={toggleSidebar}
               className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
@@ -187,7 +191,7 @@ function Sidebar() {
               <FontAwesomeIcon icon={faWallet} />
               </div>
               <span>Remesas</span>
-            </div>
+            </div> */}
             <div
               role="button"
               onClick={toggleSidebar}
