@@ -6,6 +6,7 @@ import IntranetLayout from './app/pages/layout/IntranetLayout';
 import UsersList from "./app/pages/Usuarios/usuarios";
 import LayoutCentros from "./app/pages/layout/layoutCentros";
 import Activities from "./app/pages/activities/activities";
+import ActivitiesAttendancePage from "./app/pages/activitiesAttendance/ActivitiesAttendancePage.jsx";
 import BreakfastCalendar from "./app/pages/breakfastAttendance/breakfastCalendar.jsx";
 import ActivitiesCalendar from "./app/pages/activitiesAttendance/activitiesCalendar.jsx";
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
@@ -13,12 +14,10 @@ import AboutUs from "./app/pages/layout/layout-about-us";
 import PrivacyPolicy from "./app/pages/privacyPolicy/privacyPolicy"
 import Contact from "./app/pages/contact/contact";
 import Login from "./app/components/login/login";
-import IntranetLayout from "./app/pages/layout/IntranetLayout";
 import OTPInput from "./app/components/login/OTPInput.jsx";
 import Recovered from "./app/components/login/Recovered.jsx";
 import Reset from "./app/components/login/Reset.jsx";
 import { createContext, useState } from "react";
-import UsersList from "./app/components/users/UsersList.jsx";
 
 export const RecoveryContext = createContext();
 function App() {
