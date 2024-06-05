@@ -1,5 +1,5 @@
 
-import AttendanceTable from './AttendanceTable';
+import AttendanceTable from '../../components/attendance-tables/Breakfast';
 
 const breakfast = () => {
     const handleAttendanceAdded = (data) => {

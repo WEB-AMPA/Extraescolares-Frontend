@@ -1,5 +1,5 @@
 import  { useState } from 'react';
-import ActivityAttendanceTable from './activitiesAttendance';
+import ActivityAttendanceTable from '../../components/attendance-tables/ActivitiesAttendance';
 
 const ActivitiesAttendancePage = () => {
     // Define la variable de estado 'attendances' y la función 'setAttendances'

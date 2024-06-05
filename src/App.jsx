@@ -12,6 +12,10 @@ import Recovered from "./app/components/login/Recovered.jsx";
 import Reset from "./app/components/login/Reset.jsx";
 import { createContext, useState } from "react";
 import Users from "./app/components/users/Users.jsx";
+import ActivitiesAttendancePage from "./app/pages/activitiesAttendance/activitiesAttendancePage.jsx";
+import BreakfastCalendar from "./app/components/calendar/breakfastCalendar.jsx";
+import ActivitiesCalendar from "./app/components/calendar/activitiesCalendar.jsx";
+import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
 
 export const RecoveryContext = createContext();
 function App() {
@@ -40,6 +44,10 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<NavigateComponents />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
+          <Route path="/calendar/activities/:studentId" element={<ActivitiesCalendar/>} />
+          <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
+          <Route path="/attendances" element={<ActivitiesAttendancePage />} />
         </Routes>
       </BrowserRouter>
 

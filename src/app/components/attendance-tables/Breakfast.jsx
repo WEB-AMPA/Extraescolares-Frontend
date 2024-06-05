@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaTrash } from 'react-icons/fa';
 
-const AttendanceTable = ({ onAttendanceAdded }) => {
+const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     const [students, setStudents] = useState([]);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [error, setError] = useState('');
@@ -178,8 +178,8 @@ const handleDelete = async (attendanceId) => {
     );
 };
 
-AttendanceTable.propTypes = {
+BreakfastAttendanceTable.propTypes = {
     onAttendanceAdded: PropTypes.func.isRequired,
 };
 
-export default AttendanceTable;
+export default BreakfastAttendanceTable;
