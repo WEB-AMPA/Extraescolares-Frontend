@@ -1,18 +1,19 @@
 import React from "react";
+import axios from "axios";
 import { useState } from "react";
 import { useContext } from "react";
 import { RecoveryContext } from "../../../App"; // Corrected import path
 
-export default function () {
+export default function OTPInput() {
   const { email, otp, setPage } = useContext(RecoveryContext);
-  const [timerCount, setTimer] = useState(60);
+  const [timerCount, setTimer] = React.useState(60);
   const [OTPinput, setOTPinput] = useState([0, 0, 0, 0]);
   const [disable, setDisable] = useState(true);
 
   function resendOTP() {
     if (disable) return;
     axios
-      .post("http://localhost:3000/send_recovery_email", {
+      .post("http://localhost:5000/send_recovery_email", {
         OTP: otp,
         recipient_email: email,
       })
@@ -144,7 +145,7 @@ export default function () {
                   </div>
 
                   <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-                    <p>Didn't recieve code?</p>{" "}
+                    <p>Didnt recieve code?</p>{" "}
                     <a
                       className="flex flex-row items-center"
                       style={{
