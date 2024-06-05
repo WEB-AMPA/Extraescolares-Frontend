@@ -13,12 +13,10 @@ const ActivitiesCalendar = () => {
     useEffect(() => {
         const fetchAttendanceHistory = async () => {
             try {
-                const start_date = dateRange[0].toISOString().split('T')[0];
-                const end_date = dateRange[1].toISOString().split('T')[0];
+                const startDate = dateRange[0].toISOString().split('T')[0];
+                const endDate = dateRange[1].toISOString().split('T')[0];
 
-                const response = await axios.get(`http://localhost:3010/api/attendance/calendar/student/${studentId}`, {
-                    params: { start_date, end_date }
-                });
+                const response = await axios.get(`http://localhost:3010/api/attendance/calendar/student/${studentId}/${startDate}/${endDate}`);
                 setAttendanceHistory(response.data);
             } catch (error) {
                 setError('Error fetching attendance history');
@@ -40,10 +38,8 @@ const ActivitiesCalendar = () => {
             
             if (attendance) {
                 if (attendance.attendance === 1) {
-                    // Estilo para los días que el estudiante vino
                     return <div className="flex items-center justify-center h-full w-full"><div className="bg-green-400 rounded-full h-6 w-6"></div></div>;
                 } else {
-                    // Estilo para los días que el estudiante no vino
                     return <div className="flex items-center justify-center h-full w-full"><div className="bg-red-400 rounded-full h-6 w-6"></div></div>;
                 }
             }
