@@ -50,7 +50,6 @@ function Navbar() {
               >
                 QUIENES SOMOS
               </a>
-              
             </li>
             <li>
               <a

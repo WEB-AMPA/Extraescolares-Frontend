@@ -1,9 +1,7 @@
-import "./App.css";
+import React, { createContext, useState } from "react";
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from '../src/app/pages/layout/layout-landing'
-import IntranetLayout from './app/pages/layout/IntranetLayout';
-import UsersList from "./app/pages/Usuarios/usuarios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./app/pages/layout/layout";
 import LayoutCentros from "./app/pages/layout/layoutCentros";
 import Activities from "./app/pages/activities/activities";
 import ActivitiesAttendancePage from "./app/pages/activitiesAttendance/ActivitiesAttendancePage.jsx";
@@ -32,11 +30,26 @@ function App() {
     return <Recovered />;
   }
 
+  const [page, setPage] = useState("login");
+  const [email, setEmail] = useState("");
+  const [otp, setOTP] = useState("");
+
+  function NavigateComponents() {
+    if (page === "login") return <Login />;
+    if (page === "otp") return <OTPInput />;
+    if (page === "reset") return <Reset />;
+    return <Recovered />;
+  }
+
   return (
     <RecoveryContext.Provider
     value={{ page, setPage, otp, setOTP, email, setEmail }}>
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<NavigateComponents />} />
+        <Route path="/users" element={<UsersList />} />
+        <Route path="/intranet/*" element={<IntranetLayout />} />
+        <Route path="/contactForm" element={<ContactFrom />} />
         <Route path="/" element={<Layout />} />
         <Route path="/centros" element={<LayoutCentros />} />
         <Route path="/activities" element={<Activities />} />
