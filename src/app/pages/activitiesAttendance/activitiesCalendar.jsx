@@ -1,82 +1,44 @@
-
-import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import  { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import moment from 'moment';
 
-function ActivitiesCalendar() {
-  const { studentId } = useParams();
-  const [attendances, setAttendances] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+const localizer = momentLocalizer(moment);
 
-  const fetchAttendances = useCallback(async () => {
-    try {
-      const response = await axios.get(`http://localhost:3010/attendance/${studentId}?startDate=${startDate}&endDate=${endDate}`);
-      setAttendances(response.data);
-    } catch (error) {
-      console.error('Error fetching attendances:', error);
-    }
-  }, [studentId, startDate, endDate]);
+const ActivitiesCalendar = ({ activityId }) => {
+  const [attendanceData, setAttendanceData] = useState([]);
 
   useEffect(() => {
-    fetchAttendances();
-  }, [fetchAttendances]);
-
-  const handleStartDateChange = (event) => {
-    setStartDate(event.target.value);
-  };
-
-  const handleEndDateChange = (event) => {
-    setEndDate(event.target.value);
-  };
-
-  const tileContent = ({ date, view }) => {
-    if (view === 'month') {
-      const attendance = attendances.find(attendance => {
-        const attendanceDate = new Date(attendance.date);
-        return (
-          attendanceDate.getFullYear() === date.getFullYear() &&
-          attendanceDate.getMonth() === date.getMonth() &&
-          attendanceDate.getDate() === date.getDate()
-        );
-      });
-      if (attendance) {
-        return attendance.attendance === '1' ? <span style={{ color: 'green' }}>●</span> : <span style={{ color: 'red' }}>●</span>;
+    const fetchAttendanceData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3010/api/attendance/${activityId}`);
+        setAttendanceData(response.data);
+      } catch (error) {
+        console.error('Error fetching attendance data:', error);
       }
-    }
-    return null;
-  };
+    };
+
+    fetchAttendanceData();
+  }, [activityId]);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Calendario de Asistencia</h1>
-      <div className="flex mb-4">
-        <input
-          type="date"
-          value={startDate}
-          onChange={handleStartDateChange}
-          className="mr-2"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={handleEndDateChange}
-          className="mr-2"
-        />
-        <button onClick={fetchAttendances} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Buscar
-        </button>
-      </div>
+    <div>
+      <h1>Attendance Calendar</h1>
       <Calendar
-        onChange={setSelectedDate}
-        value={selectedDate}
-        tileContent={tileContent}
+        localizer={localizer}
+        events={attendanceData.map(attendance => ({
+          title: attendance.student.name,
+          start: new Date(attendance.date),
+          end: new Date(attendance.date),
+          resource: attendance.attendance === 1 ? 'green' : 'red', // Color según la asistencia
+        }))}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500 }}
       />
     </div>
   );
-}
+};
 
 export default ActivitiesCalendar;

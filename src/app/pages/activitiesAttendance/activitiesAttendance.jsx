@@ -18,7 +18,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                 const responseActivities = await axios.get('http://localhost:3010/api/activities');
                 setActivities(responseActivities.data);
                 if (responseActivities.data.length > 0) {
-                    setSelectedActivity(responseActivities.data[0]._id); // Cambiado a _id
+                    setSelectedActivity(responseActivities.data[0]._id);
                 }
             } catch (error) {
                 setError('Error fetching activities. Please try again.');
@@ -30,24 +30,20 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     }, []);
 
     useEffect(() => {
-        const fetchStudentsByActivity = async () => {
+        const fetchStudentsByActivityAndDate = async () => {
             try {
-                const responseStudents = await axios.get(`http://localhost:3010/api/activitiesStudents/by-activity/${selectedActivity}`);
-                const studentsWithAttendance = responseStudents.data.map(student => ({
-                    ...student,
-                    attendance: 'none'
-                }));
-                setStudents(studentsWithAttendance);
+                const response = await axios.get(`http://localhost:3010/api/activitiesStudents/by-activity-and-date/${selectedActivity}/${date}`);
+                setStudents(response.data);
             } catch (error) {
                 setError('Error fetching students. Please try again.');
                 console.error('Error fetching students:', error);
             }
         };
 
-        if (selectedActivity) {
-            fetchStudentsByActivity();
+        if (selectedActivity && date) {
+            fetchStudentsByActivityAndDate();
         }
-    }, [selectedActivity]);
+    }, [selectedActivity, date]);
 
     const handleActivityChange = (event) => {
         setSelectedActivity(event.target.value);
@@ -70,8 +66,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
             .filter(student => student.attendance !== 'none')
             .map(student => ({
                 date: date,
-                activities_student: selectedActivity,
-                student_id: student.student._id,
+                activities_student: student._id,
                 attendance: student.attendance === 'present' ? 1 : 0,
             }));
 
@@ -83,8 +78,8 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                console.log('Sending record:', record); // Verificación de estructura de datos
-                const response = await axios.post('http://localhost:3010/api/register', record);
+                console.log('Sending record:', record);
+                const response = await axios.post('http://localhost:3010/api/registerAttendance', record);
                 createdAttendances.push({ ...record, id: response.data._id });
             }
             onAttendanceAdded(createdAttendances);
@@ -96,7 +91,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     };
 
     const handleViewMore = (studentId) => {
-        navigate(`calendar/activities/${studentId}`);
+        navigate(`/calendar/activities/${studentId}`);
     };
 
     return (
