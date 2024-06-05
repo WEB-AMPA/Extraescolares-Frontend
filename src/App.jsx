@@ -6,8 +6,8 @@ import IntranetLayout from './app/pages/layout/IntranetLayout';
 import UsersList from "./app/pages/Usuarios/usuarios";
 import LayoutCentros from "./app/pages/layout/layoutCentros";
 import Activities from "./app/pages/activities/activities";
-import BreakfastCalendar from "./app/pages/breakfastAttendance/breakfastCalendar.jsx";
-import ActivitiesCalendar from "./app/pages/activitiesAttendance/activitiesCalendar.jsx";
+import BreakfastCalendar from "./app/components/calendar/breakfastCalendar.jsx";
+import ActivitiesCalendar from "./app/components/calendar/activitiesCalendar.jsx";
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
 import AboutUs from "./app/pages/layout/layout-about-us";
 import PrivacyPolicy from "./app/pages/privacyPolicy/privacyPolicy"
