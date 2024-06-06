@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import './CalendarCustom.css'; // Importa el archivo CSS personalizado
 
 const BreakfastCalendar = () => {
     const { studentId } = useParams();
@@ -17,7 +18,7 @@ const BreakfastCalendar = () => {
                 const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
                 const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
 
-                const response = await axios.get(`http://localhost:3010/breakfast-attendance?${studentId}`, {
+                const response = await axios.get(`http://localhost:3010/breakfast-attendance/student/${studentId}`, {
                     params: { start_date, end_date }
                 });
                 setAttendanceHistory(response.data);
@@ -34,6 +35,12 @@ const BreakfastCalendar = () => {
         setDateRange(range);
     };
 
+    const handleActiveStartDateChange = ({ activeStartDate }) => {
+        const startOfMonth = new Date(activeStartDate.getFullYear(), activeStartDate.getMonth(), 1);
+        const endOfMonth = new Date(activeStartDate.getFullYear(), activeStartDate.getMonth() + 1, 0);
+        setDateRange([startOfMonth, endOfMonth]);
+    };
+
     const tileContent = ({ date, view }) => {
         if (view === 'month') {
             const timezoneOffset = date.getTimezoneOffset() * 60000;
@@ -43,7 +50,7 @@ const BreakfastCalendar = () => {
                 const recordDateFormatted = new Date(recordDate.getTime() - recordDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
                 return recordDateFormatted === formattedDate;
             });
-            
+
             if (attendance) {
                 if (attendance.attendance === 1) {
                     // Estilo para los días que el estudiante vino
@@ -56,7 +63,7 @@ const BreakfastCalendar = () => {
         }
         return null;
     };
-    
+
     return (
         <div className="container mx-auto p-6 bg-white shadow-md rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Historial de Asistencias</h2>
@@ -67,6 +74,7 @@ const BreakfastCalendar = () => {
                     onChange={handleDateChange}
                     value={dateRange}
                     tileContent={tileContent}
+                    onActiveStartDateChange={handleActiveStartDateChange}
                 />
             </div>
         </div>
