@@ -13,13 +13,14 @@ export default function Login() {
   const { userName, password, role, onInputChange, onResetForm } = useForm({ userName: "", password: "", role: ""})
 
   function navigateToOtp() {
+    setEmail(userName)
     if (email) {
       const OTP = Math.floor(Math.random() * 9000 + 1000);
       console.log("Generated OTP:", OTP);
       setOTP(OTP);
 
       axios
-        .post("http://localhost:3000/send_recovery_email", {
+        .post("http://localhost:3010/send_recovery_email", {
           OTP,
           recipient_email: email,
         })
@@ -145,7 +146,7 @@ export default function Login() {
                     Login
                   </button>
                   <p className="text-sm font-semibold mt-2 pt-1 mb-0">
-                    Dont have an account?
+                    ¿No tienes cuenta?
                     <a
                       href="#!"
                       className="text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out"

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useContext } from "react";
 import { RecoveryContext } from "../../../App"; // Corrected import path
 
-export default function OTPInput() {
+export default function OTPInput () {
   const { email, otp, setPage } = useContext(RecoveryContext);
   const [timerCount, setTimer] = React.useState(60);
   const [OTPinput, setOTPinput] = useState([0, 0, 0, 0]);
@@ -145,7 +145,7 @@ export default function OTPInput() {
                   </div>
 
                   <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-                    <p>Didnt recieve code?</p>{" "}
+                    <p>¿No recibiste el código?</p>{" "}
                     <a
                       className="flex flex-row items-center"
                       style={{
