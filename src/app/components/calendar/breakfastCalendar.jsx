@@ -13,8 +13,9 @@ const BreakfastCalendar = () => {
     useEffect(() => {
         const fetchAttendanceHistory = async () => {
             try {
-                const start_date = dateRange[0].toISOString().split('T')[0];
-                const end_date = dateRange[1].toISOString().split('T')[0];
+                const timezoneOffset = new Date().getTimezoneOffset() * 60000; // Desplazamiento de la zona horaria en milisegundos
+                const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
+                const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
 
                 const response = await axios.get(`http://localhost:3010/breakfast-attendance?${studentId}`, {
                     params: { start_date, end_date }
@@ -35,8 +36,13 @@ const BreakfastCalendar = () => {
 
     const tileContent = ({ date, view }) => {
         if (view === 'month') {
-            const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString().split('T')[0];
-            const attendance = attendanceHistory.find(record => new Date(record.date).toISOString().split('T')[0] === formattedDate);
+            const timezoneOffset = date.getTimezoneOffset() * 60000;
+            const formattedDate = new Date(date.getTime() - timezoneOffset).toISOString().split('T')[0];
+            const attendance = attendanceHistory.find(record => {
+                const recordDate = new Date(record.date);
+                const recordDateFormatted = new Date(recordDate.getTime() - recordDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                return recordDateFormatted === formattedDate;
+            });
             
             if (attendance) {
                 if (attendance.attendance === 1) {
