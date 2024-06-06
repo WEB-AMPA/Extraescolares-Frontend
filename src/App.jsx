@@ -1,21 +1,8 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./app/pages/layout/layout-landing";
-import LayoutCentros from "./app/pages/layout/layoutCentros";
-import AboutUs from "./app/pages/layout/layout-about-us";
-import PrivacyPolicy from "./app/pages/privacyPolicy/privacyPolicy"
-import Contact from "./app/pages/contact/contact";
-import Login from "./app/components/login/login";
-import IntranetLayout from "./app/pages/layout/IntranetLayout";
-import OTPInput from "./app/components/login/OTPInput.jsx";
-import Recovered from "./app/components/login/Recovered.jsx";
-import Reset from "./app/components/login/Reset.jsx";
-import { createContext, useState } from "react";
-import Users from "./app/components/users/Users.jsx";
-import ActivitiesAttendancePage from "./app/pages/activitiesAttendance/activitiesAttendancePage.jsx";
-import BreakfastCalendar from "./app/components/calendar/breakfastCalendar.jsx";
-import ActivitiesCalendar from "./app/components/calendar/activitiesCalendar.jsx";
-import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from '../src/app/pages/layout/layout'
+import IntranetLayout from './app/pages/layout/IntranetLayout';
+import AsistenciaTable from "./app/pages/asistencia/asistencia.jsx";
 
 export const RecoveryContext = createContext();
 function App() {
