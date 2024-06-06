@@ -90,10 +90,10 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         }
     };
 
-    const handleViewMore = (studentId) => {
-        navigate(`/calendar/activities/${studentId}`);
+    const handleViewMore = (studentId, activityId) => {
+        navigate(`/calendar/activities/${studentId}/${activityId}`);
     };
-
+    
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div className="flex justify-end p-6">
@@ -152,7 +152,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                             </td>
                             <td className="px-6 py-4">
                                 <button
-                                    onClick={() => handleViewMore(student.student._id)}
+                                    onClick={() =>  handleViewMore(student.student._id, selectedActivity)}
                                     className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center"
                                 >
                                     <FaEye className="mr-2" /> Ver más

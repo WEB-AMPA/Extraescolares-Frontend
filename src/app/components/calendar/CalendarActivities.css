@@ -1,0 +1,22 @@
+/* CalendarActivities.css */
+.attendance-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.attendance-present {
+  background-color: green;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+}
+
+.attendance-absent {
+  background-color: red;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+}
