@@ -1,20 +1,17 @@
-import  { useContext } from "react";
+import { useContext } from "react";
 import { RecoveryContext } from "../../../App";
-import { Link } from "react-router-dom";
-import axios from "axios"; // Don't forget to import axios
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios"; 
 import { useForm } from "../../hooks/useForm";
 
 export default function Login() {
   const { setEmail, setPage, email, setOTP } = useContext(RecoveryContext);
-
-  const navigate = useNavigate()
-
-  const { userName, password, role, onInputChange, onResetForm } = useForm({ userName: "", password: "", role: ""})
+  const navigate = useNavigate();
+  const { userName, password, role, onInputChange, onResetForm } = useForm({ userName: "", password: "", role: "" });
 
   function navigateToOtp() {
-    setEmail(userName)
-    if (email) {
+    setEmail(userName);
+    if (userName) { // Change from email to userName
       const OTP = Math.floor(Math.random() * 9000 + 1000);
       console.log("Generated OTP:", OTP);
       setOTP(OTP);
@@ -22,11 +19,12 @@ export default function Login() {
       axios
         .post("http://localhost:3010/send_recovery_email", {
           OTP,
-          recipient_email: email,
+          recipient_email: userName, // Change from email to userName
         })
         .then((response) => {
           console.log("Email sent successfully:", response.data);
           setPage("otp");
+          navigate("/send-otp"); // Change to the correct route
         })
         .catch((error) => {
           console.error("Error sending email:", error);
@@ -39,10 +37,9 @@ export default function Login() {
       alert("Please enter your email");
     }
   }
-  
 
   const handlerSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     navigate("/intranet", {
       replace: true,
@@ -53,9 +50,8 @@ export default function Login() {
       },
     });
     setEmail(userName);
-    onResetForm()
-  }
-
+    onResetForm();
+  };
   return (
     <div>
       <section className="h-screen">
