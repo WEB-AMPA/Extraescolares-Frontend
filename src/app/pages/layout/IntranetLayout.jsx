@@ -1,18 +1,17 @@
-import { Routes, Route } from 'react-router-dom';
+// import { Routes, Route } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/sidebar'
-import UsersList from '../Usuarios/usuarios';
+
 
 
 const IntranetLayout = () => {
   return (
-    <div className="app-container flex">
+    <div className="app-container">
       <Sidebar />
-      {/* <div className="content flex-1 p-4">
-        <Routes>
-          <Route path="users" element={<UsersList />} />
-          
-        </Routes>
-      </div> */}
+      <div className="flex-grow ml-64">
+        <Outlet />
+      </div>
+
     </div>
   );
 };

@@ -37,17 +37,22 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />} />
-          <Route path="/intranet" element={<IntranetLayout />} />
+          <Route path="/intranet" element={<IntranetLayout />}>
+            <Route path="calendar/:studentId" element={<BreakfastCalendar />} />
+            <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
+            <Route path="breakfast" element={<BreakfastAttendancePage />} />
+            <Route path="attendances" element={<ActivitiesAttendancePage />} />
+          </Route>
           <Route path="/centros" element={<LayoutCentros />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<NavigateComponents />} />
           <Route path="/users" element={<Users />} />
-          <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
+          {/* <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
           <Route path="/calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
           <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
-          <Route path="/attendances" element={<ActivitiesAttendancePage />} />
+          <Route path="/attendances" element={<ActivitiesAttendancePage />} /> */}
         </Routes>
       </BrowserRouter>
 

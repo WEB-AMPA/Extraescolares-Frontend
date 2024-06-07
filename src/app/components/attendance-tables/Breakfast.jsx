@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaEye, FaTrash } from 'react-icons/fa';
+import { FaEye } from 'react-icons/fa';
 
 const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     const [students, setStudents] = useState([]);
@@ -20,7 +20,8 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
                     const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);
                     return {
                         ...student,
-                        attendance: studentAttendance ? (studentAttendance.attendance === 1 ? 'present' : 'absent') : 'none'
+                        attendance: studentAttendance ? (studentAttendance.attendance === 1 ? 'present' : 'absent') : 'none',
+                        observations: student.observations || 'N/A'
                     };
                 });
 
@@ -76,25 +77,9 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         }
     };
 
-    // Dentro de handleDelete, usar el ID almacenado en el estado para eliminar la asistencia
-const handleDelete = async (attendanceId) => {
-    try {
-        await axios.delete(`http://localhost:3010/breakfast-attendance/${attendanceId}`);
-        // Actualizar la lista de estudiantes después de la eliminación si es necesario
-        setStudents((prevStudents) =>
-            prevStudents.filter((student) => student.attendanceId !== attendanceId)
-        );
-    } catch (error) {
-        // Manejar errores en caso de que ocurran
-        console.error('Error deleting attendance:', error);
-    }
-};
-
     const handleViewMore = (studentId) => {
-        navigate(`/calendar/${studentId}`);
+        navigate(`/intranet/calendar/${studentId}`);
     };
-
-
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -111,6 +96,7 @@ const handleDelete = async (attendanceId) => {
                     <tr>
                         <th scope="col" className="px-6 py-3">Fecha</th>
                         <th scope="col" className="px-6 py-3">Estudiante</th>
+                        <th scope="col" className="px-6 py-3">Observaciones</th>
                         <th scope="col" className="px-6 py-3">Asistencia</th>
                         <th scope="col" className="px-6 py-3">Acciones</th>
                     </tr>
@@ -133,6 +119,9 @@ const handleDelete = async (attendanceId) => {
                                 {student.name} {student.lastname}
                             </th>
                             <td className="px-6 py-4">
+                                {student.observations}
+                            </td>
+                            <td className="px-6 py-4">
                                 <select
                                     value={student.attendance}
                                     onChange={(e) => handleAttendanceChange(student._id, e.target.value)}
@@ -145,17 +134,10 @@ const handleDelete = async (attendanceId) => {
                             <td className="px-6 py-4">
                                 <button
                                     onClick={() => handleViewMore(student._id)}
-                                    className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center"
+                                    className="bg-yellow-400 text-white px-4 py-2 rounded-lg flex items-center"
                                 >
                                     <FaEye className="mr-2" /> Ver más
                                 </button>
-                                <button
-                                    onClick={() => handleDelete(student._id)}
-                                    className="bg-red-500 text-white px-4 py-2 rounded-lg flex items-center"
-                                >
-                                    <FaTrash className="mr-2" /> Eliminar
-                                </button>
-
                             </td>
                         </tr>
                     ))}
@@ -166,7 +148,7 @@ const handleDelete = async (attendanceId) => {
                     onClick={handleSaveAll}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
                 >
-                    Save All
+                   Guardar asistencias
                 </button>
             </div>
             {error && (

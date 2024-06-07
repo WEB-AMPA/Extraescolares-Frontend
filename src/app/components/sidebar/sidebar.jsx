@@ -7,7 +7,6 @@ import {
   faClipboardList,
   faClipboard,
   faCoffee,
-  faWallet,
   faSignOutAlt,
   faBars,
   faCog,
@@ -157,7 +156,7 @@ function Sidebar() {
                     <FontAwesomeIcon icon={faClipboard} />
                     <span className="ml-2">Actividades</span>
                   </Link>
-                  <Link to ="#"
+                  <Link to ="/intranet/breakfast"
                     className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                   >
