@@ -9,7 +9,16 @@ const BreakfastCalendar = () => {
     const { studentId } = useParams();
     const [attendanceHistory, setAttendanceHistory] = useState([]);
     const [error, setError] = useState('');
-    const [dateRange, setDateRange] = useState([new Date(), new Date()]);
+
+    // Función para obtener el rango de fechas del mes actual
+    const getCurrentMonthRange = () => {
+        const currentDate = new Date();
+        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        return [startOfMonth, endOfMonth];
+    };
+
+    const [dateRange, setDateRange] = useState(getCurrentMonthRange);
 
     useEffect(() => {
         const fetchAttendanceHistory = async () => {

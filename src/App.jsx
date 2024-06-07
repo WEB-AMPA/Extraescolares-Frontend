@@ -27,7 +27,7 @@ function App() {
         <Route path="/activities" element={<Activities />} />
         {/* <Route path="/calendarActivities/:studentId" element={<CalendarActivitiesPage />} /> */}
         <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
-        <Route path="/calendar/activities/:studentId/:activityId" element={<ActivitiesCalendar/>} />
+        <Route path="/calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
         <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
         <Route path="/intranet/*" element={<IntranetLayout />} />
         <Route path="/users" element={<UsersList />} />

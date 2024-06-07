@@ -90,11 +90,11 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         }
     };
 
-    const handleViewMore = (studentId, activityId) => {
-        if (studentId && activityId) {
-            navigate(`/calendar/activities/${studentId}/${activityId}`);
+    const handleViewMore = (activitiesStudentId) => {
+        if (activitiesStudentId) {
+            navigate(`/calendar/activities/${activitiesStudentId}`);
         } else {
-            setError('Invalid student or activity ID.');
+            setError('Invalid activities_student ID.');
         }
     };
 
@@ -155,7 +155,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                             </td>
                             <td className="px-6 py-4">
                                 <button
-                                    onClick={() => handleViewMore(student.student._id, selectedActivity)}
+                                    onClick={() => handleViewMore(student._id)} // Usar student._id como activitiesStudentId
                                     className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center"
                                 >
                                     <FaEye className="mr-2" /> Ver más
@@ -170,7 +170,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                     onClick={handleSaveAll}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
                 >
-                    Save All
+                    Guardar Todo
                 </button>
             </div>
             {error && (
