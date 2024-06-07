@@ -109,7 +109,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
                                 index % 2 === 0
                                     ? 'bg-white dark:bg-gray-900'
                                     : 'bg-gray-50 dark:bg-gray-800'
-                            } border-b dark:border-gray-700`}
+                            }`}
                         >
                             <td className="px-6 py-4">{date}</td>
                             <th
@@ -148,7 +148,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
                     onClick={handleSaveAll}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
                 >
-                   Guardar asistencias
+                    Save All
                 </button>
             </div>
             {error && (

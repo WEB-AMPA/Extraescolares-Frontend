@@ -18,3 +18,12 @@
     border-top-right-radius: 8px !important; /* Bordes redondeados solo en la esquina superior derecha */
     border-bottom-right-radius: 8px !important;
 }
+
+.custom-calendar {
+    width: 800px; /* Ancho personalizado */
+    max-width: 100%; /* Ancho máximo */
+    font-size: 16px; /* Tamaño de fuente */
+    margin: 20px auto; /* Margen superior e inferior */
+}
+
+/* Otros estilos personalizados según sea necesario */

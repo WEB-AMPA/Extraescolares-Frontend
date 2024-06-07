@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './CalendarCustom.css'; // Importa el archivo CSS personalizado
@@ -8,6 +8,7 @@ import './CalendarCustom.css'; // Importa el archivo CSS personalizado
 const BreakfastCalendar = () => {
     const { studentId } = useParams();
     const [attendanceHistory, setAttendanceHistory] = useState([]);
+    const [studentName, setStudentName] = useState('');
     const [error, setError] = useState('');
 
     // Función para obtener el rango de fechas del mes actual
@@ -30,7 +31,13 @@ const BreakfastCalendar = () => {
                 const response = await axios.get(`http://localhost:3010/breakfast-attendance/student/${studentId}`, {
                     params: { start_date, end_date }
                 });
-                setAttendanceHistory(response.data);
+                if (response.data.length > 0) {
+                    setAttendanceHistory(response.data);
+                    // Suponiendo que todos los registros son del mismo estudiante, tomamos el nombre del primer registro
+                    setStudentName(`${response.data[0].student_id.name} ${response.data[0].student_id.lastname}`);
+                } else {
+                    setStudentName(''); // En caso de que no haya registros
+                }
             } catch (error) {
                 setError('Error fetching attendance history');
                 console.error('Error fetching attendance history:', error.response || error.message || error);
@@ -74,18 +81,21 @@ const BreakfastCalendar = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 bg-white shadow-md rounded-lg">
+        <div className="flex flex-col items-center mt-10">
             <h2 className="text-2xl font-bold mb-4">Historial de Asistencias</h2>
             {error && <p className="text-red-500">{error}</p>}
+            <p className="text-lg font-semibold mb-4">Alumno/a: {studentName}</p>
             <div>
                 <Calendar
+                className="custom-calendar"
                     selectRange={true}
                     onChange={handleDateChange}
                     value={dateRange}
                     tileContent={tileContent}
                     onActiveStartDateChange={handleActiveStartDateChange}
                 />
-            </div>
+        </div>
+            <Link to={`/intranet/breakfast/`} className="mt-4 underline">Volver a la lista de asistencia</Link>
         </div>
     );
 };
