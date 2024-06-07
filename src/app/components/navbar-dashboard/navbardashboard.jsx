@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+
 
 const NavbarDashboard = () => {
   return (
@@ -9,7 +9,7 @@ const NavbarDashboard = () => {
       </div>
       <div className="flex items-center space-x-4">
         <button className="relative">
-          <FontAwesomeIcon icon={faBell} />
+  
           <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1 text-xs">3</span>
         </button>
         <img

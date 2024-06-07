@@ -1,8 +1,10 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from '../src/app/pages/layout/layout'
+import React, { createContext, useState } from 'react';
+import Layout from '../src/app/pages/layout/layout-landing.jsx'
 import IntranetLayout from './app/pages/layout/IntranetLayout';
-import AsistenciaTable from "./app/pages/asistencia/asistencia.jsx";
+/* import AsistenciaTable from "./app/pages/asistencia/asistencia.jsx"; */
+import Socios from "./app/pages/intranet/users/socios.jsx";
 
 export const RecoveryContext = createContext();
 function App() {
@@ -24,9 +26,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />} />
-          <Route path="/intranet" element={<IntranetLayout />} />
+          <Route path="/intranet/*" element={<IntranetLayout />} />
+          <Route path="/intranet/socios"element={<Socios />} />
+          {/*           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/centros" element={<LayoutCentros />} />
-          <Route path="/about-us" element={<AboutUs />} />
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<NavigateComponents />} />
@@ -34,7 +37,7 @@ function App() {
           <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
           <Route path="/calendar/activities/:studentId/:activityId" element={<ActivitiesCalendar/>} />
           <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
-          <Route path="/attendances" element={<ActivitiesAttendancePage />} />
+          <Route path="/attendances" element={<ActivitiesAttendancePage />} />*/}
         </Routes>
       </BrowserRouter>
 

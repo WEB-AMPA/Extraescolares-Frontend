@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FaHome } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
@@ -16,14 +17,14 @@ import { FaCogs } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaUserTie } from "react-icons/fa";
 import './sidebar.css'
-import { useLocation } from 'react-router-dom';
 
 function Sidebar() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [usersDropdownVisible, setUsersDropdownVisible] = useState(false);
   const [attendanceDropdownVisible, setAttendanceDropdownVisible] = useState(false);
 
-  const { state } = useLocation()
+  const location = useLocation();
+  const { state } = location;
   console.log(state);
 
   const toggleSidebar = () => {
@@ -46,7 +47,7 @@ function Sidebar() {
       <div
         className={`lg:block ${sidebarVisible ? 'block' : 'hidden'} bg-white w-64 h-screen fixed z-10 top-0 left-0 rounded-none border-none shadow-lg`}
       >
-        <div className="p-4 space-y-4">
+        <div className=" p-4 space-y-4">
           <div className="flex items-center justify-center py-4">
             <img src="/logo.png" alt="Logo" className="h-16 w-auto" />
           </div>
@@ -57,6 +58,7 @@ function Sidebar() {
             <div className="grid mr-2 place-items-center">
               <FaHome />
             </div>
+
             <span>Inicio</span>
           </Link>
 
@@ -138,6 +140,8 @@ function Sidebar() {
                     <FaClipboard />
                     <span className="ml-2">Asistencia</span>
                   </Link>
+
+                  
                   <Link to="/intranet/desayunos" className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700">
                     <FaCoffee />
                     <span className="ml-2">Desayunos</span>
@@ -152,12 +156,12 @@ function Sidebar() {
               </div>
               <span>Actividades</span>
             </Link>
-            </div>
+          {/*   </div>
              <div
               role="button"
               onClick={toggleSidebar}
-              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700">
-
+              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-50">
+ */}
 
             <Link to="/intranet/remesas" role="button" onClick={toggleSidebar} className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700" >
               <div className="grid mr-1 place-items-center">
@@ -165,7 +169,6 @@ function Sidebar() {
               </div>
               <span>Remesas</span>
             </Link>
-
 
             <Link to="/intranet/ajustes" role="button" onClick={toggleSidebar} className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700">
               <div className="grid mr-2 place-items-center">

@@ -1,9 +1,9 @@
 /* Estilos CSS para el hover */
 .hover-bg-gray-100:hover {
-    background-color: #ffff23; /* Color de fondo gris claro */
+    background-color: #ffff23; 
   }
   
   .hover-text-gray-700:hover {
-    color: #000000; /* Color de texto gris oscuro */
+    color: #000000;
   }
   
