@@ -3,20 +3,31 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import './CalendarCustom.css'; // Importa el archivo CSS personalizado
 
 const BreakfastCalendar = () => {
     const { studentId } = useParams();
     const [attendanceHistory, setAttendanceHistory] = useState([]);
     const [error, setError] = useState('');
-    const [dateRange, setDateRange] = useState([new Date(), new Date()]);
+
+    // Función para obtener el rango de fechas del mes actual
+    const getCurrentMonthRange = () => {
+        const currentDate = new Date();
+        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        return [startOfMonth, endOfMonth];
+    };
+
+    const [dateRange, setDateRange] = useState(getCurrentMonthRange);
 
     useEffect(() => {
         const fetchAttendanceHistory = async () => {
             try {
-                const start_date = dateRange[0].toISOString().split('T')[0];
-                const end_date = dateRange[1].toISOString().split('T')[0];
+                const timezoneOffset = new Date().getTimezoneOffset() * 60000; // Desplazamiento de la zona horaria en milisegundos
+                const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
+                const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
 
-                const response = await axios.get(`http://localhost:3010/breakfast-attendance?${studentId}`, {
+                const response = await axios.get(`http://localhost:3010/breakfast-attendance/student/${studentId}`, {
                     params: { start_date, end_date }
                 });
                 setAttendanceHistory(response.data);
@@ -33,11 +44,22 @@ const BreakfastCalendar = () => {
         setDateRange(range);
     };
 
+    const handleActiveStartDateChange = ({ activeStartDate }) => {
+        const startOfMonth = new Date(activeStartDate.getFullYear(), activeStartDate.getMonth(), 1);
+        const endOfMonth = new Date(activeStartDate.getFullYear(), activeStartDate.getMonth() + 1, 0);
+        setDateRange([startOfMonth, endOfMonth]);
+    };
+
     const tileContent = ({ date, view }) => {
         if (view === 'month') {
-            const formattedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString().split('T')[0];
-            const attendance = attendanceHistory.find(record => new Date(record.date).toISOString().split('T')[0] === formattedDate);
-            
+            const timezoneOffset = date.getTimezoneOffset() * 60000;
+            const formattedDate = new Date(date.getTime() - timezoneOffset).toISOString().split('T')[0];
+            const attendance = attendanceHistory.find(record => {
+                const recordDate = new Date(record.date);
+                const recordDateFormatted = new Date(recordDate.getTime() - recordDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                return recordDateFormatted === formattedDate;
+            });
+
             if (attendance) {
                 if (attendance.attendance === 1) {
                     // Estilo para los días que el estudiante vino
@@ -50,7 +72,7 @@ const BreakfastCalendar = () => {
         }
         return null;
     };
-    
+
     return (
         <div className="container mx-auto p-6 bg-white shadow-md rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Historial de Asistencias</h2>
@@ -61,6 +83,7 @@ const BreakfastCalendar = () => {
                     onChange={handleDateChange}
                     value={dateRange}
                     tileContent={tileContent}
+                    onActiveStartDateChange={handleActiveStartDateChange}
                 />
             </div>
         </div>

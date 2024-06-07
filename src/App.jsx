@@ -45,7 +45,7 @@ function App() {
           <Route path="/login" element={<NavigateComponents />} />
           <Route path="/users" element={<Users />} />
           <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
-          <Route path="/calendar/activities/:studentId/:activityId" element={<ActivitiesCalendar/>} />
+          <Route path="/calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
           <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
           <Route path="/attendances" element={<ActivitiesAttendancePage />} />
         </Routes>

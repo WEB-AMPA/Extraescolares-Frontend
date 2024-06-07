@@ -1,3 +1,4 @@
+// ActivityAttendanceTable.jsx
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -78,7 +79,6 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                console.log('Sending record:', record);
                 const response = await axios.post('http://localhost:3010/api/registerAttendance', record);
                 createdAttendances.push({ ...record, id: response.data._id });
             }
@@ -90,10 +90,14 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         }
     };
 
-    const handleViewMore = (studentId, activityId) => {
-        navigate(`/calendar/activities/${studentId}/${activityId}`);
+    const handleViewMore = (activitiesStudentId) => {
+        if (activitiesStudentId) {
+            navigate(`/calendar/activities/${activitiesStudentId}`);
+        } else {
+            setError('Invalid activities_student ID.');
+        }
     };
-    
+
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div className="flex justify-end p-6">
@@ -125,7 +129,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                 <tbody>
                     {students.map((student, index) => (
                         <tr
-                            key={`${student.student._id}-${index}`}
+                            key={student._id}
                             className={`${
                                 index % 2 === 0
                                     ? 'bg-white dark:bg-gray-900'
@@ -143,7 +147,6 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                                 <select
                                     value={student.attendance}
                                     onChange={(e) => handleAttendanceChange(student.student._id, e.target.value)}
-                                    className="border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5"
                                 >
                                     <option value="none">Seleccionar</option>
                                     <option value="present">Sí</option>
@@ -152,7 +155,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                             </td>
                             <td className="px-6 py-4">
                                 <button
-                                    onClick={() =>  handleViewMore(student.student._id, selectedActivity)}
+                                    onClick={() => handleViewMore(student._id)} // Usar student._id como activitiesStudentId
                                     className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center"
                                 >
                                     <FaEye className="mr-2" /> Ver más
@@ -162,16 +165,14 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                     ))}
                 </tbody>
             </table>
-            {selectedActivity && (
-                <div className="flex justify-end p-6">
-                    <button
-                        onClick={handleSaveAll}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
-                    >
-                        Guardar Todo
-                    </button>
-                </div>
-            )}
+            <div className="flex justify-end p-6">
+                <button
+                    onClick={handleSaveAll}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
+                >
+                    Guardar Todo
+                </button>
+            </div>
             {error && (
                 <div className="text-red-500 text-center">
                     {error}

@@ -1,0 +1,20 @@
+/* CalendarCustom.css */
+
+/* Estilo para el rango de fechas seleccionado */
+.react-calendar__tile--range {
+    background-color: rgba(0, 122, 204, 0.2) !important; /* Color de fondo más claro */
+    color: #004c99 !important; /* Color del texto */
+   
+}
+
+/* Estilo para el primer día del rango de fechas seleccionado */
+.react-calendar__tile--rangeStart {
+    border-top-left-radius: 8px !important; /* Bordes redondeados solo en la esquina superior izquierda */
+    border-bottom-left-radius: 8px !important;
+}
+
+/* Estilo para el último día del rango de fechas seleccionado */
+.react-calendar__tile--rangeEnd {
+    border-top-right-radius: 8px !important; /* Bordes redondeados solo en la esquina superior derecha */
+    border-bottom-right-radius: 8px !important;
+}
