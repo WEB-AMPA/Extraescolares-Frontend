@@ -17,6 +17,7 @@ import BreakfastCalendar from "./app/components/calendar/breakfastCalendar.jsx";
 import ActivitiesCalendar from "./app/components/calendar/activitiesCalendar.jsx";
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
 import SendOTPForm from "./app/components/login/SendOTPForm";
+import Activities from "./app/pages/layout/layout-activities.jsx";
 
 export const RecoveryContext = createContext();
 function App() {
@@ -55,6 +56,7 @@ function App() {
           <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
           <Route path="/attendances" element={<ActivitiesAttendancePage />} /> */}
           <Route path="/send-otp" element={<SendOTPForm />} />
+          <Route path="/activities" element={<Activities />} />
         </Routes>
       </BrowserRouter>
 
