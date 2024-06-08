@@ -4,11 +4,11 @@ import Section from './Section';
 
 const Actividades = () => {
   return (
-    <div className="container mx-auto mt-16">
+    <div className="container mx-auto mt-16 px-6 md:px-12 lg:px-24">
       <Header />
-      <div className="bg-purple-100 p-4 flex justify-between flex-wrap">
+      <div className="bg-purple-100 p-4 md:p-8 flex justify-between flex-wrap">
         <div className="w-full md:w-1/3 mb-4 md:mb-0">
-          <Section title="Actividades Deportivas" >
+          <Section title="Actividades Deportivas">
             <ul className="list-disc pl-5">
               <li>Fútbol, Fútbol sala, baloncesto, balonmano, patinaje, tenis, judo, kárate, voleibol, multideporte</li>
               <li>Juegos populares, ajedrez, baile, danza, funky, hip-hop, zumba, pilates, yoga</li>
@@ -16,7 +16,7 @@ const Actividades = () => {
           </Section>
         </div>
         <div className="w-full md:w-1/3 mb-4 md:mb-0">
-          <Section title="Actividades Educativas" >
+          <Section title="Actividades Educativas">
             <ul className="list-disc pl-5">
               <li>Club de deberes</li>
               <li>Creatividad y diversión</li>
@@ -27,19 +27,28 @@ const Actividades = () => {
           </Section>
         </div>
         <div className="w-full md:w-1/3 mb-4 md:mb-0">
-          <Section title="Actividades para Niños/as con Dificultades de Aprendizaje" >
+          <Section title="Actividades para Niños/as con Dificultades de Aprendizaje">
             <ul className="list-disc pl-5">
               <li>Actividades especializadas para alumnos con dificultades de comprensión y aprendizaje.</li>
             </ul>
           </Section>
         </div>
       </div>
-      <div className="flex justify-center space-x-4 my-8">
-        <img src="/images/actividades1.jpg" alt="Actividad 1" className="rounded-lg w-1/4" />
-        <img src="/images/actividades2.jpg" alt="Actividad 2" className="rounded-lg w-1/4" />
-        <img src="/images/actividades3.jpg" alt="Actividad 3" className="rounded-lg w-1/4" />
+      <div className="flex justify-center space-x-4 my-8 flex-wrap">
+        <picture className="w-full md:w-1/4 mb-4 md:mb-0">
+          <source srcSet="/grupo-niños.webp" type="image/webp" />
+          <img src="/grupo-niños.jpg" alt="Grupo de Niños" className="rounded-lg w-full object-cover" />
+        </picture>
+        <picture className="w-full md:w-1/4 mb-4 md:mb-0">
+          <source srcSet="/pilates-club.webp" type="image/webp" />
+          <img src="/pilates-club.jpg" alt="Grupo de Pilates" className="rounded-lg w-full object-cover" />
+        </picture>
+        <picture className="w-full md:w-1/4 mb-4 md:mb-0">
+          <source srcSet="/niños-cocinando.webp" type="image/webp" />
+          <img src="/niños-cocinando.jpg" alt="dos niños cocinando" className="rounded-lg w-full object-cover" />
+        </picture>
       </div>
-      <div className="bg-purple-100 p-4 flex justify-between flex-wrap">
+      <div className="bg-purple-100 p-4 md:p-8 flex justify-between flex-wrap">
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <Section title="Actividades para Papás y Mamás" className="bg-purple-100">
             <div className="p-4">
