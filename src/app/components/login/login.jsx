@@ -1,64 +1,23 @@
 import { useContext } from "react";
 import { RecoveryContext } from "../../../App";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"; 
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "../../hooks/useForm";
 import { useAuthContext } from "../../context/authContext";
 
 export default function Login() {
   const { setEmail, setPage, email, setOTP } = useContext(RecoveryContext);
-  const { login } = useAuthContext()
+  const { login } = useAuthContext();
+  const navigate = useNavigate();
+  const { userName, password, onInputChange, onResetForm } = useForm({ userName: "", password: "" });
 
-  const navigate = useNavigate()
-
-  const { userName, password, role, onInputChange, onResetForm } = useForm({ userName: "", password: "", role: ""})
-
-  function navigateToOtp() {
-    setEmail(userName);
-    if (userName) { // Change from email to userName
-      const OTP = Math.floor(Math.random() * 9000 + 1000);
-      setOTP(OTP);      
-
-      axios
-        .post("http://localhost:3000/send_recovery_email", {
-          OTP,
-          recipient_email: userName, // Change from email to userName
-        })
-        .then((response) => {
-          console.log("Email sent successfully:", response.data);
-          setPage("otp");
-          setEmail(userName);
-          console.log("Generated email:", userName);
-        })
-        .catch((error) => {
-          console.error("Error sending email:", error);
-          console.log(
-            "Response data:",
-            error.response ? error.response.data : "No response data"
-          );
-        });
-    } else {
-      alert("Please enter your email");
-    }
-  }
-
-
-  const handlerSubmit = (e) => {
-    e.preventDefault()
-    
-    login()
-
-    navigate("/intranet", {
-      replace: true,
-      state: {
-        logged: true,
-        userName,
-        role
-      },
-    });
-    setEmail(userName);
+  const handlerSubmit = async (e) => {
+    e.preventDefault();
+    await login({ username: userName, password });
+    navigate("/intranet", { replace: true });
     onResetForm();
   };
+
   return (
     <div>
       <section className="h-screen">
@@ -75,15 +34,6 @@ export default function Login() {
               <form onSubmit={handlerSubmit}>
                 <div className="flex flex-row items-center justify-center lg:justify-start">
                   <p className="text-lg mb-0 mr-4">Sign in with</p>
-                  <button
-                    type="button"
-                    data-mdb-ripple="true"
-                    data-mdb-ripple-color="light"
-                    className="inline-block p-3 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded-full shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out mx-1"
-                  >
-                    {/* SVG icon */}
-                  </button>
-                  {/* Other buttons */}
                 </div>
 
                 <div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
@@ -131,10 +81,9 @@ export default function Login() {
                       Remember me
                     </label>
                   </div>
-                  {/* Use Link component for navigation */}
                   <Link
                     to="#"
-                    onClick={navigateToOtp}
+                    onClick={() => navigateToOtp()}
                     className="text-gray-800"
                   >
                     Forgot password?
@@ -143,7 +92,7 @@ export default function Login() {
 
                 <div className="text-center lg:text-left">
                   <button
-                    // type="button"
+                    type="submit"
                     className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                   >
                     Login
