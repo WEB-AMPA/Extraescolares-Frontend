@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import  { useContext } from "react";
 import { RecoveryContext } from "../../../App";
 import { Link } from "react-router-dom";
 import axios from "axios"; // Don't forget to import axios
@@ -21,7 +21,7 @@ export default function Login() {
       setOTP(OTP);      
 
       axios
-        .post("http://localhost:3000/send_recovery_email", {
+        .post("http://localhost:3010/send_recovery_email", {
           OTP,
           recipient_email: email,
         })
@@ -151,7 +151,7 @@ export default function Login() {
                     Login
                   </button>
                   <p className="text-sm font-semibold mt-2 pt-1 mb-0">
-                    Don't have an account?
+                    ¿No tienes cuenta?
                     <a
                       href="#!"
                       className="text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out"
