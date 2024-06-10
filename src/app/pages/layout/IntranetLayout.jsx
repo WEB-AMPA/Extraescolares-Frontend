@@ -6,7 +6,7 @@ import Sidebar from '../../components/sidebar/sidebar'
 import { Outlet } from 'react-router-dom';
 // import Sidebar1 from '../../components/sidebar/sidebar1';
 
-const userRole = 'admin' //ESTO ES SOLO PARA HACER PRUEBAS, EL LOGIN DEBE ENVIAR EL ROLE PARA QUE SEA DINAMICO
+const userRole = 'monitor' //ESTO ES SOLO PARA HACER PRUEBAS, EL LOGIN DEBE ENVIAR EL ROLE PARA QUE SEA DINAMICO
 
 const IntranetLayout = () => {
   const { state } = useLocation()
