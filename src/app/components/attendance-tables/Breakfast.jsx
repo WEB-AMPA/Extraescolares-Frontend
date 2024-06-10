@@ -13,8 +13,8 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     useEffect(() => {
         const fetchStudentsAndAttendances = async () => {
             try {
-                const responseStudents = await axios.get('http://localhost:3010/api/students/withbreakfast');
-                const responseAttendances = await axios.get(`http://localhost:3010/breakfast-attendance/date/${date}`);
+                const responseStudents = await axios.get('http://localhost:3000/api/students/withbreakfast');
+                const responseAttendances = await axios.get(`http://localhost:3000/breakfast-attendance/date/${date}`);
                 
                 const studentsWithAttendance = responseStudents.data.map(student => {
                     const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);
@@ -66,7 +66,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                const response = await axios.post('http://localhost:3010/breakfast-attendance/', record);
+                const response = await axios.post('http://localhost:3000/breakfast-attendance/', record);
                 createdAttendances.push({ ...record, id: response.data._id }); // Guardar el ID de la asistencia
             }
             onAttendanceAdded(createdAttendances);

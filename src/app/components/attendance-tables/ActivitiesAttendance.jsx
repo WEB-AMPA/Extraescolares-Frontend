@@ -16,7 +16,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     useEffect(() => {
         const fetchActivities = async () => {
             try {
-                const responseActivities = await axios.get('http://localhost:3010/api/activities');
+                const responseActivities = await axios.get('http://localhost:3000/api/activities');
                 setActivities(responseActivities.data);
                 if (responseActivities.data.length > 0) {
                     setSelectedActivity(responseActivities.data[0]._id);
@@ -33,7 +33,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     useEffect(() => {
         const fetchStudentsByActivityAndDate = async () => {
             try {
-                const response = await axios.get(`http://localhost:3010/api/activitiesStudents/by-activity-and-date/${selectedActivity}/${date}`);
+                const response = await axios.get(`http://localhost:3000/api/activitiesStudents/by-activity-and-date/${selectedActivity}/${date}`);
                 setStudents(response.data);
             } catch (error) {
                 setError('Error fetching students. Please try again.');
@@ -79,7 +79,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                const response = await axios.post('http://localhost:3010/api/registerAttendance', record);
+                const response = await axios.post('http://localhost:3000/api/registerAttendance', record);
                 createdAttendances.push({ ...record, id: response.data._id });
             }
             onAttendanceAdded(createdAttendances);

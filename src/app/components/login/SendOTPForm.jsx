@@ -19,7 +19,7 @@ export default function SendOTPForm() {
     setOTP(OTP);
     setEmail(emailInput);
 
-    axios.post("http://localhost:3010/send_recovery_email", {
+    axios.post("http://localhost:3000/send_recovery_email", {
       OTP,
       recipient_email: emailInput,
     })

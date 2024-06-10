@@ -17,7 +17,7 @@ export default function Login() {
       setOTP(OTP);
 
       axios
-        .post("http://localhost:3010/send_recovery_email", {
+        .post("http://localhost:3000/send_recovery_email", {
           OTP,
           recipient_email: userName, // Change from email to userName
         })
