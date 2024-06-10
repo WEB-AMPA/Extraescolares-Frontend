@@ -92,7 +92,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
 
     const handleViewMore = (activitiesStudentId) => {
         if (activitiesStudentId) {
-            navigate(`/calendar/activities/${activitiesStudentId}`);
+            navigate(`/intranet/calendar/activities/${activitiesStudentId}`);
         } else {
             setError('Invalid activities_student ID.');
         }
@@ -156,7 +156,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
                             <td className="px-6 py-4">
                                 <button
                                     onClick={() => handleViewMore(student._id)} // Usar student._id como activitiesStudentId
-                                    className="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center"
+                                    className="bg-yellow-400 text-white px-4 py-2 rounded-lg flex items-center"
                                 >
                                     <FaEye className="mr-2" /> Ver más
                                 </button>

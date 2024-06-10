@@ -57,10 +57,6 @@ function App() {
           <Route path="/login" element={<NavigateComponents />} />
           <Route path="students" element={<Students />} />
           <Route path="users" element={<UsersList />} />
-          {/* <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
-          <Route path="/calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
-          <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
-          <Route path="/attendances" element={<ActivitiesAttendancePage />} /> */}
           <Route path="/send-otp" element={<SendOTPForm />} />
           <Route path="/activities" element={<Activities />} />
         </Routes>
