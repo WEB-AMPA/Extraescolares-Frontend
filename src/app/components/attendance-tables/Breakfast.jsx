@@ -148,7 +148,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
                     onClick={handleSaveAll}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
                 >
-                    Save All
+                    Guardar Todo
                 </button>
             </div>
             {error && (
