@@ -20,7 +20,7 @@ import ActivitiesCalendar from "./app/components/calendar/activitiesCalendar.jsx
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
 import SendOTPForm from "./app/components/login/SendOTPForm";
 import Activities from "./app/pages/layout/layout-activities.jsx";
-import PrivateRoute from "./app/router/PrivateRoute.jsx";
+// import PrivateRoute from "./app/router/PrivateRoute.jsx"; ----- no veo que se esta usando..
 
 export const RecoveryContext = createContext();
 function App() {
