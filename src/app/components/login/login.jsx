@@ -3,18 +3,21 @@ import { RecoveryContext } from "../../../App";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; 
 import { useForm } from "../../hooks/useForm";
+import { useAuthContext } from "../../context/authContext";
 
 export default function Login() {
   const { setEmail, setPage, email, setOTP } = useContext(RecoveryContext);
-  const navigate = useNavigate();
-  const { userName, password, role, onInputChange, onResetForm } = useForm({ userName: "", password: "", role: "" });
+  const { login } = useAuthContext()
+
+  const navigate = useNavigate()
+
+  const { userName, password, role, onInputChange, onResetForm } = useForm({ userName: "", password: "", role: ""})
 
   function navigateToOtp() {
     setEmail(userName);
     if (userName) { // Change from email to userName
       const OTP = Math.floor(Math.random() * 9000 + 1000);
-      console.log("Generated OTP:", OTP);
-      setOTP(OTP);
+      setOTP(OTP);      
 
       axios
         .post("http://localhost:3000/send_recovery_email", {
@@ -24,7 +27,8 @@ export default function Login() {
         .then((response) => {
           console.log("Email sent successfully:", response.data);
           setPage("otp");
-          navigate("/send-otp"); // Change to the correct route
+          setEmail(userName);
+          console.log("Generated email:", userName);
         })
         .catch((error) => {
           console.error("Error sending email:", error);
@@ -38,8 +42,11 @@ export default function Login() {
     }
   }
 
+
   const handlerSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    
+    login()
 
     navigate("/intranet", {
       replace: true,

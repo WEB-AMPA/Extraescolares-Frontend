@@ -11,13 +11,16 @@ import OTPInput from "./app/components/login/OTPInput.jsx";
 import Recovered from "./app/components/login/Recovered.jsx";
 import Reset from "./app/components/login/Reset.jsx";
 import { createContext, useState } from "react";
-import Users from "./app/components/users/Users.jsx";
+import { AuthContextProvider } from "./app/context/authContext.jsx";
+import Students from "./app/components/students/Students.jsx";
+import UsersList from "./app/pages/users/users.jsx";
 import ActivitiesAttendancePage from "./app/pages/activitiesAttendance/activitiesAttendancePage.jsx";
 import BreakfastCalendar from "./app/components/calendar/breakfastCalendar.jsx";
 import ActivitiesCalendar from "./app/components/calendar/activitiesCalendar.jsx";
 import BreakfastAttendancePage from "./app/pages/breakfastAttendance/BreakfastAttendancePage.jsx";
 import SendOTPForm from "./app/components/login/SendOTPForm";
 import Activities from "./app/pages/layout/layout-activities.jsx";
+import PrivateRoute from "./app/router/PrivateRoute.jsx";
 
 export const RecoveryContext = createContext();
 function App() {
@@ -33,6 +36,8 @@ function App() {
   }
 
   return (
+    <AuthContextProvider>
+
     <RecoveryContext.Provider
       value={{ page, setPage, otp, setOTP, email, setEmail }}
     >
@@ -50,7 +55,8 @@ function App() {
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<NavigateComponents />} />
-          <Route path="/users" element={<Users />} />
+          <Route path="students" element={<Students />} />
+          <Route path="users" element={<UsersList />} />
           {/* <Route path="/calendar/:studentId" element={<BreakfastCalendar/>} />
           <Route path="/calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
           <Route path = "/breakfast" element={<BreakfastAttendancePage/>} />
@@ -60,7 +66,8 @@ function App() {
         </Routes>
       </BrowserRouter>
 
-    </RecoveryContext.Provider>
+      </RecoveryContext.Provider>
+    </AuthContextProvider>
   );
 }
 
