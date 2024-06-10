@@ -116,7 +116,8 @@ export const MONITOR_SIDEBAR_LINKS = [
   }
 ];
 
-export const COORDINADOR_SIDEBAR_LINKS = [
+
+export const COORDINATOR_SIDEBAR_LINKS = [
   {
     key: 'asistencia-desayunos',
     label: 'Desayunos',
@@ -124,6 +125,19 @@ export const COORDINADOR_SIDEBAR_LINKS = [
     icon: <FontAwesomeIcon icon={faCoffee} />,
     path: '/intranet/asistencia/desayunos'
   }
+  
+];
+
+
+export const PARTNER_SIDEBAR_LINKS = [
+  {
+    key: 'alumnos',
+    label: 'Hijos',
+    level: 1,
+    icon: <FontAwesomeIcon icon={faUserGraduate} />,
+    path: '/intranet/students'
+  },
+  
 ];
 
 export const SIDEBAR_BOTTOM_LINKS = [

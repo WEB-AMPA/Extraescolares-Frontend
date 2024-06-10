@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import './sidebar.css';
-import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINADOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS } from '../../utils/navigation';
+import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINATOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS,  PARTNER_SIDEBAR_LINKS } from '../../utils/navigation';
 
 function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -26,12 +26,19 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
     case 'monitor':
       sidebarLinks = MONITOR_SIDEBAR_LINKS;
       break;
-    case 'coordinador':
-      sidebarLinks = COORDINADOR_SIDEBAR_LINKS;
+    case 'coordinator':
+      sidebarLinks = COORDINATOR_SIDEBAR_LINKS;
       break;
+    case 'partner': // Agregamos el caso de 'partner'
+      sidebarLinks = PARTNER_SIDEBAR_LINKS; // Por ejemplo, podríamos asignar los mismos enlaces que para 'admin'
+      break;
+
     default:
       sidebarLinks = [];
   }
+
+  // Filtrar los enlaces del footer del sidebar para evitar duplicados
+  const filteredSidebarLinks = sidebarLinks.filter(link => !SIDEBAR_BOTTOM_LINKS.find(footerLink => footerLink.key === link.key));
 
   return (
     <>
@@ -48,7 +55,7 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
           <div className="flex items-center justify-center py-4">
             <img src="/logo.png" alt="Logo" className="h-16 w-auto" />
           </div>
-          {sidebarLinks.map((link) => (
+          {filteredSidebarLinks.map((link) => (
             <div key={link.key} className="relative">
               <button
                 type="button"
@@ -86,6 +93,21 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
               )}
             </div>
           ))}
+        </div>
+        <div className="p-4 space-y-4">
+          <ul>
+            {SIDEBAR_BOTTOM_LINKS.map((link) => (
+              <li key={link.key} className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700">
+                <Link
+                  to={link.path}
+                  onClick={toggleSidebar}
+                >
+                  {link.icon}
+                  <span className='p-4 space-x-4'>{link.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </>
