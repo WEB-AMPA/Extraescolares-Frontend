@@ -6,7 +6,7 @@ const Card = ({ title, image, description, className, onClick }) => {
 
   return (
     <div
-      className={`bg-white shadow-md rounded-lg p-4 m-4 ${className} cursor-pointer`} 
+      className={`bg-white shadow-md rounded-lg p-4 m-4 ${className} cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg`} 
       onClick={onClick}
     >
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
