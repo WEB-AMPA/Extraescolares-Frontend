@@ -4,7 +4,7 @@ import { MdDelete } from "react-icons/md";
 import { CiViewList } from "react-icons/ci";
 import { Link } from 'react-router-dom';
 
-const SociosTable = () => {
+const AlumnTable = () => {
   const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -55,31 +55,28 @@ const SociosTable = () => {
         <thead className="bg-gray-200 gap-3 items-center">
           <tr>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Nº. Socio
-            </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Nombre
             </th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Apellido
             </th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Nº. Teléfono
+              Curso
             </th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Correo
+              Desayuno
             </th>
             <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+              Observaciones
+            </th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Ajustes
             </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {users.map((user) => (
-            <tr key={user.id} className="border-b border-gray-300">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.id}</div>
-              </td>
+            <tr key={user.id} className="border-b border-gray-300"> 
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{user.first_name}</div>
               </td>
@@ -87,10 +84,13 @@ const SociosTable = () => {
                 <div className="text-sm text-gray-900">{user.last_name}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.phone_number}</div>
+                <div className="text-sm text-gray-900">{user.employment.key_skill}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.email}</div>
+                <div className="text-sm text-gray-900">{user.subscription.status}</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm text-gray-900">{user.address.country}</div>
               </td>
               <td className="flex px-6 py-3 text-center text-sm font-medium">
                 <button title="Editar" onClick={() => handleEdit(user)} className="text-white p-2 m-2 bg-blue-800 rounded">
@@ -121,41 +121,50 @@ const SociosTable = () => {
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <form className="p-8 border border-black rounded">
-                  <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">Editar Socio</h3>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label htmlFor="nroSocio" className="block text-sm font-medium text-gray-700 m-2">Nº de Socio:</label>
-                      <input type="number" name="nroSocio" id="nroSocio" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.id || ''} readOnly />
-                    </div>
-                    <div>
-                      <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 m-2">Nº Teléfono:</label>
-                      <input type="tel" name="telefono" id="telefono" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.phone_number || ''} readOnly />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 m-2">Nombre:</label>
-                      <input type="text" name="nombre" id="nombre" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.first_name || ''} readOnly />
-                    </div>
-                    <div>
-                      <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700 m-2">Apellidos:</label>
-                      <input type="text" name="apellidos" id="apellidos" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.last_name || ''} readOnly />
-                    </div>
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="correo" className="block text-sm font-medium text-gray-700 m-2">Correo:</label>
-                    <input type="email" name="email" id="correo" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.email || ''} readOnly />
-                  </div>
-                  <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
-                      Guardar cambios
-                    </button>
-                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
-                      Cancelar
-                    </button>
-                  </div>
-                </form>
+              <form className="p-8 border border-black rounded">
+                                    <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">Añadir Alumno</h3>
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 m-2">Nombre</label>
+                                            <input type="text" name="nombre" id="nroSocio" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                                        </div>
+
+                                        <div>
+                                            <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700 m-2">Apellido</label>
+                                            <input type="text" name="apellidos" id="nombre" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        <div>
+                                            <label htmlFor="curso" className="block text-sm font-medium text-gray-700 m-2">Curso</label>
+                                            <input type="text" name="curso" id="curso" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                                        </div>
+
+                                        <div>
+                                            <label htmlFor="opciones" className="block text-sm font-medium text-gray-700 m-2">Desayuno</label>
+                                            <select name="opciones" id="opciones" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                                <option value="">Seleccione una opción</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                            <label htmlFor="text" className="block text-sm font-medium text-gray-700 m-2">Observaciones</label>
+                                            <input type="text" name="text" id="observaciones" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                                        </div>
+
+                                    <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                                        <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
+                                            Guardar
+                                        </button>
+                                        <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </form>
               </div>
             </div>
           </div>
@@ -190,4 +199,4 @@ const SociosTable = () => {
   );
 };
 
-export default SociosTable;
+export default AlumnTable;

@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import React, { createContext, useState } from 'react';
 import Layout from '../src/app/pages/layout/layout-landing.jsx'
 import IntranetLayout from './app/pages/layout/IntranetLayout';
-/* import AsistenciaTable from "./app/pages/asistencia/asistencia.jsx"; */
 import Socios from "./app/pages/intranet/users/socios.jsx";
+import SociosInfo from "./app/pages/intranet/users/sociosInfo.jsx"
 
 export const RecoveryContext = createContext();
 function App() {
@@ -28,6 +28,7 @@ function App() {
           <Route path="/" element={<Layout />} />
           <Route path="/intranet/*" element={<IntranetLayout />} />
           <Route path="/intranet/socios"element={<Socios />} />
+          <Route path="/intranet/socios/info"element={<SociosInfo />} />
           {/*           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/centros" element={<LayoutCentros />} />
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
