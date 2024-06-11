@@ -1,32 +1,85 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { RecoveryContext } from "../../../App";
-import { Link } from "react-router-dom";
-import axios from "axios"; // Don't forget to import axios
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
-  const { setEmail, setPage, email, setOTP } = useContext(RecoveryContext);
+  const {
+    setEmail: setRecoveryEmail,
+    setPage,
+    email,
+    setOTP,
+  } = useContext(RecoveryContext);
+  const [password, setPassword] = useState("");
+  const [inputEmail, setInputEmail] = useState("");
+  const [errors, setErrors] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Clear the email input when the component mounts
+    setInputEmail("");
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const errors = validate();
+    setErrors(errors);
+    if (Object.keys(errors).length === 0) {
+      try {
+        const response = await loginUser(inputEmail, password);
+        if (response.data.token) {
+          alert("Login successful");
+          navigate("/dashboard"); // Redirect to dashboard or another page
+        }
+      } catch (error) {
+        setErrors({ global: "Invalid email or password" });
+      }
+    }
+  };
+
+  const validate = () => {
+    const error = {};
+    if (!inputEmail) {
+      error.email = "Email is Required";
+    } else if (!/\S+@\S+\.\S+/.test(inputEmail)) {
+      error.email = "Email not Matched";
+    } else {
+      error.email = "";
+    }
+
+    if (!password) {
+      error.password = "Password is Required";
+    } else if (password.length < 6) {
+      error.password = "Password not Matched";
+    } else {
+      error.password = "";
+    }
+
+    return error;
+  };
+
+  const loginUser = async (email, password) => {
+    return await axios.post("http://localhost:3000/api/partners/login", {
+      credential: email,
+      password: password,
+    });
+  };
 
   function navigateToOtp() {
-    if (email) {
+    if (inputEmail) {
       const OTP = Math.floor(Math.random() * 9000 + 1000);
-      console.log("Generated OTP:", OTP);
       setOTP(OTP);
 
       axios
         .post("http://localhost:3000/send_recovery_email", {
           OTP,
-          recipient_email: email,
+          recipient_email: inputEmail,
         })
         .then((response) => {
-          console.log("Email sent successfully:", response.data);
           setPage("otp");
         })
         .catch((error) => {
           console.error("Error sending email:", error);
-          console.log(
-            "Response data:",
-            error.response ? error.response.data : "No response data"
-          );
         });
     } else {
       alert("Please enter your email");
@@ -46,7 +99,7 @@ export default function Login() {
               />
             </div>
             <div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="flex flex-row items-center justify-center lg:justify-start">
                   <p className="text-lg mb-0 mr-4">Sign in with</p>
                   <button
@@ -66,11 +119,15 @@ export default function Login() {
 
                 <div className="mb-6">
                   <input
-                    onChange={(e) => setEmail(e.target.value)}
-                    type="text"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    placeholder="Email address"
+                    type="email"
+                    autoComplete="off"
+                    name="email" // Add a name attribute to help disable autocomplete
+                    value={inputEmail}
+                    onChange={(e) => setInputEmail(e.target.value)}
+                    placeholder="Enter email address"
                   />
+                  {errors.email && <div>{errors.email}</div>}
                 </div>
 
                 <div className="mb-6">
@@ -78,7 +135,12 @@ export default function Login() {
                     type="password"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     placeholder="Password"
+                    autoComplete="off"
+                    name="password" // Add a name attribute to help disable autocomplete
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
+                  {errors.password && <div>{errors.password}</div>}
                 </div>
 
                 <div className="flex justify-between items-center mb-6">
@@ -107,7 +169,7 @@ export default function Login() {
 
                 <div className="text-center lg:text-left">
                   <button
-                    type="button"
+                    type="submit"
                     className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                   >
                     Login
@@ -122,6 +184,9 @@ export default function Login() {
                     </a>
                   </p>
                 </div>
+                {errors.global && (
+                  <div className="text-red-600 mt-2">{errors.global}</div>
+                )}
               </form>
             </div>
           </div>

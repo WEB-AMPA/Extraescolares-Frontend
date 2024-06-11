@@ -12,7 +12,7 @@ export default function () {
   function resendOTP() {
     if (disable) return;
     axios
-      .post("http://localhost:5000/send_recovery_email", {
+      .post("http://localhost:3000/send_recovery_email", {
         OTP: otp,
         recipient_email: email,
       })
