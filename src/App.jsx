@@ -5,7 +5,7 @@ import LayoutCentros from "./app/pages/layout/layoutCentros";
 import AboutUs from "./app/pages/layout/layout-about-us";
 import PrivacyPolicy from "./app/pages/privacyPolicy/privacyPolicy";
 import Contact from "./app/pages/contact/contact";
-import Login from "./app/components/login/login.jsx";
+import Login from "./app/components/login/Login.jsx";
 import IntranetLayout from "./app/pages/layout/IntranetLayout";
 import OTPInput from "./app/components/login/OTPInput.jsx";
 import Recovered from "./app/components/login/Recovered.jsx";
