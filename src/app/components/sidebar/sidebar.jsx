@@ -20,11 +20,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import './sidebar.css'
+// import { useLocation } from 'react-router-dom';
 
 function Sidebar() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [usersDropdownVisible, setUsersDropdownVisible] = useState(false);
   const [attendanceDropdownVisible, setAttendanceDropdownVisible] = useState(false);
+
+  // const { state } = useLocation()
+  // console.log(state);
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -52,41 +56,41 @@ function Sidebar() {
         <div className="p-4 space-y-4">
           {/* Espacio para el logo */}
           <div className="flex items-center justify-center py-4">
-            <img src="/path/to/your/logo.png" alt="Logo" className="h-16 w-auto" />
+            <img src="/logo.png" alt="Logo" className="h-16 w-auto" />
           </div>
           <div
             role="button"
             onClick={toggleSidebar}
             aria-label="dashboard"
             className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700" >
-        
-        <div className="grid mr-2 place-items-center">
-      <FontAwesomeIcon icon={faHome} />
-    </div>
+
+            <div className="grid mr-2 place-items-center">
+              <FontAwesomeIcon icon={faHome} />
+            </div>
             <span>Inicio</span>
           </div>
           <div className="relative">
-          <button
-    type="button"
-    onClick={toggleUsersDropdown}
-    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700 w-full"
-  >
-    <div className="grid mr-2 place-items-center">
-      <FontAwesomeIcon icon={faUser} />
-    </div>
-    <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-      Usuarios
-    </p>
-    <span className="ml-auto">
-      <FontAwesomeIcon
-        icon={faChevronDown}
-        className={`transform duration-300 ${usersDropdownVisible ? 'rotate-180' : ''}`}
-      />
-    </span>
-  </button>
+            <button
+              type="button"
+              onClick={toggleUsersDropdown}
+              className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700 w-full"
+            >
+              <div className="grid mr-2 place-items-center">
+                <FontAwesomeIcon icon={faUser} />
+              </div>
+              <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+                Usuarios
+              </p>
+              <span className="ml-auto">
+                <FontAwesomeIcon
+                  icon={faChevronDown}
+                  className={`transform duration-300 ${usersDropdownVisible ? 'rotate-180' : ''}`}
+                />
+              </span>
+            </button>
             {usersDropdownVisible && (
               <div className="mt-2 space-y-2 pl-8">
-                <Link to="/users"
+                <Link to="/intranet/users"
                   className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                 >
@@ -118,42 +122,42 @@ function Sidebar() {
               className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
             >
-            <div className="grid mr-2 place-items-center">
-              <FontAwesomeIcon icon={faUserGraduate} />
+              <div className="grid mr-2 place-items-center">
+                <FontAwesomeIcon icon={faUserGraduate} />
               </div>
 
               <span>Alumnos</span>
             </div>
             <div className="relative">
-  <button
-    type="button"
-    onClick={toggleAttendanceDropdown}
-    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700 w-full"
-  >
-    <div className="grid mr-2 place-items-center">
-      <FontAwesomeIcon icon={faCalendarCheck} />
-    </div>
-    <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-      Asistencia
-    </p>
-    <span className="ml-auto">
-      <FontAwesomeIcon
-        icon={faChevronDown}
-        className={`transform duration-300 ${attendanceDropdownVisible ? 'rotate-180' : ''}`}
-      />
-    </span>
-  </button>
+              <button
+                type="button"
+                onClick={toggleAttendanceDropdown}
+                className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700 w-full"
+              >
+                <div className="grid mr-2 place-items-center">
+                  <FontAwesomeIcon icon={faCalendarCheck} />
+                </div>
+                <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+                  Asistencia
+                </p>
+                <span className="ml-auto">
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className={`transform duration-300 ${attendanceDropdownVisible ? 'rotate-180' : ''}`}
+                  />
+                </span>
+              </button>
               {attendanceDropdownVisible && (
                 <div className="mt-2 space-y-2 pl-8">
                   <Link to="#"
                     className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                   >
-                  
+
                     <FontAwesomeIcon icon={faClipboard} />
                     <span className="ml-2">Actividades</span>
                   </Link>
-                  <Link to ="#"
+                  <Link to="#"
                     className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
                   >
@@ -171,13 +175,13 @@ function Sidebar() {
 
             >
 
-<div className="grid mr-2 place-items-center">
-              <FontAwesomeIcon icon={faClipboardList} />
+              <div className="grid mr-2 place-items-center">
+                <FontAwesomeIcon icon={faClipboardList} />
               </div>
 
               <span>Actividades</span>
             </div>
-            <div
+            {/* <div
               role="button"
               onClick={toggleSidebar}
               className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
@@ -187,17 +191,17 @@ function Sidebar() {
               <FontAwesomeIcon icon={faWallet} />
               </div>
               <span>Remesas</span>
-            </div>
+            </div> */}
             <div
               role="button"
               onClick={toggleSidebar}
               className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
             >
-            <div className="grid mr-2 place-items-center">
-            <FontAwesomeIcon icon={faCog} />
-            </div>
-              
+              <div className="grid mr-2 place-items-center">
+                <FontAwesomeIcon icon={faCog} />
+              </div>
+
               <span>Ajustes</span>
             </div>
             <div
@@ -206,8 +210,8 @@ function Sidebar() {
               className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
 
             >
-            <div className="grid mr-2 place-items-center">
-              <FontAwesomeIcon icon={faSignOutAlt} />
+              <div className="grid mr-2 place-items-center">
+                <FontAwesomeIcon icon={faSignOutAlt} />
               </div>
               <span>Cerrar sesión</span>
             </div>

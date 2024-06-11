@@ -1,6 +1,6 @@
-import slide1 from "../../../../public/hero1.png";
-import slide2 from "../../../../public/hero2.png";
-import slide3 from "../../../../public/hero3.png";
+import slide1 from "/hero1.png";
+import slide2 from "/hero2.png";
+import slide3 from "/hero3.png";
 
 function Hero() {
   return (

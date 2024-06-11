@@ -11,10 +11,10 @@ function Layout() {
     <div>
       <Navbar />
       <Hero />
- <ModalCookies />
+      <ModalCookies />
       <AboutUs />
       <Activities />
-      <Contact/>
+      <Contact />
       <Footer />
     </div>
   );
