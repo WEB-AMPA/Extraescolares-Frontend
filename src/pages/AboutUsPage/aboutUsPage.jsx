@@ -1,11 +1,11 @@
 
 
-import AboutUs from '../../components/about-us/about-us';
-import Mision from '../../components/about-us/mision';
-import Equipment from '../../components/about-us/equipment';
-import Profiles from '../../components/about-us/profiles';
-import Navbar from '../../components/navbar/Navbar';
-import Footer from '../../components/footer/Footer';
+import AboutUs from '../../components/Web/about-us/about-us';
+import Mision from '../../components/Web/about-us/mision';
+import Equipment from '../../components/Web/about-us/equipment';
+import Profiles from '../../components/Web/about-us/profiles';
+import Navbar from '../../components/Web/navbar/Navbar';
+import Footer from '../../components/Web/footer/Footer';
 
 function AboutUsPage() {
     return (

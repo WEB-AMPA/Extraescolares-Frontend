@@ -1,7 +1,7 @@
 import "./activities-landing.css";
-import img1 from '../../../public/actividad1.png';
-import img2 from '../../../public/actividad2.png';
-import img3 from '../../../public/actividad3.png';
+import img1 from '../../../../public/actividad1.png';
+import img2 from '../../../../public/actividad2.png';
+import img3 from '../../../../public/actividad3.png';
 
 
 function ActivitiesLanding() {

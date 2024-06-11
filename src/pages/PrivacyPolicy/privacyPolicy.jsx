@@ -1,8 +1,8 @@
 
-import CookiePolicy from '../../components/privacyPolicy/cookies';
-import Navbar from '../../components/navbar/Navbar';
-import Footer from '../../components/footer/Footer';
-import Privacy from '../../components/privacyPolicy/privacy';
+import CookiePolicy from '../../components/Web/privacyPolicy/cookies';
+import Navbar from '../../components/Web/navbar/Navbar';
+import Footer from '../../components/Web/footer/Footer';
+import Privacy from '../../components/Web/privacyPolicy/privacy';
 
 function PrivacyPolicy() {
     return (

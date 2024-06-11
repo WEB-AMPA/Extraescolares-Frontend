@@ -1,8 +1,8 @@
 import img1 from "../../../public/hero1.png";
 import img2 from "../../../public/hero1.png";
 import img3 from "../../../public/hero1.png";
-import Footer from "../../components/footer/Footer";
-import Navbar from "../../components/navbar/Navbar";
+import Footer from "../../components/Web/footer/Footer";
+import Navbar from "../../components/Web/navbar/Navbar";
 
 function Centros() {
   return (

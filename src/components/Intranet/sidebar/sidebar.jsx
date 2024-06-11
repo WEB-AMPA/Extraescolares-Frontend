@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import './sidebar.css';
-import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINATOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS,  PARTNER_SIDEBAR_LINKS } from '../../utils/navigation';
+import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINATOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS,  PARTNER_SIDEBAR_LINKS } from '../../../utils/navigation';
 
 function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
   const [sidebarVisible, setSidebarVisible] = useState(false);

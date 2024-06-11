@@ -1,7 +1,7 @@
 // import { Routes, Route } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { Header } from '../../components/header/Header';
-import Sidebar from '../../components/sidebar/sidebar'
+import { Header } from '../../components/Web/header/Header';
+import Sidebar from '../../components/Intranet/sidebar/sidebar'
 // import UsersList from '../Usuarios/usuarios';
 import { Outlet } from 'react-router-dom';
 // import Sidebar1 from '../../components/sidebar/sidebar1';

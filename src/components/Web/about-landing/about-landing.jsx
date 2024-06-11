@@ -1,4 +1,4 @@
-import img from "../../../public/hero3.png";
+import img from "../../../../public/hero3.png";
 
 function AboutUsLandingPage() {
   return (

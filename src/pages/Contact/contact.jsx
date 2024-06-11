@@ -1,5 +1,5 @@
 
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "../../components/Web/navbar/Navbar";
 
 function Contact() {
   return (
