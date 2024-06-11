@@ -7,15 +7,30 @@ import { useAuthContext } from "../../context/authContext";
 
 export default function Login() {
   const { setEmail, setPage, email, setOTP } = useContext(RecoveryContext);
-  const { login } = useAuthContext();
+  const { login, auth } = useAuthContext();
+
+  console.log(auth.isAuth);
+  const authenticated = auth.isAuth;
   const navigate = useNavigate();
-  const { userName, password, onInputChange, onResetForm } = useForm({ userName: "", password: "" });
+  const { username, password, onInputChange, onResetForm } = useForm({
+    userName: "",
+    password: "",
+  });
+
+  console.log(username, password);
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
-    await login({ username: userName, password });
-    navigate("/intranet", { replace: true });
-    onResetForm();
+    try {
+      const res = await login({ username, password });
+      console.log(`this is my res: ${res}`);
+      if (authenticated) {
+        navigate("/intranet", { replace: true });
+      }
+      onResetForm();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -43,9 +58,9 @@ export default function Login() {
                 <div className="mb-6">
                   <input
                     onChange={onInputChange}
-                    name="userName"
-                    id="userName"
-                    value={userName}
+                    name="username"
+                    id="username"
+                    value={username}
                     type="text"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     placeholder="User or Email address"
