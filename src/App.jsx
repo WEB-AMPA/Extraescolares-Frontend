@@ -5,6 +5,7 @@ import Layout from '../src/app/pages/layout/layout-landing.jsx'
 import IntranetLayout from './app/pages/layout/IntranetLayout';
 import Socios from "./app/pages/intranet/users/socios.jsx";
 import SociosInfo from "./app/pages/intranet/users/sociosInfo.jsx"
+import ActivitiesAlumn from "./app/pages/intranet/users/activitiesAlumn.jsx";
 
 export const RecoveryContext = createContext();
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/intranet/*" element={<IntranetLayout />} />
           <Route path="/intranet/socios"element={<Socios />} />
           <Route path="/intranet/socios/info"element={<SociosInfo />} />
+          <Route path="/intranet/alumno/actividad"element={<ActivitiesAlumn />} />
           {/*           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/centros" element={<LayoutCentros />} />
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />

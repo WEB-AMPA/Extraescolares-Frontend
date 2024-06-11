@@ -1,7 +1,7 @@
 import React from "react";
-import TitleInfo from "../../../components/admin/sociosPage/titleInfo";
-import AddAlumn from "../../../components/admin/sociosPage/addAlumn";
-import AlumnTable from "../../../components/admin/sociosPage/alumnTable";
+import TitleInfo from "../../../components/admin/alumnPage/titleInfo";
+import AddAlumn from "../../../components/admin/alumnPage/addAlumnButtom";
+import AlumnTable from "../../../components/admin/alumnPage/alumnTable";
 
 
 

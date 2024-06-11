@@ -18,7 +18,7 @@ const AddAlumn = () => {
                 className="flex flex-row gap-2 items-center text-white m-8 py-3 px-3 bg-blue-900 rounded"
                 onClick={openModal}
             >
-                <IoIosAddCircle />
+                <IoIosAddCircle className="text-3xl" />
                 Añadir Alumno
             </button>
 

@@ -93,13 +93,13 @@ const SociosTable = () => {
                 <div className="text-sm text-gray-900">{user.email}</div>
               </td>
               <td className="flex px-6 py-3 text-center text-sm font-medium">
-                <button title="Editar" onClick={() => handleEdit(user)} className="text-white p-2 m-2 bg-blue-800 rounded">
+              <button title="Editar Socio" onClick={() => handleEdit(user)} className="text-white p-2 m-2 bg-blue-800 rounded">
                   <FaEdit />
                 </button>
-                <button title="Eliminar" onClick={() => handleDelete(user)} className="text-white p-2 m-2 bg-red-700 rounded">
+                <button title="Eliminar Socio" onClick={() => handleDelete(user)} className="text-white p-2 m-2 bg-red-700 rounded">
                   <MdDelete />
                 </button>
-                <Link to="/intranet/socios/info" className="p-2 m-2 bg-yellow-300 rounded flex items-center justify-center" title="Ver más">
+                <Link to="/intranet/socios/info" className="p-2 m-2 bg-yellow-300 rounded flex items-center justify-center" title="Ver Alumnos Registrados">
                   <CiViewList />
                 </Link>
 
