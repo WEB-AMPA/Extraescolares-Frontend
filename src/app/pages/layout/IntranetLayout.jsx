@@ -4,8 +4,9 @@ import { Header } from '../../components/header/Header';
 import Sidebar from '../../components/sidebar/sidebar'
 // import UsersList from '../Usuarios/usuarios';
 import { Outlet } from 'react-router-dom';
-import Sidebar1 from '../../components/sidebar/sidebar1';
+// import Sidebar1 from '../../components/sidebar/sidebar1';
 
+const userRole = 'monitor' //ESTO ES SOLO PARA HACER PRUEBAS, EL LOGIN DEBE ENVIAR EL ROLE PARA QUE SEA DINAMICO
 
 const IntranetLayout = () => {
   const { state } = useLocation()
@@ -14,7 +15,7 @@ const IntranetLayout = () => {
   return (
     <section className="flex  flex-row justify-around" >
       <div >
-        <Sidebar1 />
+      <Sidebar userRole={userRole} />
       </div>
       <div className="flex flex-col justify-center p-4">
         <div className='flex flex-row justify-end'>
