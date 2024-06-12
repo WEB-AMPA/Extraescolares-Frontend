@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 
+// Componente de tabla de asistencia de desayuno
 const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     const [students, setStudents] = useState([]);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -14,7 +15,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         const fetchStudentsAndAttendances = async () => {
             try {
                 const responseStudents = await axios.get('http://localhost:3000/api/students/withbreakfast');
-                const responseAttendances = await axios.get(`http://localhost:3000/breakfast-attendance/date/${date}`);
+                const responseAttendances = await axios.get(`/api/breakfast-attendance/date/${date}`);
                 
                 const studentsWithAttendance = responseStudents.data.map(student => {
                     const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);
@@ -66,7 +67,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                const response = await axios.post('http://localhost:3000/breakfast-attendance/', record);
+                const response = await axios.post('/api/breakfast-attendance/', record);
                 createdAttendances.push({ ...record, id: response.data._id }); // Guardar el ID de la asistencia
             }
             onAttendanceAdded(createdAttendances);
@@ -164,4 +165,19 @@ BreakfastAttendanceTable.propTypes = {
     onAttendanceAdded: PropTypes.func.isRequired,
 };
 
-export default BreakfastAttendanceTable;
+// Componente principal
+const Breakfast = () => {
+    const handleAttendanceAdded = (data) => {
+        console.log('Attendance added:', data);
+    };
+
+    return (
+        <div className="flex">
+            <div className="flex-grow"> {/* Agrega un margen izquierdo para dejar espacio para el sidebar */}
+                <BreakfastAttendanceTable onAttendanceAdded={handleAttendanceAdded} />
+            </div>
+        </div>
+    );
+};
+
+export default Breakfast;

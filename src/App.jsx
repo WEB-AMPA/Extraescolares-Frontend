@@ -12,6 +12,7 @@ import AboutUsPage from "./pages/AboutUsPage/aboutUsPage.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy/privacyPolicy.jsx";
 import Contact from "./pages/Contact/contact.jsx";
 import ActivitiesPage from "./pages/Activities/ActivitiesPage.jsx"
+import Breakfast from "./components/Intranet/breakfastAttendance/Breakfast.jsx";
 
 
 
@@ -40,7 +41,15 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/intranet" element={<IntranetLayout />}/>
+          <Route path="/intranet" element={<IntranetLayout />}>
+            {/* <Route path="calendar/:studentId" element={<BreakfastCalendar/>} />
+            <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} /> */}
+            <Route path="breakfast" element={<Breakfast />} />
+            {/* <Route path="attendances" element={<ActivitiesAttendancePage />} /> */}
+          </Route>
+
+
+
           <Route path="/centros" element={<Centros />} />
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
