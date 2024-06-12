@@ -17,6 +17,7 @@ import BreakfastCalendar from "./components/Intranet/calendar/breakfastCalendar.
 import ActivitiesAttendancePage from "./components/Intranet/activitiesAttendance/ActivitiesAttendance.jsx";
 import ActivitiesCalendar from "./components/Intranet/calendar/activitiesCalendar.jsx";
 import MonitoresTable from "./components/Intranet/monitor-CRUD/monitor.jsx";
+import LoginPage from "./pages/loginPage/loginPage.jsx";
 // import ActivitiesCalendar from "./components/Intranet/activitiesAttendance.jsx"
 
 
@@ -60,7 +61,7 @@ function App() {
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/login" element={<NavigateComponents />} />
+          <Route path="/login" element={<LoginPage/>} />
           <Route path="/activities" element={<ActivitiesPage />} />
         </Routes>
       </BrowserRouter>

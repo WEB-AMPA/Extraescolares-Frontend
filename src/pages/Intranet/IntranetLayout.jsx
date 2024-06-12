@@ -16,7 +16,7 @@ const IntranetLayout = () => {
     <NavbarIntranet/>
 
   
-    <section className="flexml-14 flex-row ">
+    <section >
       <div>
         <Sidebar userRole={auth.role} />
       </div>
@@ -24,7 +24,7 @@ const IntranetLayout = () => {
         <div className='flex flex-row justify-end'>
           
         </div>
-        <div>
+        <div className="flex-grow flex flex-col justify-center p-4 ml-64">
           <Outlet />
         </div>
       </div>
