@@ -1,4 +1,3 @@
-// ActivityAttendanceTable.jsx
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -33,7 +32,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     useEffect(() => {
         const fetchStudentsByActivityAndDate = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/activitiesStudents/by-activity-and-date/${selectedActivity}/${date}`);
+                const response = await axios.get(`http://localhost:3000/api/attendance/activitiesStudents/by-activity-and-date/${selectedActivity}/${date}`);
                 setStudents(response.data);
             } catch (error) {
                 setError('Error fetching students. Please try again.');
@@ -79,7 +78,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                const response = await axios.post('http://localhost:3000/api/registerAttendance', record);
+                const response = await axios.post('http://localhost:3000/api/attendance/registerAttendance', record);
                 createdAttendances.push({ ...record, id: response.data._id });
             }
             onAttendanceAdded(createdAttendances);
@@ -186,4 +185,19 @@ ActivityAttendanceTable.propTypes = {
     onAttendanceAdded: PropTypes.func.isRequired,
 };
 
-export default ActivityAttendanceTable;
+const ActivitiesAttendancePage = () => {
+    const [attendances, setAttendances] = useState([]);
+
+    const handleAttendanceAdded = (newAttendances) => {
+        setAttendances([...attendances, ...newAttendances]);
+    };
+
+    return (
+        <div className="App">
+            <h1>Registro de Asistencia</h1>
+            <ActivityAttendanceTable onAttendanceAdded={handleAttendanceAdded} />
+        </div>
+    );
+};
+
+export default ActivitiesAttendancePage;
