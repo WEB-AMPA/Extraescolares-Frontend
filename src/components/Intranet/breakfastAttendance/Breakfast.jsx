@@ -15,7 +15,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         const fetchStudentsAndAttendances = async () => {
             try {
                 const responseStudents = await axios.get('http://localhost:3000/api/students/withbreakfast');
-                const responseAttendances = await axios.get(`/api/breakfast-attendance/date/${date}`);
+                const responseAttendances = await axios.get(`http://localhost:3000/api/breakfast-attendance/date/${date}`);
                 
                 const studentsWithAttendance = responseStudents.data.map(student => {
                     const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);
