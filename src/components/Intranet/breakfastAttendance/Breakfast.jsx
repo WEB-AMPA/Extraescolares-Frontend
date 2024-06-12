@@ -4,7 +4,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
 
-// Componente de tabla de asistencia de desayuno
 const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     const [students, setStudents] = useState([]);
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -15,7 +14,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         const fetchStudentsAndAttendances = async () => {
             try {
                 const responseStudents = await axios.get('http://localhost:3000/api/students/withbreakfast');
-                const responseAttendances = await axios.get(`http://localhost:3000/api/breakfast-attendance/date/${date}`);
+                const responseAttendances = await axios.get(`http://localhost:3000/api/breakfast/breakfast-attendance/date/${date}`);
                 
                 const studentsWithAttendance = responseStudents.data.map(student => {
                     const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);
@@ -67,9 +66,10 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                const response = await axios.post('/api/breakfast-attendance/', record);
+                const response = await axios.post('http://localhost:3000/api/breakfast/breakfast-attendance/', record);
                 createdAttendances.push({ ...record, id: response.data._id }); // Guardar el ID de la asistencia
             }
+            
             onAttendanceAdded(createdAttendances);
             setError('');
         } catch (error) {
@@ -149,7 +149,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
                     onClick={handleSaveAll}
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
                 >
-                    Guardar Todo
+                    Save All
                 </button>
             </div>
             {error && (
@@ -165,19 +165,8 @@ BreakfastAttendanceTable.propTypes = {
     onAttendanceAdded: PropTypes.func.isRequired,
 };
 
-// Componente principal
-const Breakfast = () => {
-    const handleAttendanceAdded = (data) => {
-        console.log('Attendance added:', data);
-    };
-
-    return (
-        <div className="flex">
-            <div className="flex-grow"> {/* Agrega un margen izquierdo para dejar espacio para el sidebar */}
-                <BreakfastAttendanceTable onAttendanceAdded={handleAttendanceAdded} />
-            </div>
-        </div>
-    );
+BreakfastAttendanceTable.defaultProps = {
+    onAttendanceAdded: () => {}, // Valor por defecto si no se proporciona una función
 };
 
-export default Breakfast;
+export default BreakfastAttendanceTable;

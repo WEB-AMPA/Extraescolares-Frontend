@@ -28,7 +28,7 @@ const BreakfastCalendar = () => {
                 const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
                 const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
 
-                const response = await axios.get(`http://localhost:3000/breakfast-attendance/student/${studentId}`, {
+                const response = await axios.get(`http://localhost:3000/api/breakfast/breakfast-attendance/student/${studentId}`, {
                     params: { start_date, end_date }
                 });
                 if (response.data.length > 0) {
