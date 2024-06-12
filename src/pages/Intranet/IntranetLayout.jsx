@@ -1,30 +1,25 @@
-// import { Routes, Route } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { Header } from '../../components/Web/header/Header';
-import Sidebar from '../../components/Intranet/sidebar/sidebar'
-// import UsersList from '../Usuarios/usuarios';
+import Sidebar from '../../components/Intranet/sidebar/sidebar';
 import { Outlet } from 'react-router-dom';
-// import Sidebar1 from '../../components/sidebar/sidebar1';
-
-const userRole = 'admin' //ESTO ES SOLO PARA HACER PRUEBAS, EL LOGIN DEBE ENVIAR EL ROLE PARA QUE SEA DINAMICO
+import { useAuthContext } from '../../context/authContext';
 
 const IntranetLayout = () => {
-  const { state } = useLocation()
-  const userName = state?.userName || 'test users'
+  const { auth } = useAuthContext();
+  const userName = auth.user || 'test user';
 
   return (
-    <section className="flex  flex-row justify-around" >
-      <div >
-      <Sidebar userRole={userRole} />
+    <section className="flex flex-row justify-around">
+      <div>
+        <Sidebar userRole={auth.role} />
       </div>
       <div className="flex flex-col justify-center p-4">
-        <div className='flex flex-row justify-end'>
+        <div className="flex flex-row justify-end">
           <Header userName={userName} />
         </div>
         <div>
-          {<Outlet />}
+          <Outlet />
         </div>
-        
       </div>
     </section>
   );
