@@ -14,6 +14,8 @@ import Contact from "./pages/Contact/contact.jsx";
 import ActivitiesPage from "./pages/Activities/ActivitiesPage.jsx"
 import Breakfast from "./components/Intranet/breakfastAttendance/Breakfast.jsx";
 import BreakfastCalendar from "./components/Intranet/calendar/breakfastCalendar.jsx";
+import ActivitiesAttendancePage from "./components/Intranet/activitiesAttendance/ActivitiesAttendance.jsx";
+import ActivitiesCalendar from "./components/Intranet/calendar/activitiesCalendar.jsx";
 // import ActivitiesCalendar from "./components/Intranet/activitiesAttendance.jsx"
 
 
@@ -45,9 +47,9 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/intranet" element={<IntranetLayout />}>
             <Route path="calendar/:studentId" element={<BreakfastCalendar/>} />
-            {/* <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />  */}
+            <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} /> 
             <Route path="breakfast" element={<Breakfast />} />
-            {/* <Route path="attendances" element={<ActivitiesAttendancePage />} /> */}
+            <Route path="attendances" element={<ActivitiesAttendancePage />} /> 
           </Route>
 
 
