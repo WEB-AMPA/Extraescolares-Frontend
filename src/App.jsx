@@ -16,6 +16,7 @@ import Breakfast from "./components/Intranet/breakfastAttendance/Breakfast.jsx";
 import BreakfastCalendar from "./components/Intranet/calendar/breakfastCalendar.jsx";
 import ActivitiesAttendancePage from "./components/Intranet/activitiesAttendance/ActivitiesAttendance.jsx";
 import ActivitiesCalendar from "./components/Intranet/calendar/activitiesCalendar.jsx";
+import MonitoresTable from "./components/Intranet/monitor-CRUD/monitor.jsx";
 // import ActivitiesCalendar from "./components/Intranet/activitiesAttendance.jsx"
 
 
@@ -49,7 +50,8 @@ function App() {
             <Route path="calendar/:studentId" element={<BreakfastCalendar/>} />
             <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} /> 
             <Route path="breakfast" element={<Breakfast />} />
-            <Route path="attendances" element={<ActivitiesAttendancePage />} /> 
+            <Route path="attendances" element={<ActivitiesAttendancePage />} />
+            <Route path="users/monitor" element={<MonitoresTable/>} />
           </Route>
 
 

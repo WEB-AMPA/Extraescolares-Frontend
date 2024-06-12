@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IoIosAddCircle } from "react-icons/io";
 
-const AddActivitie = () => {
+const AddActivities = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const openModal = () => {
