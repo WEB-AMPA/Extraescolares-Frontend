@@ -16,11 +16,8 @@ import ActivitiesAttendancePage from "./components/Intranet/activitiesAttendance
 import ActivitiesCalendar from "./components/Intranet/calendar/activitiesCalendar.jsx";
 import MonitoresTable from "./components/Intranet/monitor-CRUD/monitor.jsx";
 import LoginPage from "./pages/loginPage/loginPage.jsx";
-// import ActivitiesCalendar from "./components/Intranet/activitiesAttendance.jsx"
+import UserForm from "./components/Intranet/user-CRUD/createUser.jsx";
 
-import PrivateRoute from "./routes/PrivateRoute.jsx";
-
-// import PrivateRoute from "./app/router/PrivateRoute.jsx"; ----- no veo que se esta usando..
 
 export const RecoveryContext = createContext();
 function App() {
@@ -66,6 +63,7 @@ function App() {
                   element={<ActivitiesAttendancePage />}
                 />
                 <Route path="users/monitor" element={<MonitoresTable />} />
+                <Route path="createuser" element={<UserForm />} />
               </Route>
             {/* </Route> */}
           </Routes>
