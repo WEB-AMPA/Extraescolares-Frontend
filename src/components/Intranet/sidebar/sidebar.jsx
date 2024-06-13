@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { useAuthContext } from '../../../context/authContext'; // Importa useAuthContext
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import './sidebar.css';
-import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINATOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS,  PARTNER_SIDEBAR_LINKS } from '../../../utils/navigation';
+import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINATOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS, PARTNER_SIDEBAR_LINKS } from '../../../utils/navigation';
 
-function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
+function Sidebar({ userRole }) {
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [dropdowns, setDropdowns] = useState({});
+  const { logout } = useAuthContext();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -15,6 +19,17 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
 
   const toggleDropdown = (dropdown) => {
     setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
+  };
+
+  const handleSignOut = () => {
+    // Llamar a la función logout del contexto para actualizar el estado de autenticación
+    logout();
+    // Limpiar el localStorage
+    localStorage.removeItem("usernameOrEmail");
+    localStorage.removeItem("role");
+    localStorage.removeItem("token");
+    // Redirigir al usuario a la página de login
+    navigate("/login");
   };
 
   // Determina los enlaces según el rol del usuario
@@ -29,10 +44,9 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
     case 'coordinator':
       sidebarLinks = COORDINATOR_SIDEBAR_LINKS;
       break;
-    case 'partner': // Agregamos el caso de 'partner'
-      sidebarLinks = PARTNER_SIDEBAR_LINKS; // Por ejemplo, podríamos asignar los mismos enlaces que para 'admin'
+    case 'partner':
+      sidebarLinks = PARTNER_SIDEBAR_LINKS;
       break;
-
     default:
       sidebarLinks = [];
   }
@@ -60,7 +74,7 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
               <button
                 type="button"
                 onClick={() => toggleDropdown(link.key)}
-                className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700 w-full"
+                className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
               >
                 <div className="grid mr-2 place-items-center">
                   <FontAwesomeIcon icon={link.icon.props.icon} />
@@ -83,7 +97,7 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
                     <Link
                       key={subLink.key}
                       to={subLink.path}
-                      className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700"
+                      className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
                     >
                       <FontAwesomeIcon icon={subLink.icon.props.icon} />
                       <span className="ml-2">{subLink.label}</span>
@@ -97,14 +111,18 @@ function Sidebar({ userRole }) { // Asegúrate de recibir el rol del usuario
         <div className="p-4 space-y-4">
           <ul>
             {SIDEBAR_BOTTOM_LINKS.map((link) => (
-              <li key={link.key} className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover-bg-gray-100 hover-text-gray-700">
-                <Link
-                  to={link.path}
-                  onClick={toggleSidebar}
-                >
-                  {link.icon}
-                  <span className='p-4 space-x-4'>{link.label}</span>
-                </Link>
+              <li key={link.key} className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700">
+                {link.key === 'logout' ? (
+                  <button onClick={handleSignOut} className="w-full flex items-center">
+                    <FontAwesomeIcon icon={link.icon.props.icon} />
+                    <span className='p-4 space-x-4'>{link.label}</span>
+                  </button>
+                ) : (
+                  <Link to={link.path} onClick={toggleSidebar} className="w-full flex items-center">
+                    <FontAwesomeIcon icon={link.icon.props.icon} />
+                    <span className='p-4 space-x-4'>{link.label}</span>
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
