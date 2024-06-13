@@ -1,26 +1,30 @@
 import { useState } from 'react';
 import { FaUserCircle } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { useAuthContext } from "../../../context/authContext";
 
-const NavbarIntranet = () => {
+const NavbarIntranet = ({ user }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const currentHour = new Date().getHours();
+    const {logout} = useAuthContext()
 
     let greeting;
     if (currentHour >= 6 && currentHour < 12) {
-        greeting = "Buenos días";
+        greeting = "Buenos días " + user;
     } else if (currentHour >= 12 && currentHour < 18) {
-        greeting = "Buenas tardes";
+        greeting = "Buenas tardes " + user;
     } else {
-        greeting = "Buenas noches";
+        greeting = "Buenas noches " + user;
     }
-
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
     const handleSignOut = () => {
         // Lógica para cerrar sesión
+
+        logout()
+
         console.log("Cerrar sesión");
     };
 
@@ -59,6 +63,7 @@ const NavbarIntranet = () => {
             </nav>
         </header>
     );
-};
+}
 
-export default NavbarIntranet;
+
+export default NavbarIntranet

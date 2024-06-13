@@ -32,11 +32,13 @@ const LoginForm = () => {
           sessionStorage.setItem("usernameOrEmail", usernameOrEmail);
           sessionStorage.setItem("role", role);
           sessionStorage.setItem("token", data.token);
+          sessionStorage.setItem("name", data.name);
 
           setAuth({
             isAuth: true,
             token: data.token,
             user: usernameOrEmail,
+            name: data.name,
             role,
           });
 
