@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../../context/authContext.jsx";
-import { useForm } from "../../../hooks/useForm.jsx";
+import { useAuthContext } from "../../../context/authContext";
+import { useForm } from "../../../hooks/useForm";
 
 const LoginForm = () => {
   const { usernameOrEmail, password, onInputChange, onResetForm } = useForm({
@@ -9,7 +9,7 @@ const LoginForm = () => {
     password: "",
   });
   const [error, setError] = useState("");
-  const { setAuth } = useAuthContext();
+  const { login } = useAuthContext(); // Cambiado a `login` del contexto de autenticación
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -26,21 +26,10 @@ const LoginForm = () => {
 
       if (response.ok) {
         if (data.token) {
-          const { role } = data;
+          const { token, role, name } = data;
 
-          // Almacenar información del usuario en sessionStorage
-          sessionStorage.setItem("usernameOrEmail", usernameOrEmail);
-          sessionStorage.setItem("role", role);
-          sessionStorage.setItem("token", data.token);
-          sessionStorage.setItem("name", data.name);
-
-          setAuth({
-            isAuth: true,
-            token: data.token,
-            user: usernameOrEmail,
-            name: data.name,
-            role,
-          });
+          // Llamar a la función `login` del contexto para actualizar el estado de autenticación
+          login(token, usernameOrEmail, name, role);
 
           // Redirigir a la página de intranet
           navigate("/intranet");
