@@ -102,9 +102,9 @@ const PartnersTable = () => {
   const offset = currentPage * itemsPerPage;
   const currentPageData = filteredPartners.slice(offset, offset + itemsPerPage);
 
-  const viewMore = (partnerId) => {
-    window.location.href = `/intranet/students/${partnerId}`;
-  };
+const viewMore = (partnerId) => {
+  window.location.href = `/intranet/students/${partnerId}`;
+};
 
   return (
     <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4">

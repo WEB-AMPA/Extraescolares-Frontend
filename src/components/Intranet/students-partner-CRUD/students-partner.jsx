@@ -16,7 +16,10 @@ const StudentsList = ({ partnerId }) => {
 
   const fetchStudents = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/students/${partnerId}/partner`);
+      if (!partnerId) {
+        return; // Return early or handle case where partnerId is not defined
+      }
+      const response = await fetch(`http://localhost:3000/api/students/partner/${partnerId}`);
       if (!response.ok) {
         throw new Error('Error fetching students');
       }
@@ -26,6 +29,7 @@ const StudentsList = ({ partnerId }) => {
       console.error('Error fetching students:', error);
     }
   }, [partnerId]);
+  
 
   useEffect(() => {
     fetchStudents();
