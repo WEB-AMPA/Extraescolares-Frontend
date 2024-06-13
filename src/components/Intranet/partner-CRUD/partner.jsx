@@ -11,8 +11,7 @@ const PartnersTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
-  const [selectedPartnerId, setSelectedPartnerId] = useState(null);
-
+  
 
   const itemsPerPage = 10;
 
@@ -104,13 +103,9 @@ const PartnersTable = () => {
   const currentPageData = filteredPartners.slice(offset, offset + itemsPerPage);
 
   const viewMore = (partnerId) => {
-    setSelectedPartnerId(partnerId);
-    // Redireccionar a la página de detalles del estudiante con el partnerId
     window.location.href = `/intranet/students/${partnerId}`;
   };
-  
 
-  
   return (
     <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4">
       <div className="flex items-center justify-between mb-4">

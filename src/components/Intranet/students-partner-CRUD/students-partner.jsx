@@ -3,7 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
-const StudentsList = () => {
+const StudentsList = ({ partnerId }) => {
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -14,10 +14,9 @@ const StudentsList = () => {
 
   const itemsPerPage = 10;
 
-  // Función para obtener la lista de estudiantes
   const fetchStudents = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/students');
+      const response = await fetch(`http://localhost:3000/api/students/${partnerId}/partner`);
       if (!response.ok) {
         throw new Error('Error fetching students');
       }
@@ -26,35 +25,30 @@ const StudentsList = () => {
     } catch (error) {
       console.error('Error fetching students:', error);
     }
-  }, []);
+  }, [partnerId]);
 
   useEffect(() => {
     fetchStudents();
   }, [fetchStudents, shouldRefetch]);
 
-  // Manejar apertura del modal de edición
   const handleEdit = (student) => {
     setSelectedStudent(student);
     setIsModalOpen(true);
   };
 
-  // Manejar apertura del modal de confirmación para eliminar
   const handleDelete = (student) => {
     setSelectedStudent(student);
     setIsConfirmModalOpen(true);
   };
 
-  // Cerrar modal de confirmación de eliminación
   const closeConfirmModal = () => {
     setIsConfirmModalOpen(false);
   };
 
-  // Cerrar modal de edición
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  // Eliminar estudiante
   const deleteStudent = async () => {
     try {
       await fetch(`http://localhost:3000/api/students/${selectedStudent._id}`, {
@@ -68,13 +62,11 @@ const StudentsList = () => {
     closeConfirmModal();
   };
 
-  // Manejar cambio en el término de búsqueda
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(0);
   };
 
-  // Actualizar estudiante
   const updateStudent = async (e) => {
     e.preventDefault();
     try {
@@ -88,31 +80,28 @@ const StudentsList = () => {
       if (!response.ok) {
         throw new Error('Error updating student');
       }
+
       setShouldRefetch(true);
       closeModal();
     } catch (error) {
       console.error('Error updating student:', error);
+      closeModal();
     }
   };
 
-  // Filtrar estudiantes basado en el término de búsqueda
   const filteredStudents = students.filter(student =>
     `${student.name} ${student.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Calcular el número de páginas
   const pageCount = Math.ceil(filteredStudents.length / itemsPerPage);
 
-  // Manejar cambio de página
   const handlePageClick = (selectedPage) => {
     setCurrentPage(selectedPage);
   };
 
-  // Calcular el índice de inicio para la página actual
   const offset = currentPage * itemsPerPage;
   const currentPageData = filteredStudents.slice(offset, offset + itemsPerPage);
 
-  // Función para ver más detalles de un estudiante
   const viewMore = (studentId) => {
     window.location.href = `/intranet/students/${studentId}`;
   };
@@ -206,9 +195,7 @@ const StudentsList = () => {
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
-              Mostrando <span className="font-medium">{offset + 1}</span> a{' '}
-              <span className="font-medium">{Math.min(offset + itemsPerPage, filteredStudents.length)}</span> de{' '}
-              <span className="font-medium">{filteredStudents.length}</span> resultados
+              Página <span className="font-medium">{currentPage + 1}</span> de <span className="font-medium">{pageCount}</span>
             </p>
           </div>
           <div>
@@ -216,26 +203,24 @@ const StudentsList = () => {
               <button
                 onClick={() => handlePageClick(currentPage - 1)}
                 disabled={currentPage === 0}
-                className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
               >
                 <span className="sr-only">Previous</span>
                 <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
               </button>
-              {Array.from({ length: pageCount }, (_, i) => (
+              {[...Array(pageCount).keys()].map((page) => (
                 <button
-                  key={i}
-                  onClick={() => handlePageClick(i)}
-                  className={`relative z-10 inline-flex items-center border ${
-                    currentPage === i ? 'bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500'
-                  } px-4 py-2 text-sm font-medium focus:z-20`}
+                  key={page}
+                  onClick={() => handlePageClick(page)}
+                  className={`relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage === page ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' : ''}`}
                 >
-                  {i + 1}
+                  {page + 1}
                 </button>
               ))}
               <button
                 onClick={() => handlePageClick(currentPage + 1)}
                 disabled={currentPage >= pageCount - 1}
-                className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
               >
                 <span className="sr-only">Next</span>
                 <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -245,131 +230,87 @@ const StudentsList = () => {
         </div>
       </div>
 
-      {/* Modal de Confirmación */}
-      {isConfirmModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                    <MdDelete className="h-6 w-6 text-red-600" aria-hidden="true" />
-                  </div>
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                      Eliminar Estudiante
-                    </h3>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500">¿Estás seguro de que deseas eliminar a este estudiante?</p>
-                    </div>
-                  </div>
-                </div>
+      {/* Modal for editing student */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Editar Estudiante</h2>
+            <form onSubmit={updateStudent}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Nombre</label>
+                <input
+                  type="text"
+                  id="name"
+                  value={selectedStudent.name}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, name: e.target.value })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={deleteStudent}
-                >
-                  Eliminar
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={closeConfirmModal}
-                >
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">Apellido</label>
+                <input
+                  type="text"
+                  id="lastname"
+                  value={selectedStudent.lastname}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, lastname: e.target.value })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="course">Curso</label>
+                <input
+                  type="text"
+                  id="course"
+                  value={selectedStudent.course}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, course: e.target.value })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="breakfast">Desayuno</label>
+                <input
+                  type="checkbox"
+                  id="breakfast"
+                  checked={selectedStudent.breakfast}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, breakfast: e.target.checked })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="observations">Observaciones</label>
+                <textarea
+                  id="observations"
+                  value={selectedStudent.observations}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, observations: e.target.value })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="flex justify-end">
+                <button type="button" onClick={closeModal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
                   Cancelar
                 </button>
+                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Guardar
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
 
-      {/* Modal de Edición */}
-      {isModalOpen && selectedStudent && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                      Editar Estudiante
-                    </h3>
-                    <div className="mt-2">
-                      <form onSubmit={updateStudent}>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">Nombre</label>
-                          <input
-                            type="text"
-                            value={selectedStudent.name}
-                            onChange={(e) => setSelectedStudent({ ...selectedStudent, name: e.target.value })}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          />
-                        </div>
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700">Apellidos</label>
-                          <input
-                            type="text"
-                            value={selectedStudent.lastname}
-                            onChange={(e) => setSelectedStudent({ ...selectedStudent, lastname: e.target.value })}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          />
-                        </div>
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700">Curso</label>
-                          <input
-                            type="text"
-                            value={selectedStudent.course}
-                            onChange={(e) => setSelectedStudent({ ...selectedStudent, course: e.target.value })}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          />
-                        </div>
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700">Desayuno</label>
-                          <input
-                            type="checkbox"
-                            checked={selectedStudent.breakfast}
-                            onChange={(e) => setSelectedStudent({ ...selectedStudent, breakfast: e.target.checked })}
-                          />
-                        </div>
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium text-gray-700">Observaciones</label>
-                          <textarea
-                            value={selectedStudent.observations}
-                            onChange={(e) => setSelectedStudent({ ...selectedStudent, observations: e.target.value })}
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                          />
-                        </div>
-                        <div className="mt-4 sm:mt-6 sm:flex sm:flex-row-reverse">
-                          <button
-                            type="submit"
-                            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                          >
-                            Guardar
-                          </button>
-                          <button
-                            type="button"
-                            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                            onClick={closeModal}
-                          >
-                            Cancelar
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {/* Confirm delete modal */}
+      {isConfirmModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Confirmar Eliminación</h2>
+            <p>¿Estás seguro de que quieres eliminar a {selectedStudent.name} {selectedStudent.lastname}?</p>
+            <div className="flex justify-end mt-4">
+              <button onClick={closeConfirmModal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
+                Cancelar
+              </button>
+              <button onClick={deleteStudent} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Eliminar
+              </button>
             </div>
           </div>
         </div>
