@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import  { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
-const StudentsList = ({ partnerId }) => {
+const StudentsList = () => {
+  const { partnerId } = useParams();  // Obtén el partnerId de la URL
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -15,26 +17,26 @@ const StudentsList = ({ partnerId }) => {
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
+    console.log('Fetching students for partnerId:', partnerId);
+    if (!partnerId) {
+      console.log('PartnerId not defined, returning early');
+      return;
+    }
+
     try {
-      if (!partnerId) {
-        return; // Return early or handle case where partnerId is not defined
-      }
       const response = await fetch(`http://localhost:3000/api/students/partner/${partnerId}`);
-      if (!response.ok) {
-        throw new Error('Error fetching students');
-      }
+      if (!response.ok) throw new Error('Error fetching students');
+
       const data = await response.json();
       setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);
     }
   }, [partnerId]);
-  
 
   useEffect(() => {
     fetchStudents();
   }, [fetchStudents, shouldRefetch]);
-
   const handleEdit = (student) => {
     setSelectedStudent(student);
     setIsModalOpen(true);

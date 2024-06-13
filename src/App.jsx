@@ -43,7 +43,7 @@ function App() {
               <Route path="attendances" element={<ActivitiesAttendancePage />} />
               <Route path="users/monitor" element={<MonitoresTable />} />
               <Route path="createuser" element={<UserForm />} />
-              <Route path="user/partner" element={<PartnersTable />} />
+              <Route path="users/partner" element={<PartnersTable />} />
               <Route path="students/:partnerId" element={<StudentsList />} />
             </Route>
           </Route>

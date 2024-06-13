@@ -12,6 +12,7 @@ const PartnersTable = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
   
+  
 
   const itemsPerPage = 10;
 
