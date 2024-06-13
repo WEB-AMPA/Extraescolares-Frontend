@@ -1,40 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-
 
 const MonitoresTable = () => {
   const [monitors, setMonitors] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedMonitor, setSelectedMonitor] = useState(null);
+  const [selectedActivityId, setSelectedActivityId] = useState(null); // Estado para el ID de la actividad seleccionada
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [activities, setActivities] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [shouldRefetch, setShouldRefetch] = useState(false); // Estado para controlar el refetch automático
 
   const itemsPerPage = 10;
 
-  useEffect(() => {
-    fetchMonitors();
-    fetchActivities();
-  }, []);
-
-  const fetchMonitors = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/users/role/monitor');
-      if (!response.ok) {
-        throw new Error('Error fetching monitors');
-      }
-      const data = await response.json();
-      setMonitors(data);
-    } catch (error) {
-      console.error('Error fetching monitors:', error);
-    }
-  };
-
-
-  const fetchActivities = async () => {
+  const fetchActivities = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:3000/api/activities');
       if (!response.ok) {
@@ -45,12 +28,42 @@ const MonitoresTable = () => {
     } catch (error) {
       console.error('Error fetching activities:', error);
     }
-  };
+  }, []);
 
+  const fetchMonitors = useCallback(async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/users/role/monitor');
+      if (!response.ok) {
+        throw new Error('Error fetching monitors');
+      }
+      const data = await response.json();
+      setUsers(data);
+      
+      const monitorsData = data.map(user => {
+        const activity = activities.find(activity => activity.monitor && activity.monitor._id === user._id);
+        return {
+          _id: user._id,
+          name: user.name,
+          lastname: user.lastname,
+          activity: activity ? activity.name : 'No asignada',
+          activityId: activity ? activity._id : null
+        };
+      });
 
+      setMonitors(monitorsData);
+    } catch (error) {
+      console.error('Error fetching monitors:', error);
+    }
+  }, [activities]);
+
+  useEffect(() => {
+    fetchActivities();
+    fetchMonitors();
+  }, [fetchActivities, fetchMonitors, shouldRefetch]); // Dependencias actualizadas para incluir fetchMonitors
 
   const handleEdit = (monitor) => {
     setSelectedMonitor(monitor);
+    setSelectedActivityId(monitor.activityId); // Establecer la actividad seleccionada para el monitor seleccionado
     setIsModalOpen(true);
   };
 
@@ -73,6 +86,7 @@ const MonitoresTable = () => {
         method: 'DELETE',
       });
       setMonitors(monitors.filter(monitor => monitor._id !== selectedMonitor._id));
+      setShouldRefetch(true); // Activar refetch automático después de eliminar
     } catch (error) {
       console.error('Error deleting monitor:', error);
     }
@@ -81,24 +95,30 @@ const MonitoresTable = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(0); // Reset current page to 0 when search term changes
+    setCurrentPage(0);
   };
 
-  const updateMonitor = async (e) => {
+  const updateActivity = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${selectedMonitor._id}`, {
+      const updatedActivity = { newMonitorUsername: selectedMonitor._id, activityId: selectedActivityId }; // Incluir activityId en los datos actualizados
+      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivityId}/update-monitor`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(selectedMonitor),
+        body: JSON.stringify(updatedActivity),
       });
-      const updatedMonitor = await response.json();
-      setMonitors(monitors.map(monitor => (monitor._id === updatedMonitor._id ? updatedMonitor : monitor)));
+      if (!response.ok) {
+        throw new Error('Error updating activity');
+      }
+
+      const updatedActivityData = await response.json();
+      setActivities(activities.map(activity => activity._id === updatedActivityData._id ? updatedActivityData : activity));
+      setShouldRefetch(true); // Activar refetch automático después de actualizar
       closeModal();
     } catch (error) {
-      console.error('Error updating monitor:', error);
+      console.error('Error updating activity:', error);
     }
   };
 
@@ -148,7 +168,7 @@ const MonitoresTable = () => {
                 <div className="text-sm text-gray-900">{`${monitor.name} ${monitor.lastname}`}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{monitor.actividad}</div>
+                <div className="text-sm text-gray-900">{monitor.activity}</div>
               </td>
               <td className="flex justify-center px-6 py-3 text-sm font-medium">
                 <button title="Editar Monitor" onClick={() => handleEdit(monitor)} className="text-white p-2 m-2 bg-blue-800 rounded">
@@ -162,6 +182,7 @@ const MonitoresTable = () => {
           ))}
         </tbody>
       </table>
+
       <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
         <div className="flex flex-1 justify-between sm:hidden">
           <button
@@ -182,8 +203,9 @@ const MonitoresTable = () => {
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
-              Showing <span className="font-medium">{offset + 1}</span> to <span className="font-medium">{Math.min(offset + itemsPerPage, filteredMonitors.length)}</span> of{' '}
-              <span className="font-medium">{filteredMonitors.length}</span> results
+              Mostrando <span className="font-medium">{offset + 1}</span> a{' '}
+              <span className="font-medium">{Math.min(offset + itemsPerPage, filteredMonitors.length)}</span> de{' '}
+              <span className="font-medium">{filteredMonitors.length}</span> resultados
             </p>
           </div>
           <div>
@@ -196,13 +218,15 @@ const MonitoresTable = () => {
                 <span className="sr-only">Previous</span>
                 <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
               </button>
-              {[...Array(pageCount).keys()].map(number => (
+              {[...Array(pageCount).keys()].map((page) => (
                 <button
-                  key={number}
-                  onClick={() => handlePageClick(number)}
-                  className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${number === currentPage ? 'bg-indigo-600 text-white' : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'} focus:z-20 focus:outline-offset-0`}
+                  key={page}
+                  onClick={() => handlePageClick(page)}
+                  className={`relative inline-flex items-center px-4 py-2 text-sm font-medium ${
+                    page === currentPage ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                  } ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0`}
                 >
-                  {number + 1}
+                  {page + 1}
                 </button>
               ))}
               <button
@@ -217,70 +241,55 @@ const MonitoresTable = () => {
           </div>
         </div>
       </div>
-
       {isModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <form onSubmit={updateMonitor}>
-                  <h3 className="mb-4 text-xl font-bold text-gray-900">Modificar Monitor</h3>
-                  <label className="block mb-4">
-                    <span className="text-gray-700">Nombre:</span>
-                    <input type="text" name="name" value={selectedMonitor.name} onChange={(e) => setSelectedMonitor({ ...selectedMonitor, name: e.target.value })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                  </label>
-                  <label className="block mb-4">
-                    <span className="text-gray-700">Apellidos:</span>
-                    <input type="text" name="lastname" value={selectedMonitor.lastname} onChange={(e) => setSelectedMonitor({ ...selectedMonitor, lastname: e.target.value })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                  </label>
-                  <label className="block mb-4">
-                    <span className="text-gray-700">Actividad:</span>
-                    <select name="actividad" value={selectedMonitor.actividad} onChange={(e) => setSelectedMonitor({ ...selectedMonitor, actividad: e.target.value })} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                      {activities.map((activity) => (
-                        <option key={activity._id} value={activity._id}>{activity.name}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="submit" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                      Guardar
-                    </button>
-                    <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
-                      Cancelar
-                    </button>
-                  </div>
-                </form>
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow">
+            <h2 className="text-xl font-bold mb-4">Edit Monitor</h2>
+            <form onSubmit={updateActivity}>
+              <label className="block mb-2">
+                Actividad:
+                <select
+                  value={selectedActivityId}
+                  onChange={(e) => setSelectedActivityId(e.target.value)}
+                  className="block w-full mt-1 p-2 border rounded"
+                >
+                  {activities.map(activity => (
+                    <option key={activity._id} value={activity._id}>
+                      {activity.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block mb-2">
+                Monitor:
+                <select
+                  value={selectedMonitor?._id}
+                  onChange={(e) => setSelectedMonitor({ ...selectedMonitor, _id: e.target.value })}
+                  className="block w-full mt-1 p-2 border rounded"
+                >
+                  {users.map(user => (
+                    <option key={user._id} value={user._id}>
+                      {`${user.name} ${user.lastname}`}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="flex justify-end">
+                <button type="button" onClick={closeModal} className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded mr-2">Cancel</button>
+                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Save</button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
-
       {isConfirmModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <h3 className="mb-4 text-xl font-bold text-gray-900">Confirmar Eliminación</h3>
-                <p className="text-sm text-gray-500">¿Estás seguro de que quieres eliminar a {selectedMonitor.name} {selectedMonitor.lastname}?</p>
-              </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={deleteMonitor}>
-                  Eliminar
-                </button>
-                <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeConfirmModal}>
-                  Cancelar
-                </button>
-              </div>
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-4 rounded shadow">
+            <h2 className="text-xl font-bold mb-4">Confirm Deletion</h2>
+            <p>Are you sure you want to delete {selectedMonitor.name} {selectedMonitor.lastname}?</p>
+            <div className="flex justify-end mt-4">
+              <button type="button" onClick={closeConfirmModal} className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded mr-2">Cancel</button>
+              <button onClick={deleteMonitor} className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">Delete</button>
             </div>
           </div>
         </div>
