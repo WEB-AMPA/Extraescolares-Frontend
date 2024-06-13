@@ -52,29 +52,29 @@ const AlumnTable = () => {
   return (
     <div className="flex justify-center overflow-x-auto m-4 p-4">
       <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
-        <thead className="bg-gray-200 gap-3 items-center">
+        <thead className="bg-gray-200 gap-3 items-center text-center">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Nombre
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Apellido
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Curso
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Desayuno
             </th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-6 py-3  text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Observaciones
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Ajustes
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white divide-y divide-gray-200 text-center">
           {users.map((user) => (
             <tr key={user.id} className="border-b border-gray-300"> 
               <td className="px-6 py-4 whitespace-nowrap">

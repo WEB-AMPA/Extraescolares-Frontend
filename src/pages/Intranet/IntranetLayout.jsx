@@ -1,7 +1,10 @@
 import { useLocation } from 'react-router-dom';
-import { Header } from '../../components/Web/header/Header';
-import Sidebar from '../../components/Intranet/sidebar/sidebar';
+import NavbarIntranet from '../../components/Intranet/navbar-dashboard/navbardashboard';
+
+import Sidebar from '../../components/Intranet/sidebar/sidebar'
+// import UsersList from '../Usuarios/usuarios';
 import { Outlet } from 'react-router-dom';
+
 import { useAuthContext } from '../../context/authContext';
 
 const IntranetLayout = () => {
@@ -9,19 +12,25 @@ const IntranetLayout = () => {
   const userName = auth.user || 'test user';
 
   return (
-    <section className="flex flex-row justify-around">
+    <>
+    <NavbarIntranet/>
+
+  
+    <section >
       <div>
         <Sidebar userRole={auth.role} />
       </div>
       <div className="flex flex-col justify-center p-4">
-        <div className="flex flex-row justify-end">
-          <Header userName={userName} />
+        <div className='flex flex-row justify-end'>
+          
         </div>
-        <div>
+        <div className="flex-grow flex flex-col justify-center p-4 ml-64">
           <Outlet />
         </div>
       </div>
     </section>
+
+     </>
   );
 };
 
