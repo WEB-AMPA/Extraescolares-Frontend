@@ -95,7 +95,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
                     className="border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5"
                 />
             </div>
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 ml-52">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" className="px-6 py-3">Fecha</th>

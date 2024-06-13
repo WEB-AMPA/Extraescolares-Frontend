@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import NavbarIntranet from '../../components/Intranet/navbar-dashboard/navbardashboard';
 
 import Sidebar from '../../components/Intranet/sidebar/sidebar'
@@ -9,13 +9,11 @@ import { useAuthContext } from '../../context/authContext';
 
 const IntranetLayout = () => {
   const { auth } = useAuthContext();
-  const userName = auth.user || 'test user';
+  const userName = auth.name || 'test user';
 
   return (
     <>
-    <NavbarIntranet/>
-
-  
+    <NavbarIntranet user={userName}/>
     <section >
       <div>
         <Sidebar userRole={auth.role} />
