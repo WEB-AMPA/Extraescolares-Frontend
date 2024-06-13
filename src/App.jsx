@@ -17,6 +17,8 @@ import ActivitiesCalendar from "./components/Intranet/calendar/activitiesCalenda
 import MonitoresTable from "./components/Intranet/monitor-CRUD/monitor.jsx";
 import LoginPage from "./pages/loginPage/loginPage.jsx";
 import UserForm from "./components/Intranet/user-CRUD/createUser.jsx";
+import PartnersTable from "./components/Intranet/partner-CRUD/partner.jsx";
+import StudentsList from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
 
 
 export const RecoveryContext = createContext();
@@ -64,6 +66,8 @@ function App() {
                 />
                 <Route path="users/monitor" element={<MonitoresTable />} />
                 <Route path="createuser" element={<UserForm />} />
+                <Route path="partner" element={<PartnersTable />} />
+                <Route path="students/:partnerId" element={<StudentsList />} />
               </Route>
             {/* </Route> */}
           </Routes>
