@@ -16,6 +16,11 @@ import MonitoresTable from "./components/Intranet/monitor-CRUD/monitor";
 import LoginPage from "./pages/loginPage/loginPage";
 import PrivateRoute from "./routes/PrivateRoute";
 import UnauthorizedPage from "./pages/UnauthorizedPage/UnauthorizedPage";
+import UserForm from "./components/Intranet/user-CRUD/createUser.jsx";
+import PartnersTable from "./components/Intranet/partner-CRUD/partner.jsx";
+import StudentsList from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
+
+
 
 function App() {
   return (
@@ -37,6 +42,9 @@ function App() {
               <Route path="breakfast" element={<Breakfast />} />
               <Route path="attendances" element={<ActivitiesAttendancePage />} />
               <Route path="users/monitor" element={<MonitoresTable />} />
+              <Route path="createuser" element={<UserForm />} />
+              <Route path="user/partner" element={<PartnersTable />} />
+              <Route path="students/:partnerId" element={<StudentsList />} />
             </Route>
           </Route>
         </Routes>
