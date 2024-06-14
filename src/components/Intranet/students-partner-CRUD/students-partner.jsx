@@ -1,4 +1,4 @@
-import  { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -37,6 +37,7 @@ const StudentsList = () => {
   useEffect(() => {
     fetchStudents();
   }, [fetchStudents, shouldRefetch]);
+
   const handleEdit = (student) => {
     setSelectedStudent(student);
     setIsModalOpen(true);
@@ -109,7 +110,7 @@ const StudentsList = () => {
   const currentPageData = filteredStudents.slice(offset, offset + itemsPerPage);
 
   const viewMore = (studentId) => {
-    window.location.href = `/intranet/students/${studentId}`;
+    window.location.href = `/intranet/activities-student/${studentId}`;
   };
 
   return (

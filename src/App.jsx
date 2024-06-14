@@ -19,6 +19,7 @@ import UnauthorizedPage from "./pages/UnauthorizedPage/UnauthorizedPage";
 import UserForm from "./components/Intranet/user-CRUD/createUser.jsx";
 import PartnersTable from "./components/Intranet/partner-CRUD/partner.jsx";
 import StudentsList from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
+import ActivitiesStudent from "./components/Intranet/activities-students-CRUD/activities-students.jsx";
 
 
 
@@ -45,6 +46,7 @@ function App() {
               <Route path="createuser" element={<UserForm />} />
               <Route path="users/socios" element={<PartnersTable />} />
               <Route path="students/:partnerId" element={<StudentsList />} />
+              <Route path="activities-student/:studentId" element={<ActivitiesStudent />} />
             </Route>
           </Route>
         </Routes>
