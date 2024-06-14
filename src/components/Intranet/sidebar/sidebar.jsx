@@ -1,11 +1,16 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { useAuthContext } from '../../../context/authContext'; // Importa useAuthContext
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
-import './sidebar.css';
-import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINATOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS, PARTNER_SIDEBAR_LINKS } from '../../../utils/navigation';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { useAuthContext } from "../../../context/authContext";
+import "./sidebar.css";
+import {
+  ADMIN_SIDEBAR_LINKS,
+  MONITOR_SIDEBAR_LINKS,
+  COORDINATOR_SIDEBAR_LINKS,
+  SIDEBAR_BOTTOM_LINKS,
+  PARTNER_SIDEBAR_LINKS,
+} from "../../../utils/navigation";
 
 function Sidebar({ userRole }) {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -22,37 +27,35 @@ function Sidebar({ userRole }) {
   };
 
   const handleSignOut = () => {
-    // Llamar a la función logout del contexto para actualizar el estado de autenticación
     logout();
-    // Limpiar el localStorage
     localStorage.removeItem("usernameOrEmail");
     localStorage.removeItem("role");
     localStorage.removeItem("token");
-    // Redirigir al usuario a la página de login
     navigate("/login");
   };
 
-  // Determina los enlaces según el rol del usuario
   let sidebarLinks;
   switch (userRole) {
-    case 'admin':
+    case "admin":
       sidebarLinks = ADMIN_SIDEBAR_LINKS;
       break;
-    case 'monitor':
+    case "monitor":
       sidebarLinks = MONITOR_SIDEBAR_LINKS;
       break;
-    case 'coordinator':
+    case "coordinator":
       sidebarLinks = COORDINATOR_SIDEBAR_LINKS;
       break;
-    case 'partner':
+    case "partner":
       sidebarLinks = PARTNER_SIDEBAR_LINKS;
       break;
     default:
       sidebarLinks = [];
   }
 
-  // Filtrar los enlaces del footer del sidebar para evitar duplicados
-  const filteredSidebarLinks = sidebarLinks.filter(link => !SIDEBAR_BOTTOM_LINKS.find(footerLink => footerLink.key === link.key));
+  const filteredSidebarLinks = sidebarLinks.filter(
+    (link) =>
+      !SIDEBAR_BOTTOM_LINKS.find((footerLink) => footerLink.key === link.key)
+  );
 
   return (
     <>
@@ -63,7 +66,9 @@ function Sidebar({ userRole }) {
         <FontAwesomeIcon icon={faBars} />
       </button>
       <div
-        className={`lg:block ${sidebarVisible ? 'block' : 'hidden'} bg-white w-64 h-screen fixed z-10 top-0 left-0 rounded-none border-none shadow-lg`}
+        className={`lg:block ${
+          sidebarVisible ? "block" : "hidden"
+        } bg-white w-64 h-screen fixed z-10 top-0 left-0 rounded-none border-none shadow-lg`}
       >
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-center py-4">
@@ -71,30 +76,28 @@ function Sidebar({ userRole }) {
           </div>
           {filteredSidebarLinks.map((link) => (
             <div key={link.key} className="relative">
-            
-
-              <button 
+              <button
                 type="button"
                 onClick={() => toggleDropdown(link.key)}
                 className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
               >
-             
                 <div className="grid mr-2 place-items-center">
                   <FontAwesomeIcon icon={link.icon.props.icon} />
                 </div>
                 <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-                  {link.label} 
+                  {link.label}
                 </p>
                 {link.subLinks && (
                   <span className="ml-auto">
                     <FontAwesomeIcon
                       icon={faChevronDown}
-                      className={`transform duration-300 ${dropdowns[link.key] ? 'rotate-180' : ''}`}
+                      className={`transform duration-300 ${
+                        dropdowns[link.key] ? "rotate-180" : ""
+                      }`}
                     />
                   </span>
                 )}
               </button>
-          
               {dropdowns[link.key] && link.subLinks && (
                 <div className="mt-2 space-y-2 pl-8">
                   {link.subLinks.map((subLink) => (
@@ -102,12 +105,11 @@ function Sidebar({ userRole }) {
                       key={subLink.key}
                       to={subLink.path}
                       className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+                      onClick={toggleSidebar}
                     >
                       <FontAwesomeIcon icon={subLink.icon.props.icon} />
                       <span className="ml-2">{subLink.label}</span>
                     </Link>
-                    
-                    
                   ))}
                 </div>
               )}
@@ -117,16 +119,26 @@ function Sidebar({ userRole }) {
         <div className="p-4 space-y-4">
           <ul>
             {SIDEBAR_BOTTOM_LINKS.map((link) => (
-              <li key={link.key} className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700">
-                {link.key === 'logout' ? (
-                  <button onClick={handleSignOut} className="w-full flex items-center">
+              <li
+                key={link.key}
+                className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+              >
+                {link.key === "logout" ? (
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center"
+                  >
                     <FontAwesomeIcon icon={link.icon.props.icon} />
-                    <span className='p-4 space-x-4'>{link.label}</span>
+                    <span className="p-4 space-x-4">{link.label}</span>
                   </button>
                 ) : (
-                  <Link to={link.path} onClick={toggleSidebar} className="w-full flex items-center">
+                  <Link
+                    to={link.path}
+                    onClick={toggleSidebar}
+                    className="w-full flex items-center"
+                  >
                     <FontAwesomeIcon icon={link.icon.props.icon} />
-                    <span className='p-4 space-x-4'>{link.label}</span>
+                    <span className="p-4 space-x-4">{link.label}</span>
                   </Link>
                 )}
               </li>
