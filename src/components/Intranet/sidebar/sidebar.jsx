@@ -71,16 +71,19 @@ function Sidebar({ userRole }) {
           </div>
           {filteredSidebarLinks.map((link) => (
             <div key={link.key} className="relative">
-              <button
+            
+
+              <button 
                 type="button"
                 onClick={() => toggleDropdown(link.key)}
                 className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
               >
+             
                 <div className="grid mr-2 place-items-center">
                   <FontAwesomeIcon icon={link.icon.props.icon} />
                 </div>
                 <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-                  {link.label}
+                  {link.label} 
                 </p>
                 {link.subLinks && (
                   <span className="ml-auto">
@@ -91,6 +94,7 @@ function Sidebar({ userRole }) {
                   </span>
                 )}
               </button>
+          
               {dropdowns[link.key] && link.subLinks && (
                 <div className="mt-2 space-y-2 pl-8">
                   {link.subLinks.map((subLink) => (
@@ -102,6 +106,8 @@ function Sidebar({ userRole }) {
                       <FontAwesomeIcon icon={subLink.icon.props.icon} />
                       <span className="ml-2">{subLink.label}</span>
                     </Link>
+                    
+                    
                   ))}
                 </div>
               )}

@@ -108,23 +108,41 @@ export const ADMIN_SIDEBAR_LINKS = [
 
 export const MONITOR_SIDEBAR_LINKS = [
   {
-    key: 'asistencia-actividades',
-    label: 'Actividades',
+    key: 'asistencia',
+    label: 'Asistencia',
     level: 1,
-    icon: <FontAwesomeIcon icon={faClipboard} />,
-    path: '/intranet/asistencia/actividades'
-  }
+    icon: <FontAwesomeIcon icon={faCalendarCheck} />,
+    path: '',
+    subLinks: [
+      {
+        key: 'asistencia-actividades',
+        label: 'Actividades',
+        level: 2,
+        icon: <FontAwesomeIcon icon={faClipboard} />,
+        path: '/intranet/attendances'
+      }
+    ]
+  },
 ];
 
 
 export const COORDINATOR_SIDEBAR_LINKS = [
   {
-    key: 'asistencia-desayunos',
-    label: 'Desayunos',
+    key: 'asistencia',
+    label: 'Asistencia',
     level: 1,
-    icon: <FontAwesomeIcon icon={faCoffee} />,
-    path: '/intranet/asistencia/desayunos'
-  }
+    icon: <FontAwesomeIcon icon={faCalendarCheck} />,
+    path: '',
+    subLinks: [
+      {
+        key: 'asistencia-desayunos',
+        label: 'Desayunos',
+        level: 2,
+        icon: <FontAwesomeIcon icon={faCoffee} />,
+        path: '/intranet/breakfast'
+      }
+    ]
+  },
   
 ];
 

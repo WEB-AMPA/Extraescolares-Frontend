@@ -35,7 +35,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/activities" element={<ActivitiesPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
-          <Route element={<PrivateRoute roles={['admin', 'partner', 'monitor', 'coordinator']} />}>
+          {/* <Route element={<PrivateRoute roles={['admin', 'partner', 'monitor', 'coordinator']} />}> */}
             <Route path="/intranet" element={<IntranetLayout />}>
               <Route path="calendar/:studentId" element={<BreakfastCalendar />} />
               <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
@@ -46,7 +46,7 @@ function App() {
               <Route path="users/socios" element={<PartnersTable />} />
               <Route path="students/:partnerId" element={<StudentsList />} />
             </Route>
-          </Route>
+          {/* </Route> */}
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
