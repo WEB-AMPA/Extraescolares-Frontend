@@ -34,34 +34,35 @@ function App() {
           <Route path="/activities" element={<ActivitiesPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-          {/* Rutas generales para todos los roles autenticados */}
+          {/* Layout de Intranet */}
           <Route element={<PrivateRoute roles={['admin', 'partner', 'monitor', 'coordinator']} />}>
             <Route path="/intranet" element={<IntranetLayout />}>
+              {/* Rutas generales dentro de la intranet */}
               <Route path="calendar/:studentId" element={<BreakfastCalendar />} />
               <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
+              
+              {/* Rutas específicas para admin */}
+              <Route element={<PrivateRoute roles={['admin']} />}>
+                <Route path="createuser" element={<UserForm />} />
+                <Route path="users/monitor" element={<MonitoresTable />} />
+                <Route path="users/socios" element={<PartnersTable />} />
+              </Route>
+
+              {/* Rutas específicas para partner */}
+              <Route element={<PrivateRoute roles={['partner','admin']} />}>
+                <Route path="students/:partnerId" element={<StudentsList />} />
+              </Route>
+
+              {/* Rutas específicas para monitor */}
+              <Route element={<PrivateRoute roles={['monitor', 'admin']} />}>
+                <Route path="attendances" element={<ActivitiesAttendancePage />} />
+              </Route>
+
+              {/* Rutas específicas para coordinator */}
+              <Route element={<PrivateRoute roles={['coordinator', 'admin']} />}>
+                <Route path="breakfast" element={<Breakfast />} />
+              </Route>
             </Route>
-          </Route>
-
-          {/* Rutas específicas para admin */}
-          <Route element={<PrivateRoute roles={['admin']} />}>
-            <Route path="/intranet/createuser" element={<UserForm />} />
-            <Route path="/intranet/users/monitor" element={<MonitoresTable />} />
-            <Route path="/intranet/users/socios" element={<PartnersTable />} />
-          </Route>
-
-          {/* Rutas específicas para partner */}
-          <Route element={<PrivateRoute roles={['partner']} />}>
-            <Route path="/intranet/students/:partnerId" element={<StudentsList />} />
-          </Route>
-
-          {/* Rutas específicas para monitor */}
-          <Route element={<PrivateRoute roles={['monitor']} />}>
-            <Route path="/intranet/attendances" element={<ActivitiesAttendancePage />} />
-          </Route>
-
-          {/* Rutas específicas para coordinator */}
-          <Route element={<PrivateRoute roles={['coordinator']} />}>
-            <Route path="/intranet/breakfast" element={<Breakfast />} />
           </Route>
         </Routes>
       </BrowserRouter>
