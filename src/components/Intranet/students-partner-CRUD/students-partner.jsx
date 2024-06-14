@@ -5,7 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
 const StudentsList = () => {
-  const { partnerId } = useParams();  // Obtén el partnerId de la URL
+  const { partnerId } = useParams();
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -17,12 +17,7 @@ const StudentsList = () => {
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
-    console.log('Fetching students for partnerId:', partnerId);
-    if (!partnerId) {
-      console.log('PartnerId not defined, returning early');
-      return;
-    }
-
+    if (!partnerId) return;
     try {
       const response = await fetch(`http://localhost:3000/api/students/partner/${partnerId}`);
       if (!response.ok) throw new Error('Error fetching students');
@@ -39,10 +34,15 @@ const StudentsList = () => {
   }, [fetchStudents, shouldRefetch]);
 
   const handleEdit = (student) => {
-    setSelectedStudent(student);
+    // Ensure all required fields are set
+    const completeStudent = {
+      ...student,
+      partner_number: student.partner?.partner_number || '',
+      centerName: student.center?.name || '',
+    };
+    setSelectedStudent(completeStudent);
     setIsModalOpen(true);
   };
-
   const handleDelete = (student) => {
     setSelectedStudent(student);
     setIsConfirmModalOpen(true);
@@ -76,25 +76,41 @@ const StudentsList = () => {
 
   const updateStudent = async (e) => {
     e.preventDefault();
+  
+    // Ensure the payload includes all required fields
+    const updatedStudentData = {
+      observations: selectedStudent.observations,
+      name: selectedStudent.name,
+      lastname: selectedStudent.lastname,
+      breakfast: selectedStudent.breakfast,
+      course: selectedStudent.course,
+      partner_number: selectedStudent.partner_number, // Ensure this field is included
+      centerName: selectedStudent.centerName, // Ensure this field is included
+    };
+  
     try {
       const response = await fetch(`http://localhost:3000/api/students/${selectedStudent._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(selectedStudent),
+        body: JSON.stringify(updatedStudentData),
       });
+  
       if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error updating student:', errorData);
         throw new Error('Error updating student');
       }
-
+  
       setShouldRefetch(true);
       closeModal();
     } catch (error) {
-      console.error('Error updating student:', error);
+      console.error('Error updating student:', error.message);
       closeModal();
     }
   };
+
 
   const filteredStudents = students.filter(student =>
     `${student.name} ${student.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -202,7 +218,7 @@ const StudentsList = () => {
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
-              Página <span className="font-medium">{currentPage + 1}</span> de <span className="font-medium">{pageCount}</span>
+              Showing <span className="font-medium">{offset + 1}</span> to <span className="font-medium">{Math.min(offset + itemsPerPage, filteredStudents.length)}</span> of <span className="font-medium">{filteredStudents.length}</span> results
             </p>
           </div>
           <div>
@@ -210,24 +226,24 @@ const StudentsList = () => {
               <button
                 onClick={() => handlePageClick(currentPage - 1)}
                 disabled={currentPage === 0}
-                className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+                className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
               >
                 <span className="sr-only">Previous</span>
                 <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
               </button>
-              {[...Array(pageCount).keys()].map((page) => (
+              {Array.from({ length: pageCount }, (_, index) => (
                 <button
-                  key={page}
-                  onClick={() => handlePageClick(page)}
-                  className={`relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${currentPage === page ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' : ''}`}
+                  key={index}
+                  onClick={() => handlePageClick(index)}
+                  className={`relative inline-flex items-center border ${currentPage === index ? 'border-indigo-500 bg-indigo-50 z-10' : 'border-gray-300 bg-white'} px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20`}
                 >
-                  {page + 1}
+                  {index + 1}
                 </button>
               ))}
               <button
                 onClick={() => handlePageClick(currentPage + 1)}
                 disabled={currentPage >= pageCount - 1}
-                className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+                className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
               >
                 <span className="sr-only">Next</span>
                 <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -237,86 +253,71 @@ const StudentsList = () => {
         </div>
       </div>
 
-      {/* Modal for editing student */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Editar Estudiante</h2>
-            <form onSubmit={updateStudent}>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Nombre</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={selectedStudent.name}
-                  onChange={(e) => setSelectedStudent({ ...selectedStudent, name: e.target.value })}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">Apellido</label>
-                <input
-                  type="text"
-                  id="lastname"
-                  value={selectedStudent.lastname}
-                  onChange={(e) => setSelectedStudent({ ...selectedStudent, lastname: e.target.value })}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="course">Curso</label>
-                <input
-                  type="text"
-                  id="course"
-                  value={selectedStudent.course}
-                  onChange={(e) => setSelectedStudent({ ...selectedStudent, course: e.target.value })}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="breakfast">Desayuno</label>
-                <input
-                  type="checkbox"
-                  id="breakfast"
-                  checked={selectedStudent.breakfast}
-                  onChange={(e) => setSelectedStudent({ ...selectedStudent, breakfast: e.target.checked })}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="observations">Observaciones</label>
-                <textarea
-                  id="observations"
-                  value={selectedStudent.observations}
-                  onChange={(e) => setSelectedStudent({ ...selectedStudent, observations: e.target.value })}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div className="flex justify-end">
-                <button type="button" onClick={closeModal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
-                  Cancelar
-                </button>
-                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Guardar
-                </button>
-              </div>
-            </form>
-          </div>
+  <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+    <div className="bg-white p-8 rounded-lg shadow-lg">
+      <h2 className="text-xl font-bold mb-4">Editar Estudiante</h2>
+      <form onSubmit={updateStudent}>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+            Nombre
+          </label>
+          <input
+            type="text"
+            id="name"
+            value={`${selectedStudent.name} ${selectedStudent.lastname}`}
+            readOnly // Para que el campo sea de solo lectura
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
         </div>
-      )}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="observations">
+            Observaciones
+          </label>
+          <textarea
+            id="observations"
+            value={selectedStudent.observations}
+            onChange={(e) => setSelectedStudent({ ...selectedStudent, observations: e.target.value })}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          ></textarea>
+        </div>
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Actualizar
+          </button>
+          <button
+            type="button"
+            onClick={closeModal}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
 
-      {/* Confirm delete modal */}
       {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded shadow-lg">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Confirmar Eliminación</h2>
-            <p>¿Estás seguro de que quieres eliminar a {selectedStudent.name} {selectedStudent.lastname}?</p>
-            <div className="flex justify-end mt-4">
-              <button onClick={closeConfirmModal} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
-                Cancelar
-              </button>
-              <button onClick={deleteStudent} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            <p>¿Estás seguro de que deseas eliminar a este estudiante?</p>
+            <div className="flex items-center justify-between mt-4">
+              <button
+                onClick={deleteStudent}
+                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
                 Eliminar
+              </button>
+              <button
+                onClick={closeConfirmModal}
+                className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Cancelar
               </button>
             </div>
           </div>
