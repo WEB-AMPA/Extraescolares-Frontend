@@ -18,9 +18,11 @@ import PrivateRoute from "./routes/PrivateRoute";
 import UnauthorizedPage from "./pages/UnauthorizedPage/UnauthorizedPage";
 import UserForm from "./components/Intranet/user-CRUD/createUser.jsx";
 import PartnersTable from "./components/Intranet/partner-CRUD/partner.jsx";
-import StudentsList from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
 import ActivitiesStudent from "./components/Intranet/activities-students-CRUD/activities-students.jsx";
 import CoordinatorTable from "./components/Intranet/coordinator-CRUD/coordinator.jsx";
+import StudentsPartner from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
+import Students from "./components/Intranet/students-CRUD/students.jsx";
+import CreateStudent from "./components/Intranet/students-CRUD/createStudent.jsx";
 
 
 
@@ -47,8 +49,10 @@ function App() {
               <Route path="createuser" element={<UserForm />} />
               <Route path="users/socios" element={<PartnersTable />} />
               <Route path="users/coordinator" element={<CoordinatorTable />} />
-              <Route path="students/:partnerId" element={<StudentsList />} />
+              <Route path="students/:partnerId" element={<StudentsPartner />} />
               <Route path="activities-student/:studentId" element={<ActivitiesStudent />} />
+              <Route path="allstudents" element={<Students />} />
+              <Route path="createstudent" element={<CreateStudent />} />
 
             </Route>
           </Route>

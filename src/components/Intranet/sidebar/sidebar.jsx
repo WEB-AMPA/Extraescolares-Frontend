@@ -2,10 +2,16 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { useAuthContext } from '../../../context/authContext'; // Importa useAuthContext
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useAuthContext } from '../../../context/authContext';
+import { useNavigate } from 'react-router-dom';
 import './sidebar.css';
-import { ADMIN_SIDEBAR_LINKS, MONITOR_SIDEBAR_LINKS, COORDINATOR_SIDEBAR_LINKS, SIDEBAR_BOTTOM_LINKS, PARTNER_SIDEBAR_LINKS } from '../../../utils/navigation';
+import {
+  ADMIN_SIDEBAR_LINKS,
+  MONITOR_SIDEBAR_LINKS,
+  COORDINATOR_SIDEBAR_LINKS,
+  SIDEBAR_BOTTOM_LINKS,
+  PARTNER_SIDEBAR_LINKS
+} from '../../../utils/navigation';
 
 function Sidebar({ userRole }) {
   const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -17,22 +23,21 @@ function Sidebar({ userRole }) {
     setSidebarVisible(!sidebarVisible);
   };
 
-  const toggleDropdown = (dropdown) => {
-    setDropdowns({ ...dropdowns, [dropdown]: !dropdowns[dropdown] });
+  const toggleDropdown = (key) => {
+    setDropdowns({
+      ...dropdowns,
+      [key]: !dropdowns[key]
+    });
   };
 
   const handleSignOut = () => {
-    // Llamar a la función logout del contexto para actualizar el estado de autenticación
     logout();
-    // Limpiar el localStorage
     localStorage.removeItem("usernameOrEmail");
     localStorage.removeItem("role");
     localStorage.removeItem("token");
-    // Redirigir al usuario a la página de login
     navigate("/login");
   };
 
-  // Determina los enlaces según el rol del usuario
   let sidebarLinks;
   switch (userRole) {
     case 'admin':
@@ -51,7 +56,6 @@ function Sidebar({ userRole }) {
       sidebarLinks = [];
   }
 
-  // Filtrar los enlaces del footer del sidebar para evitar duplicados
   const filteredSidebarLinks = sidebarLinks.filter(link => !SIDEBAR_BOTTOM_LINKS.find(footerLink => footerLink.key === link.key));
 
   return (
@@ -71,45 +75,53 @@ function Sidebar({ userRole }) {
           </div>
           {filteredSidebarLinks.map((link) => (
             <div key={link.key} className="relative">
-            
-
-              <button 
-                type="button"
-                onClick={() => toggleDropdown(link.key)}
-                className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
-              >
-             
-                <div className="grid mr-2 place-items-center">
-                  <FontAwesomeIcon icon={link.icon.props.icon} />
-                </div>
-                <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-                  {link.label} 
-                </p>
-                {link.subLinks && (
-                  <span className="ml-auto">
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className={`transform duration-300 ${dropdowns[link.key] ? 'rotate-180' : ''}`}
-                    />
-                  </span>
-                )}
-              </button>
-          
-              {dropdowns[link.key] && link.subLinks && (
-                <div className="mt-2 space-y-2 pl-8">
-                  {link.subLinks.map((subLink) => (
-                    <Link
-                      key={subLink.key}
-                      to={subLink.path}
-                      className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      <FontAwesomeIcon icon={subLink.icon.props.icon} />
-                      <span className="ml-2">{subLink.label}</span>
-                    </Link>
-                    
-                    
-                  ))}
-                </div>
+              {link.subLinks ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => toggleDropdown(link.key)}
+                    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
+                  >
+                    <div className="grid mr-2 place-items-center">
+                      <FontAwesomeIcon icon={link.icon.props.icon} />
+                    </div>
+                    <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+                      {link.label}
+                    </p>
+                    <span className="ml-auto">
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className={`transform duration-300 ${dropdowns[link.key] ? 'rotate-180' : ''}`}
+                      />
+                    </span>
+                  </button>
+                  {dropdowns[link.key] && (
+                    <div className="mt-2 space-y-2 pl-8">
+                      {link.subLinks.map((subLink) => (
+                        <Link
+                          key={subLink.key}
+                          to={subLink.path}
+                          className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+                        >
+                          <FontAwesomeIcon icon={subLink.icon.props.icon} />
+                          <span className="ml-2">{subLink.label}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  to={link.path}
+                  className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
+                >
+                  <div className="grid mr-2 place-items-center">
+                    <FontAwesomeIcon icon={link.icon.props.icon} />
+                  </div>
+                  <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+                    {link.label}
+                  </p>
+                </Link>
               )}
             </div>
           ))}

@@ -57,7 +57,7 @@ export const ADMIN_SIDEBAR_LINKS = [
     label: 'Alumnos',
     level: 1,
     icon: <FontAwesomeIcon icon={faUserGraduate} />,
-    path: '/intranet/students'
+    path: '/intranet/allstudents'
   },
   {
     key: 'asistencia',
@@ -87,7 +87,7 @@ export const ADMIN_SIDEBAR_LINKS = [
     label: 'Actividades',
     level: 1,
     icon: <FontAwesomeIcon icon={faClipboardList} />,
-    path: '/intranet/users'
+    path: '/intranet/activities'
   },
   {
     key: 'logout',

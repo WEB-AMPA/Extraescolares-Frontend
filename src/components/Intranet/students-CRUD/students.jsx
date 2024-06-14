@@ -1,11 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
-const StudentsPartner = () => {
-  const { partnerId } = useParams();
+const Students = () => {
+
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -17,21 +16,20 @@ const StudentsPartner = () => {
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
-    if (!partnerId) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/students/partner/${partnerId}`);
+      const response = await fetch(`http://localhost:3000/api/students/`);
       if (!response.ok) throw new Error('Error fetching students');
-
       const data = await response.json();
       setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);
     }
-  }, [partnerId]);
+  }, []);
 
   useEffect(() => {
     fetchStudents();
   }, [fetchStudents, shouldRefetch]);
+
 
   const handleEdit = (student) => {
     // Ensure all required fields are set
@@ -328,4 +326,4 @@ const StudentsPartner = () => {
   );
 };
 
-export default StudentsPartner;
+export default Students;
