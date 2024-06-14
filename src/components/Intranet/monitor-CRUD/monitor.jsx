@@ -32,6 +32,7 @@ const MonitoresTable = () => {
 
   const fetchMonitors = useCallback(async () => {
     try {
+      
       const response = await fetch('http://localhost:3000/api/users/role/monitor');
       if (!response.ok) {
         throw new Error('Error fetching monitors');
@@ -158,7 +159,7 @@ const MonitoresTable = () => {
         <thead className="bg-gray-200">
           <tr>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Nombre y Apellidos
+              Nombre Completo
             </th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Actividad
@@ -251,7 +252,7 @@ const MonitoresTable = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-4 rounded shadow">
-            <h2 className="text-xl font-bold mb-4">Edit Monitor</h2>
+            <h2 className="text-xl font-bold mb-4">Editar Asignación de Monitor/Actividad</h2>
             <form onSubmit={updateActivity}>
               <label className="block mb-2">
                 Actividad:
@@ -283,7 +284,7 @@ const MonitoresTable = () => {
               </label>
               <div className="flex justify-end">
                 <button type="button" onClick={closeModal} className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded mr-2">Cancel</button>
-                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Save</button>
+                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Guardar</button>
               </div>
             </form>
           </div>

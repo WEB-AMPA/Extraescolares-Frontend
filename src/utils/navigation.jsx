@@ -7,7 +7,6 @@ import {
   faClipboard,
   faCoffee,
   faSignOutAlt,
-  faCog,
   faCalendarCheck,
   faUserGraduate,
   faChalkboardTeacher,
@@ -49,7 +48,7 @@ export const ADMIN_SIDEBAR_LINKS = [
         label: 'Coordinadores',
         level: 2,
         icon: <FontAwesomeIcon icon={faUserTie} />,
-        path: '/intranet/users/coordinadores'
+        path: '/intranet/users/coordinator'
       }
     ]
   },
@@ -89,13 +88,6 @@ export const ADMIN_SIDEBAR_LINKS = [
     level: 1,
     icon: <FontAwesomeIcon icon={faClipboardList} />,
     path: '/intranet/users'
-  },
-  {
-    key: 'ajustes',
-    label: 'Ajustes',
-    level: 1,
-    icon: <FontAwesomeIcon icon={faCog} />,
-    path: '/intranet/ajustes'
   },
   {
     key: 'logout',

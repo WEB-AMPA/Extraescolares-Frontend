@@ -254,24 +254,24 @@ const StudentsList = () => {
       </div>
 
       {isModalOpen && (
-  <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-    <div className="bg-white p-8 rounded-lg shadow-lg">
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:max-w-lg">
       <h2 className="text-xl font-bold mb-4">Editar Estudiante</h2>
       <form onSubmit={updateStudent}>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Nombre
           </label>
           <input
             type="text"
             id="name"
             value={`${selectedStudent.name} ${selectedStudent.lastname}`}
-            readOnly // Para que el campo sea de solo lectura
+            readOnly
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="observations">
+          <label htmlFor="observations" className="block text-sm font-medium text-gray-700">
             Observaciones
           </label>
           <textarea
@@ -281,25 +281,26 @@ const StudentsList = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           ></textarea>
         </div>
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Actualizar
-          </button>
+        <div className="flex justify-end">
           <button
             type="button"
             onClick={closeModal}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="mr-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Cancelar
+          </button>
+          <button
+            type="submit"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Guardar
           </button>
         </div>
       </form>
     </div>
   </div>
 )}
+
 
       {isConfirmModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">

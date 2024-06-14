@@ -138,7 +138,7 @@ const viewMore = (partnerId) => {
               Número de Teléfono
             </th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Correo
+              Correo 
             </th>
             <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
               Ajustes
@@ -236,82 +236,80 @@ const viewMore = (partnerId) => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
-            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Editar Socio</h3>
-                <form onSubmit={updatePartner}>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                      Nombre:
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      value={selectedPartner?.name || ''}
-                      onChange={(e) => setSelectedPartner({ ...selectedPartner, name: e.target.value })}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastname">
-                      Apellido:
-                    </label>
-                    <input
-                      type="text"
-                      id="lastname"
-                      value={selectedPartner?.lastname || ''}
-                      onChange={(e) => setSelectedPartner({ ...selectedPartner, lastname: e.target.value })}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone_number">
-                      Teléfono:
-                    </label>
-                    <input
-                      type="text"
-                      id="phone_number"
-                      value={selectedPartner?.phone_number || ''}
-                      onChange={(e) => setSelectedPartner({ ...selectedPartner, phone_number: e.target.value })}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                      Correo:
-                    </label>
-                    <input
-                      type="text"
-                      id="email"
-                      value={selectedPartner?.email || ''}
-                      onChange={(e) => setSelectedPartner({ ...selectedPartner, email: e.target.value })}
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    />
-                  </div>
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={closeModal}
-                      className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
-                    >
-                      Guardar Cambios
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="bg-black opacity-25 absolute inset-0"></div>
+    <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Editar Socio</h3>
+        <form onSubmit={updatePartner}>
+          <div className="mb-4">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              Nombre
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={selectedPartner?.name || ''}
+              onChange={(e) => setSelectedPartner({ ...selectedPartner, name: e.target.value })}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
           </div>
-        </div>
-      )}
+          <div className="mb-4">
+            <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
+              Apellidos
+            </label>
+            <input
+              type="text"
+              id="lastname"
+              value={selectedPartner?.lastname || ''}
+              onChange={(e) => setSelectedPartner({ ...selectedPartner, lastname: e.target.value })}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">
+              Teléfono
+            </label>
+            <input
+              type="text"
+              id="phone_number"
+              value={selectedPartner?.phone_number || ''}
+              onChange={(e) => setSelectedPartner({ ...selectedPartner, phone_number: e.target.value })}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Correo
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={selectedPartner?.email || ''}
+              onChange={(e) => setSelectedPartner({ ...selectedPartner, email: e.target.value })}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+          </div>
+          <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button
+              type="submit"
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              onClick={closeModal}
+              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+)}
 
       {isConfirmModalOpen && (
         <div className="fixed z-10 inset-0 overflow-y-auto">
