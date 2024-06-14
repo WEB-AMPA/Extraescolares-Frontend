@@ -159,13 +159,7 @@ export const PARTNER_SIDEBAR_LINKS = [
 ];
 
 export const SIDEBAR_BOTTOM_LINKS = [
-  {
-    key: 'ajustes',
-    label: 'Ajustes',
-    level: 1,
-    icon: <FontAwesomeIcon icon={faCog} />,
-    path: '/intranet/ajustes'
-  },
+
   {
     key: 'logout',
     label: 'Cerrar Sesión',
