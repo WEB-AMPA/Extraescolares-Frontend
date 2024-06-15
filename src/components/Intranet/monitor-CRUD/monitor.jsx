@@ -36,9 +36,13 @@ const MonitoresTable = () => {
       
       const response = await fetch(`${VITE_URL}/api/users/role/monitor`);
       if (!response.ok) {
+
         throw new Error('Error fetching monitors');
       }
+     
       const data = await response.json();
+     console.log(data)
+
       setUsers(data);
       
       const monitorsData = data.map(user => {
