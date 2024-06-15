@@ -68,7 +68,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                const response = await axios.post('http://localhost:3000/api/breakfast/breakfast-attendance/', record);
+                const response = await axios.post(`${VITE_URL}/api/breakfast/breakfast-attendance/`, record);
                 createdAttendances.push({ ...record, id: response.data._id }); // Guardar el ID de la asistencia
             }
             

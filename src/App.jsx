@@ -68,12 +68,16 @@ function App() {
               <Route element={<PrivateRoute roles={['monitor', 'admin']} />}>
                 <Route path="attendances" element={<ActivitiesAttendancePage />} />
                 <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
+                <Route path="allstudents" element={<Students />} />
+
               </Route>
 
               {/* Rutas específicas para coordinator */}
               <Route element={<PrivateRoute roles={['coordinator', 'admin']} />}>
                 <Route path="breakfast" element={<Breakfast />} />
                 <Route path="calendar/:studentId" element={<BreakfastCalendar />} />
+                <Route path="allstudents" element={<Students />} />
+
               </Route>
             </Route>
           </Route>

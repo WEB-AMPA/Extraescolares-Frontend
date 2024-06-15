@@ -9,7 +9,7 @@ const ActivitiesCalendar = () => {
     const { activitiesStudentId } = useParams();
     const [attendanceHistory, setAttendanceHistory] = useState([]);
     const [error, setError] = useState('');
-    const { VITE_URL } = import.meta.ev
+    const { VITE_URL } = import.meta.env
 
     // Función para obtener el rango de fechas del mes actual
     const getCurrentMonthRange = () => {

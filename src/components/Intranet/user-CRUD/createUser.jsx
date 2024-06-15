@@ -14,6 +14,7 @@ const UserForm = () => {
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const {VITE_URL} = import.meta.env
 
   const handleChange = (e) => {
     const { name, value } = e.target;

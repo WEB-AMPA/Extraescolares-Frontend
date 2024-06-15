@@ -50,9 +50,9 @@ const CoordinatorTable = () => {
     setIsModalOpen(false);
   };
 
-  const deleteCoordinator = async () => {
+  const deleteCoordinator = async () => { 
     try {
-      await fetch(`http://localhost:3000/api/users/${selectedCoordinator._id}`, {
+      await fetch(`${VITE_URL}/api/users/${selectedCoordinator._id}`, {
         method: 'DELETE',
       });
       setCoordinators(coordinators.filter(coordinator => coordinator._id !== selectedCoordinator._id));
@@ -71,7 +71,7 @@ const CoordinatorTable = () => {
   const updateCoordinator = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${selectedCoordinator._id}`, {
+      const response = await fetch(`${VITE_URL}/api/users/${selectedCoordinator._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
