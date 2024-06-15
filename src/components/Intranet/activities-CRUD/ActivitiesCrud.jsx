@@ -1,234 +1,287 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { CiViewList } from "react-icons/ci";
+import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../../context/authContext';
 
-const ActivitiesCrud = () => {
-    const [users, setUsers] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const { auth } = useAuthContext();
+const Activities = () => {
+  const [activities, setActivities] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [monitors, setMonitors] = useState([]);
+  const [centers, setCenters] = useState([]);
+  const [schedules, setSchedules] = useState([]);
+  const [days, setDays] = useState([]);
+  const { VITE_URL } = import.meta.env;
+  const { auth } = useAuthContext();
 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('https://random-data-api.com/api/users/random_user');
-                const data = await response.json();
-                setUsers([data]);
-            } catch (error) {
-                console.error('Error fetching data: ', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const handleEdit = (user) => {
-        console.log('Editar usuario:', user);
-        setSelectedUser(user);
-        setIsModalOpen(true);
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await fetch(`${VITE_URL}/api/activities`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${auth.token}`,
+          },
+        });
+        if (!response.ok) throw new Error('Error fetching activities');
+        const data = await response.json();
+        setActivities(data);
+      } catch (error) {
+        console.error('Error fetching activities:', error);
+      }
     };
 
-    const handleDelete = (user) => {
-        console.log('Borrar usuario:', user);
-        setSelectedUser(user);
-        setIsConfirmModalOpen(true);
+    const fetchOptions = async () => {
+      try {
+        const [monitorsResponse, centersResponse, schedulesResponse, daysResponse] = await Promise.all([
+          fetch(`${VITE_URL}/api/users/role/monitor`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${auth.token}`,
+            },
+          }),
+          fetch(`${VITE_URL}/api/centers`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${auth.token}`,
+            },
+          }),
+          fetch(`${VITE_URL}/api/scheduleHours`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${auth.token}`,
+            },
+          }),
+          fetch(`${VITE_URL}/api/schedulesDays`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${auth.token}`,
+            },
+          })
+        ]);
+
+        const [monitorsData, centersData, schedulesData, daysData] = await Promise.all([
+          monitorsResponse.json(),
+          centersResponse.json(),
+          schedulesResponse.json(),
+          daysResponse.json()
+        ]);
+
+        setMonitors(monitorsData);
+        setCenters(centersData);
+        setSchedules(schedulesData);
+        setDays(daysData);
+      } catch (error) {
+        console.error('Error fetching options:', error);
+      }
     };
 
-    const closeConfirmModal = () => {
-        setIsConfirmModalOpen(false);
-    };
+    fetchActivities();
+    fetchOptions();
+  }, []);
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+  const handleEdit = (activity) => {
+    setSelectedActivity(activity);
+    setIsModalOpen(true);
+  };
 
-    const deleteUser = () => {
-        console.log(`Eliminar usuario: ${selectedUser.id}`);
-        closeConfirmModal();
-    };
+  const handleDelete = async (activityId) => {
+    try {
+      const response = await fetch(`${VITE_URL}/api/activities/${activityId}`, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${auth.token}`,
+        },
+      });
+      if (!response.ok) throw new Error('Error deleting activity');
+      setActivities(activities.filter(activity => activity._id !== activityId));
+    } catch (error) {
+      console.error('Error deleting activity:', error);
+    }
+  };
 
-    return (
-        <div className="flex justify-center overflow-x-auto m-4 p-4">
-            <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
-                <thead className="bg-gray-200 gap-3 items-center text-center">
-                    <tr>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                            Actividad
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                            Categoría
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                            Monitor
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                            Horario
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                            Días
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                            Observaciones
-                        </th>
-                        <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                            Ajustes
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200 text-center">
-                    {users.map((user) => (
-                        <tr key={user.id} className="border-b border-gray-300">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{user.employment.title}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{user.gender}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{user.id}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{user.gender}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{user.gender}</div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-900">{user.address.state}</div>
-                            </td>
-                            <td className="flex px-6 py-3 text-center text-sm font-medium">
-                                <button title="Editar Actividad" onClick={() => handleEdit(user)} className="text-white p-2 m-2 bg-blue-800 rounded">
-                                    <FaEdit />
-                                </button>
-                                <button title="Eliminar Actividad" onClick={() => handleDelete(user)} className="text-white p-2 m-2 bg-red-700 rounded">
-                                    <MdDelete />
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
-            {isModalOpen && (
-                <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-                        </div>
+  const saveActivity = async () => {
+    try {
+      const response = await fetch(`${VITE_URL}/api/activities/${selectedActivity._id}`, {
+        method: 'PUT',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${auth.token}`,
+        },
+        body: JSON.stringify(selectedActivity),
+      });
+      if (!response.ok) throw new Error('Error updating activity');
+      const updatedActivity = await response.json();
+      setActivities(activities.map(activity => activity._id === updatedActivity._id ? updatedActivity : activity));
+      closeModal();
+    } catch (error) {
+      console.error('Error updating activity:', error);
+    }
+  };
 
-                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <form className="p-8 border border-black rounded">
-                                    <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">Editar Actividad del Alumno</h3>
-                                    <div className="gap-4 mb-4">
+  return (
+    <div className="flex justify-center overflow-x-auto m-4 p-4">
+      <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
+        <thead className="bg-gray-200 gap-3 items-center">
+          <tr>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Actividad</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Categoría</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Monitor</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Centro</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Horario</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Días</th>
+            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Ajustes</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {activities.length === 0 ? (
+            <tr>
+              <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">No hay actividades disponibles.</td>
+            </tr>
+          ) : (
+            activities.map((activity) => (
+              <tr key={activity._id} className="border-b border-gray-300">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{activity?.name || 'Nombre no disponible'}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{activity?.categories?.map(category => category.name).join(', ') || 'Categoría no disponible'}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{activity?.monitor?.name || 'Monitor no disponible'}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{activity?.centers?.map(center => center.name).join(', ') || 'Centro no disponible'}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{activity?.scheduleHour?.map(hour => hour.range).join(', ') || 'Horario no disponible'}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">{activity?.scheduleDay?.map(day => day.days).join(', ') || 'Días no disponibles'}</div>
+                </td>
+                <td className="flex px-6 py-3 text-center text-sm font-medium">
+                  <button title="Editar Actividad" onClick={() => handleEdit(activity)} className="text-white p-2 m-2 bg-blue-800 rounded">
+                    <FaEdit />
+                  </button>
+                  <button title="Eliminar Actividad" onClick={() => handleDelete(activity._id)} className="text-white p-2 m-2 bg-red-700 rounded">
+                    <MdDelete />
+                  </button>
+                  <Link to={`/intranet/actividades/${activity._id}`} className="p-2 m-2 bg-yellow-300 rounded flex items-center justify-center" title="Ver Detalles de la Actividad">
+                    <CiViewList />
+                  </Link>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
 
-                                        <div>
-                                            <label htmlFor="actividades" className="block text-sm font-medium text-gray-700 m-2">Actividades</label>
-                                            <select name="actividades" id="actividades" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                                <option value="">Seleccione una actividad</option>
-                                                <option value="opcion1">Opción 1</option>
-                                                <option value="opcion2">Opción 2</option>
-                                                <option value="opcion3">Opción 3</option>
-                                                <option value="opcion4">Opción 4</option>
-                                                <option value="opcion5">Opción 5</option>
-                                                <option value="opcion6">Opción 6</option>
-                                            </select>
-                                        </div>
-
-                                        <div className="grid grid-cols-2 ">
-                                            <div className="w-full md:w-1/2 px-2 mb-4">
-                                                <label htmlFor="monitor" className="block text-sm font-medium text-gray-700 m-2">Monitor</label>
-                                                <input type="text" name="monitor" id="monitor" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                                            </div>
-                                            <div className="w-full md:w-1/2 px-2 mb-4">
-                                                <label htmlFor="categoria" className="block text-sm font-medium text-gray-700 m-2">Categoría</label>
-                                                <select name="categoria" id="categoria" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                                    <option value="">Seleccione una categoría</option>
-                                                    <option value="opcion1">Opción 1</option>
-                                                    <option value="opcion2">Opción 2</option>
-                                                    <option value="opcion3">Opción 3</option>
-                                                    <option value="opcion4">Opción 4</option>
-                                                    <option value="opcion5">Opción 5</option>
-                                                    <option value="opcion6">Opción 6</option>
-                                                </select>
-                                            </div>
-                                            <div className="w-full md:w-1/2 px-2 mb-4">
-                                                <label htmlFor="horario" className="block text-sm font-medium text-gray-700 m-2">Horario</label>
-                                                <select name="horario" id="horario" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                                    <option value="">Seleccione un horario</option>
-                                                    <option value="opcion1">13:00-14:00</option>
-                                                    <option value="opcion2">14:00-15:00</option>
-                                                    <option value="opcion3">15:00-16:00</option>
-                                                    <option value="opcion4">16:00-17:00</option>
-                                                    <option value="opcion5">17:00-18:00</option>
-                                                    <option value="opcion6">18:00-19:00</option>
-                                                </select>
-                                            </div>
-                                            <div className="w-full md:w-1/2 px-2 mb-4">
-                                                <label htmlFor="dias" className="block text-sm font-medium text-gray-700 m-2">Días</label>
-                                                <select name="dias" id="dias" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                                                    <option value="">Seleccione días</option>
-                                                    <option value="lunes">Lunes y Miercoles</option>
-                                                    <option value="martes">Martes y Jueves</option>
-                                                    <option value="miércoles">Miércoles y Viernes</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="text" className="block text-sm font-medium text-gray-700 m-2">Observaciones</label>
-                                        <input type="text" name="text" id="observaciones" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                                    </div>
-
-                                    <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                                        <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
-                                            Guardar
-                                        </button>
-                                        <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
-                                            Cancelar
-                                        </button>
-                                    </div>
-                                </form>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {isConfirmModalOpen && (
-                <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="confirm-modal-title" role="dialog" aria-modal="true">
-                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-                        </div>
-
-                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">¿Seguro que quieres Eliminar esta Actividad?</h3>
-                                <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={deleteUser}>
-                                        Confirmar
-                                    </button>
-                                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeConfirmModal}>
-                                        Cancelar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
+      {isModalOpen && (
+        <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            </div>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <form className="p-8 border border-black rounded">
+                  <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">Editar Actividad</h3>
+                  <div className="mb-4">
+                    <label htmlFor="activityName" className="block text-sm font-medium text-gray-700 m-2">Nombre de la Actividad:</label>
+                    <input
+                      type="text"
+                      name="activityName"
+                      id="activityName"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      value={selectedActivity?.name || ''}
+                      onChange={(e) => setSelectedActivity({ ...selectedActivity, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="activityMonitor" className="block text-sm font-medium text-gray-700 m-2">Monitor:</label>
+                    <select
+                      id="activityMonitor"
+                      name="activityMonitor"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      value={selectedActivity?.monitor?._id || ''}
+                      onChange={(e) => setSelectedActivity({ ...selectedActivity, monitor: monitors.find(monitor => monitor._id === e.target.value) })}
+                    >
+                      <option value="">Seleccione un monitor</option>
+                      {monitors.map(monitor => (
+                        <option key={monitor._id} value={monitor._id}>{monitor.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="activityCenter" className="block text-sm font-medium text-gray-700 m-2">Centro:</label>
+                    <select
+                      id="activityCenter"
+                      name="activityCenter"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      value={selectedActivity?.centers?.[0]?._id || ''}
+                      onChange={(e) => setSelectedActivity({ ...selectedActivity, centers: [centers.find(center => center._id === e.target.value)] })}
+                    >
+                      <option value="">Seleccione un centro</option>
+                      {centers.map(center => (
+                        <option key={center._id} value={center._id}>{center.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="activitySchedule" className="block text-sm font-medium text-gray-700 m-2">Horario:</label>
+                    <select
+                      id="activitySchedule"
+                      name="activitySchedule"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      value={selectedActivity?.scheduleHour?.[0]?._id || ''}
+                      onChange={(e) => setSelectedActivity({ ...selectedActivity, scheduleHour: [schedules.find(schedule => schedule._id === e.target.value)] })}
+                    >
+                      <option value="">Seleccione un horario</option>
+                      {schedules.map(schedule => (
+                        <option key={schedule._id} value={schedule._id}>{schedule.range}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="activityDay" className="block text-sm font-medium text-gray-700 m-2">Días:</label>
+                    <select
+                      id="activityDay"
+                      name="activityDay"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      value={selectedActivity?.scheduleDay?.[0]?._id || ''}
+                      onChange={(e) => setSelectedActivity({ ...selectedActivity, scheduleDay: [days.find(day => day._id === e.target.value)] })}
+                    >
+                      <option value="">Seleccione un día</option>
+                      {days.map(day => (
+                        <option key={day._id} value={day._id}>{day.days}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {/* Add more fields here as necessary */}
+                  <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={saveActivity}>
+                      Guardar Cambios
+                    </button>
+                    <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" onClick={closeModal}>
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
-export default ActivitiesCrud;
+export default Activities;

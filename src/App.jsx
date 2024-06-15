@@ -24,6 +24,7 @@ import StudentsPartner from "./components/Intranet/students-partner-CRUD/student
 import Students from "./components/Intranet/students-CRUD/students.jsx";
 import CreateStudent from "./components/Intranet/students-CRUD/createStudent.jsx";
 import AssignActivity from "./components/Intranet/assign-activities/assign-activities.jsx";
+import Activities from "./components/Intranet/activities-CRUD/ActivitiesCrud.jsx";
 
 
 
@@ -56,6 +57,7 @@ function App() {
                 <Route path="allstudents" element={<Students />} />
                 <Route path="createstudent" element={<CreateStudent />} />
                 <Route path="asignactivities/:studentId" element={<AssignActivity />} />
+                <Route path="activities" element={<Activities />} />
 
               </Route>
 
