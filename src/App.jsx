@@ -23,6 +23,7 @@ import CoordinatorTable from "./components/Intranet/coordinator-CRUD/coordinator
 import StudentsPartner from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
 import Students from "./components/Intranet/students-CRUD/students.jsx";
 import CreateStudent from "./components/Intranet/students-CRUD/createStudent.jsx";
+import AssignActivity from "./components/Intranet/assign-activities/assign-activities.jsx";
 
 
 
@@ -54,6 +55,7 @@ function App() {
                 <Route path="users/coordinator" element={<CoordinatorTable />} />
                 <Route path="allstudents" element={<Students />} />
                 <Route path="createstudent" element={<CreateStudent />} />
+                <Route path="asignactivities/:studentId" element={<AssignActivity />} />
 
               </Route>
 
