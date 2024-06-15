@@ -13,11 +13,11 @@ const CreateStudent = () => {
   });
 
   const [centers, setCenters] = useState([]);
+  const [partners, setPartners] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    // Fetch all centers when the component mounts
     const fetchCenters = async () => {
       try {
         const response = await axios.get('http://localhost:3000/api/centers');
@@ -27,7 +27,17 @@ const CreateStudent = () => {
       }
     };
 
+    const fetchPartners = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/users/role/partner');
+        setPartners(response.data);
+      } catch (error) {
+        console.error('Error fetching partners:', error);
+      }
+    };
+
     fetchCenters();
+    fetchPartners();
   }, []);
 
   const handleChange = (e) => {
@@ -76,9 +86,13 @@ const CreateStudent = () => {
             <input type="text" id="course" name="course" value={formData.course} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
           </div>
           <div>
-            <label htmlFor="partner_number" className="block text-gray-700">Número de Socio del Padre:</label>
-            <input type="text" id="partner_number" name="partner_number" value={formData.partner_number} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
-            <p className="text-sm text-gray-500 mt-1">Hay que poner el numero de socio de un padre </p>
+            <label htmlFor="partner_number" className="block text-gray-700">Número de Socio:</label>
+            <select id="partner_number" name="partner_number" value={formData.partner_number} onChange={handleChange} required className="mt-1 p-2 w-full border rounded">
+              <option value="">Seleccione un Socio</option>
+              {partners.map((partner) => (
+                <option key={partner._id} value={partner.partner_number}>{partner.name} {partner.lastname} ({partner.partner_number})</option>
+              ))}
+            </select>
           </div>
           <div>
             <label htmlFor="centerName" className="block text-gray-700">Nombre del Centro:</label>
