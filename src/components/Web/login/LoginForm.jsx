@@ -9,12 +9,17 @@ const LoginForm = () => {
     password: "",
   });
   const [error, setError] = useState("");
-  const { login } = useAuthContext(); // Cambiado a `login` del contexto de autenticación
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const { login } = useAuthContext(); 
   const navigate = useNavigate();
-  const { VITE_URL } =  import.meta.env
+  const { VITE_URL } = import.meta.env;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!termsAccepted) {
+      setError("Debes aceptar los términos y condiciones");
+      return;
+    }
 
     try {
       const response = await fetch(`${VITE_URL}/api/login`, {
@@ -23,22 +28,18 @@ const LoginForm = () => {
         body: JSON.stringify({ usernameOrEmail, password }),
       });
 
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
       const data = await response.json();
 
-      if (response.ok) {
-        if (data.token) {
-          const { token, role, name } = data;
-
-          // Llamar a la función `login` del contexto para actualizar el estado de autenticación
-          login(token, usernameOrEmail, name, role);
-
-          // Redirigir a la página de intranet
-          navigate("/intranet");
-        } else {
-          setError("Credenciales incorrectas. Por favor, verifica tus datos.");
-        }
+      if (data.token) {
+        const { token, role, name } = data;
+        login(token, usernameOrEmail, name, role);
+        navigate("/intranet");
       } else {
-        setError("Error al iniciar sesión. Por favor, inténtalo de nuevo.");
+        setError("Credenciales incorrectas. Por favor, verifica tus datos.");
       }
     } catch (error) {
       console.error("Error al verificar las credenciales", error);
@@ -48,42 +49,66 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-80">
-        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
-        {error && <div className="mb-4 text-red-600">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-700">Usuario o Email</label>
-            <input
-              name="usernameOrEmail"
-              id="usernameOrEmail"
-              type="text"
-              className="w-full px-3 py-2 border rounded"
-              value={usernameOrEmail}
-              onChange={onInputChange}
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700">Contraseña</label>
-            <input
-              name="password"
-              id="password"
-              type="password"
-              className="w-full px-3 py-2 border rounded"
-              value={password}
-              onChange={onInputChange}
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded"
-          >
-            Ingresar
-          </button>
-        </form>
+    <div className="hero min-h-screen bg-base-200">
+      <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="text-center lg:text-left">
+          <h1 className="text-5xl font-bold">¡Inicia sesión ahora!</h1>
+          <p className="py-6">
+            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
+          </p>
+        </div>
+        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+          <form className="card-body" onSubmit={handleSubmit}>
+            {error && <div className="mb-4 text-red-600">{error}</div>}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Usuario o Email</span>
+              </label>
+              <input
+                name="usernameOrEmail"
+                id="usernameOrEmail"
+                type="text"
+                placeholder="Usuario o Email"
+                className="input input-bordered"
+                value={usernameOrEmail}
+                onChange={onInputChange}
+                required
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Contraseña</span>
+              </label>
+              <input
+                name="password"
+                id="password"
+                type="password"
+                placeholder="Contraseña"
+                className="input input-bordered"
+                value={password}
+                onChange={onInputChange}
+                required
+              />
+              <label className="label">
+                <a href="/request-password-reset" className="label-text-alt link link-hover">¿Olvidaste tu contraseña?</a>
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="cursor-pointer label">
+                <span className="label-text">Acepto los términos y condiciones</span>
+                <input 
+                  type="checkbox" 
+                  className="checkbox checkbox-primary" 
+                  checked={termsAccepted} 
+                  onChange={() => setTermsAccepted(!termsAccepted)} 
+                />
+              </label>
+            </div>
+            <div className="form-control mt-6">
+              <button type="submit" className="btn btn-primary">Ingresar</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

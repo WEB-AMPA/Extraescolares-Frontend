@@ -25,6 +25,8 @@ import Students from "./components/Intranet/students-CRUD/students.jsx";
 import CreateStudent from "./components/Intranet/students-CRUD/createStudent.jsx";
 import AssignActivity from "./components/Intranet/assign-activities/assign-activities.jsx";
 import Activities from "./components/Intranet/activities-CRUD/ActivitiesCrud.jsx";
+import RequestPasswordReset from "./components/Web/password-reset/password-reset-request.jsx";
+import ResetPassword from "./components/Web/password-reset/password-reset-form.jsx";
 
 
 
@@ -39,6 +41,8 @@ function App() {
           <Route path="/Privacy-Policy" element={<PrivacyPolicy />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/request-password-reset" element={<RequestPasswordReset />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/activities" element={<ActivitiesPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
