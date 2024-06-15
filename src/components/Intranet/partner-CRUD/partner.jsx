@@ -11,14 +11,14 @@ const PartnersTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
-  
+  const { VITE_URL } = import.meta.env
   
 
   const itemsPerPage = 10;
 
   const fetchPartners = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/users/role/partner');
+      const response = await fetch(`${VITE_URL}/api/users/role/partner`);
       if (!response.ok) {
         throw new Error('Error fetching partners');
       }
@@ -53,7 +53,7 @@ const PartnersTable = () => {
 
   const deletePartner = async () => {
     try {
-      await fetch(`http://localhost:3000/api/users/${selectedPartner._id}`, {
+      await fetch(`${VITE_URL}/api/users/${selectedPartner._id}`, {
         method: 'DELETE',
       });
       setPartners(partners.filter(partner => partner._id !== selectedPartner._id));
@@ -72,7 +72,7 @@ const PartnersTable = () => {
   const updatePartner = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${selectedPartner._id}`, {
+      const response = await fetch(`${VITE_URL}/api/users/${selectedPartner._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -10,6 +10,7 @@ const BreakfastCalendar = () => {
     const [attendanceHistory, setAttendanceHistory] = useState([]);
     const [studentName, setStudentName] = useState('');
     const [error, setError] = useState('');
+    const { VITE_URL } = import.meta.env
 
     // Función para obtener el rango de fechas del mes actual
     const getCurrentMonthRange = () => {
@@ -28,7 +29,7 @@ const BreakfastCalendar = () => {
                 const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
                 const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
 
-                const response = await axios.get(`http://localhost:3000/api/breakfast/breakfast-attendance/student/${studentId}`, {
+                const response = await axios.get(`${VITE_URL}/api/breakfast/breakfast-attendance/student/${studentId}`, {
                     params: { start_date, end_date }
                 });
                 if (response.data.length > 0) {

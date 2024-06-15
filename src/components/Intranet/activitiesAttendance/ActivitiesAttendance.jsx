@@ -10,12 +10,13 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     const [selectedActivity, setSelectedActivity] = useState('');
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [error, setError] = useState('');
+    const { VITE_URL }= import.meta.env
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchActivities = async () => {
             try {
-                const responseActivities = await axios.get('http://localhost:3000/api/activities');
+                const responseActivities = await axios.get(`${VITE_URL}/api/activities`);
                 setActivities(responseActivities.data);
                 if (responseActivities.data.length > 0) {
                     setSelectedActivity(responseActivities.data[0]._id);
@@ -32,7 +33,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
     useEffect(() => {
         const fetchStudentsByActivityAndDate = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/attendance/activitiesStudents/by-activity-and-date/${selectedActivity}/${date}`);
+                const response = await axios.get(`${VITE_URL}/api/attendance/activitiesStudents/by-activity-and-date/${selectedActivity}/${date}`);
                 setStudents(response.data);
             } catch (error) {
                 setError('Error fetching students. Please try again.');
@@ -78,7 +79,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         try {
             const createdAttendances = [];
             for (const record of attendanceRecords) {
-                const response = await axios.post('http://localhost:3000/api/attendance/registerAttendance', record);
+                const response = await axios.post(`${VITE_URL}/api/attendance/registerAttendance`, record);
                 createdAttendances.push({ ...record, id: response.data._id });
             }
             onAttendanceAdded(createdAttendances);

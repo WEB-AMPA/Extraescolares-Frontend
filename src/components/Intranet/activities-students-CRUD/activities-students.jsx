@@ -11,13 +11,14 @@ const ActivitiesStudent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
+  const { VITE_URL } = import.meta.env
 
   useEffect(() => {
     const fetchActivities = async () => {
       try {
         const url = studentId 
-          ? `http://localhost:3000/api/activitiesStudents?studentId=${studentId}`
-          : `http://localhost:3000/api/activitiesStudents`;
+          ? `${VITE_URL}/api/activitiesStudents?studentId=${studentId}`
+          : `${VITE_URL}/api/activitiesStudents`;
 
         const response = await fetch(url);
         if (!response.ok) throw new Error('Error fetching activities');

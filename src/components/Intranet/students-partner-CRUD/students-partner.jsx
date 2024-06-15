@@ -13,13 +13,14 @@ const StudentsPartner = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const {VITE_URL } = import.meta.env
 
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
     if (!partnerId) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/students/partner/${partnerId}`);
+      const response = await fetch(`${VITE_URL}/api/students/partner/${partnerId}`);
       if (!response.ok) throw new Error('Error fetching students');
 
       const data = await response.json();
@@ -58,7 +59,7 @@ const StudentsPartner = () => {
 
   const deleteStudent = async () => {
     try {
-      await fetch(`http://localhost:3000/api/students/${selectedStudent._id}`, {
+      await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'DELETE',
       });
       setStudents(students.filter(student => student._id !== selectedStudent._id));
@@ -89,7 +90,7 @@ const StudentsPartner = () => {
     };
   
     try {
-      const response = await fetch(`http://localhost:3000/api/students/${selectedStudent._id}`, {
+      const response = await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
