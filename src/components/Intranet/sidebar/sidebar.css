@@ -1,4 +1,20 @@
-/* Estilos CSS para el hover */
+
+section {
+  display: flex;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.ml-64 {
+  margin-left: 16rem;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
 .hover-bg-gray-100:hover {
     background-color: #ffff23; /* Color de fondo gris claro */
   }
