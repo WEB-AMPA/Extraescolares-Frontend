@@ -90,13 +90,13 @@ export const ADMIN_SIDEBAR_LINKS = [
     icon: <FontAwesomeIcon icon={faClipboardList} />,
     path: '/intranet/users'
   },
-  {
-    key: 'ajustes',
-    label: 'Ajustes',
-    level: 1,
-    icon: <FontAwesomeIcon icon={faCog} />,
-    path: '/intranet/ajustes'
-  },
+  // {
+  //   key: 'ajustes',
+  //   label: 'Ajustes',
+  //   level: 1,
+  //   icon: <FontAwesomeIcon icon={faCog} />,
+  //   path: '/intranet/ajustes'
+  // }, COMENTADO POR QUE SE USARÁ EN UN SPRING SIGUIENTE
   {
     key: 'logout',
     label: 'Cerrar Sesión',

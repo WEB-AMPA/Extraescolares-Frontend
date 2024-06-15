@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+import { CiViewList } from "react-icons/ci"; // Asegúrate de importar el icono correctamente
 
 const PartnersTable = () => {
   const [partners, setPartners] = useState([]);
@@ -11,8 +12,6 @@ const PartnersTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
-  
-  
 
   const itemsPerPage = 10;
 
@@ -103,24 +102,23 @@ const PartnersTable = () => {
   const offset = currentPage * itemsPerPage;
   const currentPageData = filteredPartners.slice(offset, offset + itemsPerPage);
 
-const viewMore = (partnerId) => {
-  window.location.href = `/intranet/students/${partnerId}`;
-};
+  const viewMore = (partnerId) => {
+    window.location.href = `/intranet/students/${partnerId}`;
+  };
 
   return (
     <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
         <input
           type="text"
-          placeholder="Buscar por Nombre y Apellidos..."
+          placeholder="Buscar Socio"
           value={searchTerm}
           onChange={handleSearch}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          style={{ maxWidth: '300px' }}
+          className="shadow appearance-none border rounded w-full sm:w-auto py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
         <button
           onClick={() => window.location.href = '/intranet/createuser'}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-600 hover:bg-gray-400 text-white font-normal py-2 px-2 rounded mt-4 sm:mt-0"
         >
           Crear Socio
         </button>
@@ -128,19 +126,19 @@ const viewMore = (partnerId) => {
       <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg">
         <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th className="px-2 sm:px-6 py-2 text-left text-sm font-bold text-black uppercase tracking-wider border-b border-gray-300">
               Nº Socio
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th className="px-2 sm:px-6 py-3 text-left text-sm font-bold text-black uppercase tracking-wider border-b border-gray-300">
               Nombre Completo
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th className="px-2 sm:px-6 py-3 text-left text-sm font-bold text-black uppercase tracking-wider border-b border-gray-300">
               Número de Teléfono
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th className="px-2 sm:px-6 py-3 text-left text-sm font-bold text-black uppercase tracking-wider border-b border-gray-300">
               Correo
             </th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th className="px-2 sm:px-6 py-3 text-center text-sm font-bold text-black uppercase tracking-wider border-b border-gray-300">
               Ajustes
             </th>
           </tr>
@@ -148,27 +146,30 @@ const viewMore = (partnerId) => {
         <tbody className="bg-white divide-y divide-gray-200">
           {currentPageData.map((partner) => (
             <tr key={partner._id} className="border-b border-gray-300">
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{partner.partner_number}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{`${partner.name} ${partner.lastname}`}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{partner.phone_number}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
+              <td className="px-2 sm:px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{partner.email}</div>
               </td>
-              <td className="flex justify-center px-6 py-3 text-sm font-medium">
-                <button title="Ver Más" onClick={() => viewMore(partner._id)} className="text-white p-2 m-2 bg-green-500 rounded">
+              <td className="flex flex-col sm:flex-row justify-center px-2 sm:px-6 py-3 text-sm font-medium space-y-2 sm:space-y-0 sm:space-x-2">
+                <button title="Ver Más" onClick={() => viewMore(partner._id)} className="flex flex-col items-center justify-center p-2 bg-yellow-500 text-white rounded w-full sm:w-auto text-xs">
+                  <CiViewList className="mb-1" />
                   Ver Más
                 </button>
-                <button title="Editar Socio" onClick={() => handleEdit(partner)} className="text-white p-2 m-2 bg-blue-800 rounded">
-                  <FaEdit />
+                <button title="Editar Socio" onClick={() => handleEdit(partner)} className="flex flex-col items-center justify-center p-2 bg-blue-800 text-white rounded w-full sm:w-auto text-xs">
+                  <FaEdit className="mb-1" />
+                  Editar
                 </button>
-                <button title="Eliminar Socio" onClick={() => handleDelete(partner)} className="text-white p-2 m-2 bg-red-700 rounded">
-                  <MdDelete />
+                <button title="Eliminar Socio" onClick={() => handleDelete(partner)} className="flex flex-col items-center justify-center p-2 bg-red-700 text-white rounded w-full sm:w-auto text-xs">
+                  <MdDelete className="mb-1" />
+                  Eliminar
                 </button>
               </td>
             </tr>

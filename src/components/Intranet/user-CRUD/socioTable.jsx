@@ -25,13 +25,11 @@ const SociosTable = () => {
   }, []);
 
   const handleEdit = (user) => {
-    console.log('Editar usuario:', user);
     setSelectedUser(user);
     setIsModalOpen(true);
   };
 
   const handleDelete = (user) => {
-    console.log('Borrar usuario:', user);
     setSelectedUser(user);
     setIsConfirmModalOpen(true);
   };
@@ -45,66 +43,43 @@ const SociosTable = () => {
   };
 
   const deleteUser = () => {
-    console.log(`Eliminar usuario: ${selectedUser.id}`);
     closeConfirmModal();
   };
 
   return (
     <div className="flex justify-center overflow-x-auto m-4 p-4">
-      <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
-        <thead className="bg-gray-200 gap-3 items-center">
+      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg">
+        <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Nº. Socio
-            </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Nombre
-            </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Apellido
-            </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Nº. Teléfono
-            </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Correo
-            </th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Ajustes
-            </th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nº. Socio</th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Apellido</th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Nº. Teléfono</th>
+            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Correo</th>
+            <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">Ajustes</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {users.map((user) => (
-            <tr key={user.id} className="border-b border-gray-300">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.id}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.first_name}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.last_name}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.phone_number}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{user.email}</div>
-              </td>
-              <td className="flex px-6 py-3 text-center text-sm font-medium">
-              <button title="Editar Socio" onClick={() => handleEdit(user)} className="text-white p-2 m-2 bg-blue-800 rounded">
-                  <FaEdit />
+            <tr key={user.id}>
+              <td className="px-4 py-2 whitespace-nowrap">{user.id}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{user.first_name}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{user.last_name}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{user.phone_number}</td>
+              <td className="px-4 py-2 whitespace-nowrap">{user.email}</td>
+              <td className="px-4 py-2 flex flex-col items-center space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 justify-center">
+                <button title="Editar Socio" onClick={() => handleEdit(user)} className="flex flex-col items-center p-2 rounded-lg bg-blue-600 text-white w-24 h-24">
+                  <FaEdit className="w-6 h-6 mb-1"/>
+                  <span className="text-sm">Editar</span>
                 </button>
-                <button title="Eliminar Socio" onClick={() => handleDelete(user)} className="text-white p-2 m-2 bg-red-700 rounded">
-                  <MdDelete />
+                <button title="Eliminar Socio" onClick={() => handleDelete(user)} className="flex flex-col items-center p-2 rounded-lg bg-red-600 text-white w-24 h-24">
+                  <MdDelete className="w-6 h-6 mb-1"/>
+                  <span className="text-sm">Eliminar</span>
                 </button>
-                <Link to="/intranet/socios/info" className="p-2 m-2 bg-yellow-300 rounded flex items-center justify-center" title="Ver Alumnos Registrados">
-                  <CiViewList />
+                <Link to="/intranet/socios/info" className="flex flex-col items-center p-2 rounded-lg bg-yellow-400 text-black w-24 h-24" title="Ver Alumnos Registrados">
+                  <CiViewList className="w-6 h-6 mb-1"/>
+                  <span className="text-sm">Ver más</span>
                 </Link>
-
-
-
               </td>
             </tr>
           ))}
@@ -112,80 +87,59 @@ const SociosTable = () => {
       </table>
 
       {isModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <form className="p-8 border border-black rounded">
-                  <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">Editar Socio</h3>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label htmlFor="nroSocio" className="block text-sm font-medium text-gray-700 m-2">Nº de Socio:</label>
-                      <input type="number" name="nroSocio" id="nroSocio" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.id || ''} readOnly />
-                    </div>
-                    <div>
-                      <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 m-2">Nº Teléfono:</label>
-                      <input type="tel" name="telefono" id="telefono" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.phone_number || ''} readOnly />
-                    </div>
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg w-full p-6">
+              <form>
+                <h3 className="mb-4 text-lg text-center font-medium text-gray-700">Editar Socio</h3>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label htmlFor="nroSocio" className="block text-sm font-medium text-gray-700">Nº de Socio:</label>
+                    <input type="number" name="nroSocio" id="nroSocio" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" defaultValue={selectedUser?.id || ''} readOnly />
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 m-2">Nombre:</label>
-                      <input type="text" name="nombre" id="nombre" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.first_name || ''} readOnly />
-                    </div>
-                    <div>
-                      <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700 m-2">Apellidos:</label>
-                      <input type="text" name="apellidos" id="apellidos" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.last_name || ''} readOnly />
-                    </div>
+                  <div>
+                    <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">Nº Teléfono:</label>
+                    <input type="tel" name="telefono" id="telefono" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" defaultValue={selectedUser?.phone_number || ''} readOnly />
                   </div>
-                  <div className="mb-4">
-                    <label htmlFor="correo" className="block text-sm font-medium text-gray-700 m-2">Correo:</label>
-                    <input type="email" name="email" id="correo" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" defaultValue={selectedUser?.email || ''} readOnly />
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre:</label>
+                    <input type="text" name="nombre" id="nombre" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" defaultValue={selectedUser?.first_name || ''} readOnly />
                   </div>
-                  <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
-                      Guardar cambios
-                    </button>
-                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>
-                      Cancelar
-                    </button>
+                  <div>
+                    <label htmlFor="apellidos" className="block text-sm font-medium text-gray-700">Apellidos:</label>
+                    <input type="text" name="apellidos" id="apellidos" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" defaultValue={selectedUser?.last_name || ''} readOnly />
                   </div>
-                </form>
-              </div>
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="correo" className="block text-sm font-medium text-gray-700">Correo:</label>
+                  <input type="email" name="correo" id="correo" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" defaultValue={selectedUser?.email || ''} readOnly />
+                </div>
+                <div className="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
+                  <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeModal}>Guardar cambios</button>
+                  <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" onClick={closeModal}>Cancelar</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       )}
       {isConfirmModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="confirm-modal-title" role="dialog" aria-modal="true">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">¿Seguro que quieres Eliminar este Socio?</h3>
-                <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={deleteUser}>
-                    Confirmar
-                  </button>
-                  <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={closeConfirmModal}>
-                    Cancelar
-                  </button>
-                </div>
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75"></div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg w-full p-6">
+              <h3 className="mb-4 text-lg text-center font-medium text-gray-700">¿Seguro que quieres eliminar este socio?</h3>
+              <div className="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
+                <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={deleteUser}>Confirmar</button>
+                <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" onClick={closeConfirmModal}>Cancelar</button>
               </div>
             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 };
