@@ -30,7 +30,7 @@ const CreateStudent = () => {
 
     const fetchPartners = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/users/role/partner');
+        const response = await axios.get(`${VITE_URL}/api/users/role/partner`);
         setPartners(response.data);
       } catch (error) {
         console.error('Error fetching partners:', error);
