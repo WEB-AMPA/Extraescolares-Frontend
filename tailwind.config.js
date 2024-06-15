@@ -1,5 +1,3 @@
-import flowbitePlugin from "flowbite/plugin";
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -10,12 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
-      },
-      colors: { 
-        button: "#F2E30F",
+        poppins: ["Poppins", "sans-serif"],
       },
     },
   },
-  plugins: [require("flowbite/plugin","daisyui")],
+  plugins: [require("flowbite/plugin"), require("daisyui")],
 };

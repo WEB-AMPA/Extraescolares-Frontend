@@ -1,92 +1,60 @@
-import "./navbar.css";
-import logo from "../../../../public/logo.png";
+import React from 'react';
+import logo from '../../../../public/logo.png'; // Asegúrate de que esta ruta sea correcta
 
 function Navbar() {
   return (
-    <nav className="navbar fixed top-0 w-full z-50 bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src={logo} className="h-16 w-23" alt="Flowbite Logo" />
-        </a>
-        <button
-          data-collapse-toggle="navbar-dropdown"
-          type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          aria-controls="navbar-dropdown"
-          aria-expanded="false"
-        >
-          <svg
-            className="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 17 14"
-          >
-            <path
+    <div className="navbar bg-base-100 fixed top-0 left-0 right-0 z-50 py-2">
+      <div className="navbar-start">
+        <div className="dropdown">
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 30 30"
               stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
-          </svg>
-        </button>
-        <div className="hidden w-full md:block md:w-auto" id="navbar-dropdown">
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            <li>
-              <a
-                href="/"
-                className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent"
-                aria-current="page"
-              >
-                INICIO
-              </a>
-            </li>
-            <li>
-              <a
-                href="./about-us"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                QUIENES SOMOS
-              </a>
-            </li>
-            <li>
-              <a
-                href="./activities"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                ACTIVIDADES
-              </a>
-            </li>
-            <li>
-              <a
-                href="./centros"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                CENTROS
-              </a>
-            </li>
-            <li>
-              <a
-                href="./login"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                ACCESOS
-              </a>
-            </li>
-            <li>
-              <a
-                href="./contact"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                CONTACTO
-              </a>
-            </li>
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-4 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li><a href="/" className="font-bold">INICIO</a></li>
+            <li><a href="/about-us" className="font-semibold">QUIENES SOMOS</a></li>
+            <li><a href="/activities" className="font-semibold">ACTIVIDADES</a></li>
+            <li><a href="/centros" className="font-semibold">CENTROS</a></li>
+            <li><a href="/contact" className="font-semibold">CONTACTANOS</a></li>
           </ul>
         </div>
+        <a href="/" className="">
+          <img src={logo} alt="Logo" className="h-[6rem] w-[6rem]" />
+        </a>
       </div>
-    </nav>
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1">
+          <li><a href="/" className="font-semibold text-[1rem]">INICIO</a></li>
+          <li><a href="/about-us" className="font-semibold text-[1rem]">QUIENES SOMOS</a></li>
+          <li><a href="/activities" className="font-semibold text-[1rem]">ACTIVIDADES</a></li>
+          <li><a href="/centros" className="font-semibold text-[1rem]">CENTROS</a></li>
+          <li><a href="/contact" className="font-semibold text-[1rem]">CONTACTANOS</a></li>
+        </ul>
+      </div>
+      <div className="navbar-end">
+        <a href="/login" className="btn bg-blue-600 text-white hover:bg-blue-700">
+          ACCESOS
+        </a>
+      </div>
+    </div>
   );
 }
 
 export default Navbar;
+
+
