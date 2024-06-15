@@ -25,7 +25,7 @@ const Students = () => {
     } catch (error) {
       console.error('Error fetching students:', error);
     }
-  }, []);
+  }, [VITE_URL]);
 
   useEffect(() => {
     fetchStudents();

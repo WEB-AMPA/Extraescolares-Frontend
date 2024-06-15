@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useAuthContext } from '../../../context/authContext';
-import { useNavigate } from 'react-router-dom';
+
 import './sidebar.css';
 import {
   ADMIN_SIDEBAR_LINKS,
@@ -13,11 +13,11 @@ import {
   PARTNER_SIDEBAR_LINKS
 } from '../../../utils/navigation';
 
-function Sidebar({ userRole }) {
+function Sidebar() {
+  const { auth, logout } = useAuthContext();
+  const navigate = useNavigate();
   const [sidebarVisible, setSidebarVisible] = useState(false);
   const [dropdowns, setDropdowns] = useState({});
-  const { logout } = useAuthContext();
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);
@@ -39,7 +39,7 @@ function Sidebar({ userRole }) {
   };
 
   let sidebarLinks;
-  switch (userRole) {
+  switch (auth.role) {
     case 'admin':
       sidebarLinks = ADMIN_SIDEBAR_LINKS;
       break;
