@@ -15,12 +15,13 @@ const CreateStudent = () => {
   const [centers, setCenters] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const { VITE_URL } = import.meta.env
 
   useEffect(() => {
     // Fetch all centers when the component mounts
     const fetchCenters = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/centers');
+        const response = await axios.get(`${VITE_URL}/api/centers`);
         setCenters(response.data);
       } catch (error) {
         console.error('Error fetching centers:', error);
@@ -41,7 +42,7 @@ const CreateStudent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/students', formData);
+      const response = await axios.post(`${VITE_URL}/api/students`, formData);
       setSubmitted(true);
       setErrors({});
       console.log(response.data);

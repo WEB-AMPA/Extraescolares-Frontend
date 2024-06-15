@@ -12,12 +12,13 @@ const Students = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const { VITE_URL } = import.meta.env
 
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/students/`);
+      const response = await fetch(`${VITE_URL}/api/students/`);
       if (!response.ok) throw new Error('Error fetching students');
       const data = await response.json();
       setStudents(data);

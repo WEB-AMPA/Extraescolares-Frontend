@@ -29,7 +29,7 @@ const UserForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/users', formData);
+      const response = await axios.post(`${VITE_URL}/api/users`, formData);
       setSubmitted(true);
       console.log(response.data);
     } catch (error) {

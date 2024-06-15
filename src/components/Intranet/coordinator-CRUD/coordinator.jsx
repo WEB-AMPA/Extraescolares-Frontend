@@ -11,12 +11,13 @@ const CoordinatorTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const { VITE_URL } = import.meta.env
 
   const itemsPerPage = 10;
 
   const fetchCoordinators = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/users/role/coordinator');
+      const response = await fetch(`${VITE_URL}/api/users/role/coordinator`);
       if (!response.ok) {
         throw new Error('Error fetching coordinators');
       }

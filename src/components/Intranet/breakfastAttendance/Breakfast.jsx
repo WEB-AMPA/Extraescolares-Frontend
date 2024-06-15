@@ -10,12 +10,13 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { VITE_URL} = import.meta.env
 
     useEffect(() => {
         const fetchStudentsAndAttendances = async () => {
             try {
-                const responseStudents = await axios.get('http://localhost:3000/api/students/withbreakfast');
-                const responseAttendances = await axios.get(`http://localhost:3000/api/breakfast/breakfast-attendance/date/${date}`);
+                const responseStudents = await axios.get(`${VITE_URL}/api/students/withbreakfast`);
+                const responseAttendances = await axios.get(`${VITE_URL}/api/breakfast/breakfast-attendance/date/${date}`);
                 
                 const studentsWithAttendance = responseStudents.data.map(student => {
                     const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);

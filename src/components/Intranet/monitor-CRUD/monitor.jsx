@@ -14,12 +14,13 @@ const MonitoresTable = () => {
   const [activities, setActivities] = useState([]);
   const [users, setUsers] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false); // Estado para controlar el refetch automático
+  const { VITE_URL } = import.meta.env
 
   const itemsPerPage = 10;
 
   const fetchActivities = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/activities');
+      const response = await fetch(`${VITE_URL}/api/activities`);
       if (!response.ok) {
         throw new Error('Error fetching activities');
       }
@@ -33,7 +34,7 @@ const MonitoresTable = () => {
   const fetchMonitors = useCallback(async () => {
     try {
       
-      const response = await fetch('http://localhost:3000/api/users/role/monitor');
+      const response = await fetch(`${VITE_URL}/api/users/role/monitor`);
       if (!response.ok) {
         throw new Error('Error fetching monitors');
       }
@@ -83,7 +84,7 @@ const MonitoresTable = () => {
 
   const deleteMonitor = async () => {
     try {
-      await fetch(`http://localhost:3000/api/users/${selectedMonitor._id}`, {
+      await fetch(`${VITE_URL}/api/users/${selectedMonitor._id}`, {
         method: 'DELETE',
       });
       setMonitors(monitors.filter(monitor => monitor._id !== selectedMonitor._id));
@@ -103,7 +104,7 @@ const MonitoresTable = () => {
     e.preventDefault();
     try {
       const updatedActivity = { newMonitorUsername: selectedMonitor._id, activityId: selectedActivityId }; // Incluir activityId en los datos actualizados
-      const response = await fetch(`http://localhost:3000/api/activities/${selectedActivityId}/update-monitor`, {
+      const response = await fetch(`${VITE_URL}/api/activities/${selectedActivityId}/update-monitor`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
