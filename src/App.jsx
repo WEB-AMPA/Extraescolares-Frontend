@@ -44,29 +44,36 @@ function App() {
           <Route element={<PrivateRoute roles={['admin', 'partner', 'monitor', 'coordinator']} />}>
             <Route path="/intranet" element={<IntranetLayout />}>
               {/* Rutas generales dentro de la intranet */}
-              <Route path="calendar/:studentId" element={<BreakfastCalendar />} />
-              <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
+
               
               {/* Rutas específicas para admin */}
               <Route element={<PrivateRoute roles={['admin']} />}>
                 <Route path="createuser" element={<UserForm />} />
                 <Route path="users/monitor" element={<MonitoresTable />} />
                 <Route path="users/socios" element={<PartnersTable />} />
+                <Route path="users/coordinator" element={<CoordinatorTable />} />
+                <Route path="allstudents" element={<Students />} />
+                <Route path="createstudent" element={<CreateStudent />} />
+
               </Route>
 
               {/* Rutas específicas para partner */}
               <Route element={<PrivateRoute roles={['partner','admin']} />}>
-                <Route path="students/:partnerId" element={<StudentsList />} />
+                <Route path="students/:partnerId" element={<StudentsPartner />} />
+                <Route path="activities-student/:studentId" element={<ActivitiesStudent />} />
+
               </Route>
 
               {/* Rutas específicas para monitor */}
               <Route element={<PrivateRoute roles={['monitor', 'admin']} />}>
                 <Route path="attendances" element={<ActivitiesAttendancePage />} />
+                <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
               </Route>
 
               {/* Rutas específicas para coordinator */}
               <Route element={<PrivateRoute roles={['coordinator', 'admin']} />}>
                 <Route path="breakfast" element={<Breakfast />} />
+                <Route path="calendar/:studentId" element={<BreakfastCalendar />} />
               </Route>
             </Route>
           </Route>
