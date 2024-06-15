@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useAuthContext } from '../../../context/authContext';
+
 import './sidebar.css';
 import {
   ADMIN_SIDEBAR_LINKS,
@@ -74,45 +75,53 @@ function Sidebar() {
           </div>
           {filteredSidebarLinks.map((link) => (
             <div key={link.key} className="relative">
-            
-
-              <button 
-                type="button"
-                onClick={() => toggleDropdown(link.key)}
-                className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
-              >
-             
-                <div className="grid mr-2 place-items-center">
-                  <FontAwesomeIcon icon={link.icon.props.icon} />
-                </div>
-                <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
-                  {link.label} 
-                </p>
-                {link.subLinks && (
-                  <span className="ml-auto">
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className={`transform duration-300 ${dropdowns[link.key] ? 'rotate-180' : ''}`}
-                    />
-                  </span>
-                )}
-              </button>
-          
-              {dropdowns[link.key] && link.subLinks && (
-                <div className="mt-2 space-y-2 pl-8">
-                  {link.subLinks.map((subLink) => (
-                    <Link
-                      key={subLink.key}
-                      to={subLink.path}
-                      className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
-                    >
-                      <FontAwesomeIcon icon={subLink.icon.props.icon} />
-                      <span className="ml-2">{subLink.label}</span>
-                    </Link>
-                    
-                    
-                  ))}
-                </div>
+              {link.subLinks ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => toggleDropdown(link.key)}
+                    className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
+                  >
+                    <div className="grid mr-2 place-items-center">
+                      <FontAwesomeIcon icon={link.icon.props.icon} />
+                    </div>
+                    <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+                      {link.label}
+                    </p>
+                    <span className="ml-auto">
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className={`transform duration-300 ${dropdowns[link.key] ? 'rotate-180' : ''}`}
+                      />
+                    </span>
+                  </button>
+                  {dropdowns[link.key] && (
+                    <div className="mt-2 space-y-2 pl-8">
+                      {link.subLinks.map((subLink) => (
+                        <Link
+                          key={subLink.key}
+                          to={subLink.path}
+                          className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+                        >
+                          <FontAwesomeIcon icon={subLink.icon.props.icon} />
+                          <span className="ml-2">{subLink.label}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  to={link.path}
+                  className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
+                >
+                  <div className="grid mr-2 place-items-center">
+                    <FontAwesomeIcon icon={link.icon.props.icon} />
+                  </div>
+                  <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
+                    {link.label}
+                  </p>
+                </Link>
               )}
             </div>
           ))}
