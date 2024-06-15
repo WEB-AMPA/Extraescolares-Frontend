@@ -20,15 +20,7 @@ const ActivitiesStudent = () => {
           ? `${VITE_URL}/api/activitiesStudents?studentId=${studentId}`
           : `${VITE_URL}/api/activitiesStudents`;
 
-        const response = await fetch(url,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.token}`,
-            },
-          }
-        );
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Error fetching activities');
         const data = await response.json();
         setActivities(data);
