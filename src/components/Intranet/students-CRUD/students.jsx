@@ -56,7 +56,7 @@ const Students = () => {
 
   const deleteStudent = async () => {
     try {
-      await fetch(`http://localhost:3000/api/students/${selectedStudent._id}`, {
+      await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'DELETE',
       });
       setStudents(students.filter(student => student._id !== selectedStudent._id));
@@ -86,7 +86,7 @@ const Students = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/api/students/${selectedStudent._id}`, {
+      const response = await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
