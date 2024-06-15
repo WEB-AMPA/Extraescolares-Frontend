@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { useAuthContext } from '../../../context/authContext';
 
 const ActivitiesCrud = () => {
     const [users, setUsers] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const { auth } = useAuthContext();
+
 
     useEffect(() => {
         const fetchData = async () => {

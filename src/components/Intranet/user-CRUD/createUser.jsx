@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useAuthContext } from '../../../context/authContext';
 
 const UserForm = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,8 @@ const UserForm = () => {
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const {VITE_URL} = import.meta.env
+  const { VITE_URL } = import.meta.env;
+  const { auth } = useAuthContext();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,11 +32,21 @@ const UserForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${VITE_URL}/api/users`, formData);
+      const response = await axios.post(`${VITE_URL}/api/users`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
       setSubmitted(true);
       console.log(response.data);
     } catch (error) {
-      setErrors(error.response.data.errors || {});
+      setSubmitted(false);
+      if (error.response && error.response.data && error.response.data.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        setErrors({ general: 'Error creando el usuario' });
+      }
     }
   };
 
@@ -42,7 +54,7 @@ const UserForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="max-w-1xl mx-auto p-8 bg-white shadow-md rounded-lg">
+      <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-8 bg-white shadow-md rounded-lg">
         <h2 className="text-2xl font-bold mb-6 text-center">Crear un usuario</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>

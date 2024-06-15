@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
+import { useAuthContext } from '../../../context/authContext';
 
 
 const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
@@ -11,12 +12,30 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const { VITE_URL} = import.meta.env
+    const { auth } = useAuthContext();
+
+
 
     useEffect(() => {
         const fetchStudentsAndAttendances = async () => {
             try {
-                const responseStudents = await axios.get(`${VITE_URL}/api/students/withbreakfast`);
-                const responseAttendances = await axios.get(`${VITE_URL}/api/breakfast/breakfast-attendance/date/${date}`);
+                const responseStudents = await axios.get(`${VITE_URL}/api/students/withbreakfast`,
+                
+                       {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${auth.token}`,
+                          },
+                       } 
+                );
+                const responseAttendances = await axios.get(`${VITE_URL}/api/breakfast/breakfast-attendance/date/${date}`,
+                    {
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${auth.token}`,
+                        },
+                      }
+                );
                 
                 const studentsWithAttendance = responseStudents.data.map(student => {
                     const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);

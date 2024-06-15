@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+import { useAuthContext } from '../../../context/authContext';
+
 
 const MonitoresTable = () => {
   const [monitors, setMonitors] = useState([]);
@@ -14,13 +16,23 @@ const MonitoresTable = () => {
   const [activities, setActivities] = useState([]);
   const [users, setUsers] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false); // Estado para controlar el refetch automático
+  const { auth } = useAuthContext();
+
   const { VITE_URL } = import.meta.env
 
   const itemsPerPage = 10;
 
   const fetchActivities = useCallback(async () => {
     try {
-      const response = await fetch(`${VITE_URL}/api/activities`);
+      const response = await fetch(`${VITE_URL}/api/activities`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error('Error fetching activities');
       }
@@ -34,7 +46,15 @@ const MonitoresTable = () => {
   const fetchMonitors = useCallback(async () => {
     try {
       
-      const response = await fetch(`${VITE_URL}/api/users/role/monitor`);
+      const response = await fetch(`${VITE_URL}/api/users/role/monitor`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
+      );
       if (!response.ok) {
 
         throw new Error('Error fetching monitors');
@@ -90,6 +110,10 @@ const MonitoresTable = () => {
     try {
       await fetch(`${VITE_URL}/api/users/${selectedMonitor._id}`, {
         method: 'DELETE',
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+        }
       });
       setMonitors(monitors.filter(monitor => monitor._id !== selectedMonitor._id));
       setShouldRefetch(true); // Activar refetch automático después de eliminar

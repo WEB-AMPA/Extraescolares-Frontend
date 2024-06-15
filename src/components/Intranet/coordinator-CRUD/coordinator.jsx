@@ -1,32 +1,41 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { useAuthContext } from "../../../context/authContext";
+import axios from "axios";
 
 const CoordinatorTable = () => {
   const [coordinators, setCoordinators] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedCoordinator, setSelectedCoordinator] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
-  const { VITE_URL } = import.meta.env
+  const { VITE_URL } = import.meta.env;
+  const { auth } = useAuthContext();
 
   const itemsPerPage = 10;
 
   const fetchCoordinators = useCallback(async () => {
     try {
-      const response = await fetch(`${VITE_URL}/api/users/role/coordinator`);
+      const response = await fetch(`${VITE_URL}/api/users/role/coordinator`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
       if (!response.ok) {
-        throw new Error('Error fetching coordinators');
+        throw new Error("Error fetching coordinators");
       }
       const data = await response.json();
       setCoordinators(data);
     } catch (error) {
-      console.error('Error fetching coordinators:', error);
+      console.error("Error fetching coordinators:", error);
     }
-  }, []);
+  }, [VITE_URL, auth.token]);
 
   useEffect(() => {
     fetchCoordinators();
@@ -50,15 +59,23 @@ const CoordinatorTable = () => {
     setIsModalOpen(false);
   };
 
-  const deleteCoordinator = async () => { 
+  const deleteCoordinator = async () => {
     try {
       await fetch(`${VITE_URL}/api/users/${selectedCoordinator._id}`, {
-        method: 'DELETE',
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
       });
-      setCoordinators(coordinators.filter(coordinator => coordinator._id !== selectedCoordinator._id));
+      setCoordinators(
+        coordinators.filter(
+          (coordinator) => coordinator._id !== selectedCoordinator._id
+        )
+      );
       setShouldRefetch(true);
     } catch (error) {
-      console.error('Error deleting coordinator:', error);
+      console.error("Error deleting coordinator:", error);
     }
     closeConfirmModal();
   };
@@ -71,25 +88,30 @@ const CoordinatorTable = () => {
   const updateCoordinator = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${VITE_URL}/api/users/${selectedCoordinator._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selectedCoordinator),
-      });
-      if (!response.ok) {
-        throw new Error('Error updating coordinator');
-      }
+      const response = await axios.put(
+        `${VITE_URL}/api/users/${selectedCoordinator._id}`,
+        selectedCoordinator,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${auth.token}`,
+          },
+        }
+      );
+
+      console.log("Respuesta de actualización:", response.data);
+
       setShouldRefetch(true);
       closeModal();
     } catch (error) {
-      console.error('Error updating coordinator:', error);
+      console.error("Error actualizando coordinador:", error.response ? error.response.data : error.message);
     }
   };
 
-  const filteredCoordinators = coordinators.filter(coordinator =>
-    `${coordinator.name} ${coordinator.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCoordinators = coordinators.filter((coordinator) =>
+    `${coordinator.name} ${coordinator.lastname}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   const pageCount = Math.ceil(filteredCoordinators.length / itemsPerPage);
@@ -99,7 +121,10 @@ const CoordinatorTable = () => {
   };
 
   const offset = currentPage * itemsPerPage;
-  const currentPageData = filteredCoordinators.slice(offset, offset + itemsPerPage);
+  const currentPageData = filteredCoordinators.slice(
+    offset,
+    offset + itemsPerPage
+  );
 
   return (
     <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4">
@@ -110,10 +135,10 @@ const CoordinatorTable = () => {
           value={searchTerm}
           onChange={handleSearch}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          style={{ maxWidth: '300px' }}
+          style={{ maxWidth: "300px" }}
         />
         <button
-          onClick={() => window.location.href = '/intranet/createuser'}
+          onClick={() => (window.location.href = "/intranet/createuser")}
           className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Crear Coordinador
@@ -122,16 +147,28 @@ const CoordinatorTable = () => {
       <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg">
         <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+            >
               Nombre Completo
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+            >
               Nombre de Usuario
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-              Correo 
+            <th
+              scope="col"
+              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+            >
+              Correo
             </th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th
+              scope="col"
+              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+            >
               Ajustes
             </th>
           </tr>
@@ -143,16 +180,26 @@ const CoordinatorTable = () => {
                 <div className="text-sm text-gray-900">{`${coordinator.name} ${coordinator.lastname}`}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{coordinator.username}</div>
+                <div className="text-sm text-gray-900">
+                  {coordinator.username}
+                </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-900">{coordinator.email}</div>
               </td>
               <td className="flex justify-center px-6 py-3 text-sm font-medium">
-                <button title="Editar Coordinador" onClick={() => handleEdit(coordinator)} className="text-white p-2 m-2 bg-blue-800 rounded">
+                <button
+                  title="Editar Coordinador"
+                  onClick={() => handleEdit(coordinator)}
+                  className="text-white p-2 m-2 bg-blue-800 rounded"
+                >
                   <FaEdit />
                 </button>
-                <button title="Eliminar Coordinador" onClick={() => handleDelete(coordinator)} className="text-white p-2 m-2 bg-red-700 rounded">
+                <button
+                  title="Eliminar Coordinador"
+                  onClick={() => handleDelete(coordinator)}
+                  className="text-white p-2 m-2 bg-red-700 rounded"
+                >
                   <MdDelete />
                 </button>
               </td>
@@ -181,13 +228,20 @@ const CoordinatorTable = () => {
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
-              Mostrando <span className="font-medium">{offset + 1}</span> a{' '}
-              <span className="font-medium">{Math.min(offset + itemsPerPage, filteredCoordinators.length)}</span> de{' '}
-              <span className="font-medium">{filteredCoordinators.length}</span> resultados
+              Mostrando <span className="font-medium">{offset + 1}</span> a{" "}
+              <span className="font-medium">
+                {Math.min(offset + itemsPerPage, filteredCoordinators.length)}
+              </span>{" "}
+              de{" "}
+              <span className="font-medium">{filteredCoordinators.length}</span>{" "}
+              resultados
             </p>
           </div>
           <div>
-            <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+            <nav
+              className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+              aria-label="Pagination"
+            >
               <button
                 onClick={() => handlePageClick(currentPage - 1)}
                 disabled={currentPage === 0}
@@ -201,7 +255,9 @@ const CoordinatorTable = () => {
                   key={index}
                   onClick={() => handlePageClick(index)}
                   className={`relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                    index === currentPage ? 'bg-indigo-600 text-white' : 'text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                    index === currentPage
+                      ? "bg-indigo-600 text-white"
+                      : "text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                   }`}
                 >
                   {index + 1}
@@ -225,60 +281,86 @@ const CoordinatorTable = () => {
           <div className="bg-black opacity-25 absolute inset-0"></div>
           <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Editar Coordinador</h3>
+              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Editar Coordinador
+              </h3>
               <form onSubmit={updateCoordinator}>
                 <div className="mb-4">
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Nombre
                   </label>
                   <input
                     type="text"
                     id="name"
-                    value={selectedCoordinator?.name || ''}
+                    value={selectedCoordinator?.name || ""}
                     onChange={(e) =>
-                      setSelectedCoordinator({ ...selectedCoordinator, name: e.target.value })
+                      setSelectedCoordinator({
+                        ...selectedCoordinator,
+                        name: e.target.value,
+                      })
                     }
                     className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="lastname"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Apellidos
                   </label>
                   <input
                     type="text"
                     id="lastname"
-                    value={selectedCoordinator?.lastname || ''}
+                    value={selectedCoordinator?.lastname || ""}
                     onChange={(e) =>
-                      setSelectedCoordinator({ ...selectedCoordinator, lastname: e.target.value })
+                      setSelectedCoordinator({
+                        ...selectedCoordinator,
+                        lastname: e.target.value,
+                      })
                     }
                     className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="username"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Nombre de Usuario
                   </label>
                   <input
                     type="text"
                     id="username"
-                    value={selectedCoordinator?.username || ''}
+                    value={selectedCoordinator?.username || ""}
                     onChange={(e) =>
-                      setSelectedCoordinator({ ...selectedCoordinator, username: e.target.value })
+                      setSelectedCoordinator({
+                        ...selectedCoordinator,
+                        username: e.target.value,
+                      })
                     }
                     className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Correo 
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Correo
                   </label>
                   <input
                     type="email"
                     id="email"
-                    value={selectedCoordinator?.email || ''}
+                    value={selectedCoordinator?.email || ""}
                     onChange={(e) =>
-                      setSelectedCoordinator({ ...selectedCoordinator, email: e.target.value })
+                      setSelectedCoordinator({
+                        ...selectedCoordinator,
+                        email: e.target.value,
+                      })
                     }
                     className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
@@ -309,9 +391,13 @@ const CoordinatorTable = () => {
           <div className="bg-black opacity-25 absolute inset-0"></div>
           <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Confirmar Eliminación</h3>
+              <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Confirmar Eliminación
+              </h3>
               <p className="text-sm text-gray-500">
-                ¿Estás seguro de que deseas eliminar a {selectedCoordinator?.name} {selectedCoordinator?.lastname}? Esta acción no se puede deshacer.
+                ¿Estás seguro de que deseas eliminar a{" "}
+                {selectedCoordinator?.name} {selectedCoordinator?.lastname}?
+                Esta acción no se puede deshacer.
               </p>
               <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button

@@ -4,12 +4,15 @@ import { useParams } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './CalendarCustom.css'; // Importa el archivo CSS personalizado
+import { useAuthContext } from '../../../context/authContext';
 
 const ActivitiesCalendar = () => {
     const { activitiesStudentId } = useParams();
     const [attendanceHistory, setAttendanceHistory] = useState([]);
     const [error, setError] = useState('');
     const { VITE_URL } = import.meta.env
+    const { auth } = useAuthContext();
+
 
     // Función para obtener el rango de fechas del mes actual
     const getCurrentMonthRange = () => {
@@ -28,7 +31,14 @@ const ActivitiesCalendar = () => {
                 const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
                 const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
 
-                const response = await axios.get(`${VITE_URL}/api/attendance/activities_student/${activitiesStudentId}/date-range/${start_date}/${end_date}`);
+                const response = await axios.get(`${VITE_URL}/api/attendance/activities_student/${activitiesStudentId}/date-range/${start_date}/${end_date}`,
+                    {
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${auth.token}`,
+                        },
+                      }
+                );
                 setAttendanceHistory(response.data);
             } catch (error) {
                 setError('Error fetching attendance history');
