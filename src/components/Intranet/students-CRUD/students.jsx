@@ -31,9 +31,7 @@ const Students = () => {
     fetchStudents();
   }, [fetchStudents, shouldRefetch]);
 
-
   const handleEdit = (student) => {
-    // Ensure all required fields are set
     const completeStudent = {
       ...student,
       partner_number: student.partner?.partner_number || '',
@@ -42,6 +40,7 @@ const Students = () => {
     setSelectedStudent(completeStudent);
     setIsModalOpen(true);
   };
+
   const handleDelete = (student) => {
     setSelectedStudent(student);
     setIsConfirmModalOpen(true);
@@ -75,18 +74,17 @@ const Students = () => {
 
   const updateStudent = async (e) => {
     e.preventDefault();
-  
-    // Ensure the payload includes all required fields
+
     const updatedStudentData = {
-      observations: selectedStudent.observations,
       name: selectedStudent.name,
       lastname: selectedStudent.lastname,
       breakfast: selectedStudent.breakfast,
       course: selectedStudent.course,
-      partner_number: selectedStudent.partner_number, // Ensure this field is included
-      centerName: selectedStudent.centerName, // Ensure this field is included
+      partner_number: selectedStudent.partner_number,
+      centerName: selectedStudent.centerName,
+      observations: selectedStudent.observations,
     };
-  
+
     try {
       const response = await fetch(`http://localhost:3000/api/students/${selectedStudent._id}`, {
         method: 'PUT',
@@ -95,13 +93,13 @@ const Students = () => {
         },
         body: JSON.stringify(updatedStudentData),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error updating student:', errorData);
         throw new Error('Error updating student');
       }
-  
+
       setShouldRefetch(true);
       closeModal();
     } catch (error) {
@@ -109,7 +107,6 @@ const Students = () => {
       closeModal();
     }
   };
-
 
   const filteredStudents = students.filter(student =>
     `${student.name} ${student.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -253,53 +250,78 @@ const Students = () => {
       </div>
 
       {isModalOpen && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
-    <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:max-w-lg">
-      <h2 className="text-xl font-bold mb-4">Editar Estudiante</h2>
-      <form onSubmit={updateStudent}>
-        <div className="mb-4">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Nombre
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={`${selectedStudent.name} ${selectedStudent.lastname}`}
-            readOnly
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:max-w-lg">
+            <h2 className="text-xl font-bold mb-4">Editar Estudiante</h2>
+            <form onSubmit={updateStudent}>
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  value={selectedStudent.name}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, name: e.target.value })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  id="lastname"
+                  value={selectedStudent.lastname}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, lastname: e.target.value })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="breakfast" className="block text-sm font-medium text-gray-700">
+                  Desayuno
+                </label>
+                <select
+                  id="breakfast"
+                  value={selectedStudent.breakfast}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, breakfast: e.target.value === 'true' })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  <option value="true">Sí</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="observations" className="block text-sm font-medium text-gray-700">
+                  Observaciones
+                </label>
+                <textarea
+                  id="observations"
+                  value={selectedStudent.observations}
+                  onChange={(e) => setSelectedStudent({ ...selectedStudent, observations: e.target.value })}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                ></textarea>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="mr-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Guardar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div className="mb-4">
-          <label htmlFor="observations" className="block text-sm font-medium text-gray-700">
-            Observaciones
-          </label>
-          <textarea
-            id="observations"
-            value={selectedStudent.observations}
-            onChange={(e) => setSelectedStudent({ ...selectedStudent, observations: e.target.value })}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          ></textarea>
-        </div>
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={closeModal}
-            className="mr-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Guardar
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
+      )}
 
       {isConfirmModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
