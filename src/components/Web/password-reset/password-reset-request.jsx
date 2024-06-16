@@ -8,7 +8,7 @@ const PasswordResetRequest = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://extraescolares-backend.onrender.com/api/request-password-reset', {
+      const response = await fetch('https://extraescolares-backend.onrender.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

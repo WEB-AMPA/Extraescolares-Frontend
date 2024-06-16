@@ -28,8 +28,6 @@ import Activities from "./components/Intranet/activities-CRUD/ActivitiesCrud.jsx
 import RequestPasswordReset from "./components/Web/password-reset/password-reset-request.jsx";
 import ResetPassword from "./components/Web/password-reset/password-reset-form.jsx";
 
-
-
 function App() {
   return (
     <AuthContextProvider>
@@ -42,7 +40,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/request-password-reset" element={<RequestPasswordReset />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/activities" element={<ActivitiesPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
@@ -51,7 +49,6 @@ function App() {
             <Route path="/intranet" element={<IntranetLayout />}>
               {/* Rutas generales dentro de la intranet */}
 
-              
               {/* Rutas específicas para admin */}
               <Route element={<PrivateRoute roles={['admin']} />}>
                 <Route path="createuser" element={<UserForm />} />
@@ -62,14 +59,12 @@ function App() {
                 <Route path="createstudent" element={<CreateStudent />} />
                 <Route path="asignactivities/:studentId" element={<AssignActivity />} />
                 <Route path="activities" element={<Activities />} />
-
               </Route>
 
               {/* Rutas específicas para partner */}
               <Route element={<PrivateRoute roles={['partner','admin']} />}>
                 <Route path="students/:partnerId" element={<StudentsPartner />} />
                 <Route path="activities-student/:studentId" element={<ActivitiesStudent />} />
-
               </Route>
 
               {/* Rutas específicas para monitor */}
@@ -77,7 +72,6 @@ function App() {
                 <Route path="attendances" element={<ActivitiesAttendancePage />} />
                 <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
                 <Route path="allstudents" element={<Students />} />
-
               </Route>
 
               {/* Rutas específicas para coordinator */}
@@ -85,7 +79,6 @@ function App() {
                 <Route path="breakfast" element={<Breakfast />} />
                 <Route path="calendar/:studentId" element={<BreakfastCalendar />} />
                 <Route path="allstudents" element={<Students />} />
-
               </Route>
             </Route>
           </Route>

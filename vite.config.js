@@ -6,5 +6,5 @@ export default defineConfig({
   server: {
     port: 3000
   },
-  envPrefix: 'VITE_', // Asegúrate de que las variables de entorno comiencen con VITE_
+  envPrefix: 'VITE_',
 });
