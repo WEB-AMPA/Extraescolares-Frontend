@@ -139,7 +139,6 @@ const Activities = () => {
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(0);
   };
 
   const saveActivity = async () => {
@@ -176,12 +175,12 @@ const Activities = () => {
     } catch (error) {
       console.error('Error updating activity:', error.message);
     }
+    
   };
-
   const filteredActivities = activities.filter(activity =>
-    `${activity.name}`.toLowerCase().includes(searchTerm.toLowerCase())
+    activity.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  
   const handlePreviousPage = () => {
     setCurrentPage(currentPage > 1 ? currentPage - 1 : currentPage);
   };
@@ -193,13 +192,13 @@ const Activities = () => {
   const indexOfLastActivity = currentPage * itemsPerPage;
   const indexOfFirstActivity = indexOfLastActivity - itemsPerPage;
   const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
-
+  
   return (
     <div className="flex flex-col justify-center overflow-x-auto m-4 p-4">
       <div className="flex items-center justify-between mb-4">
         <input
           type="text"
-          placeholder="Buscar por Nombre y Apellidos..."
+          placeholder="Buscar Actividad"
           value={searchTerm}
           onChange={handleSearch}
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
