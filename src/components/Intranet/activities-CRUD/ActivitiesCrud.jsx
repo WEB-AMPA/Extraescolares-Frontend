@@ -13,6 +13,7 @@ const Activities = () => {
   const [centers, setCenters] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [days, setDays] = useState([]);
+  const [categories, setCategories] = useState([]);
   const { VITE_URL } = import.meta.env;
   const { auth } = useAuthContext();
 
@@ -35,7 +36,7 @@ const Activities = () => {
 
     const fetchOptions = async () => {
       try {
-        const [monitorsResponse, centersResponse, schedulesResponse, daysResponse] = await Promise.all([
+        const [monitorsResponse, centersResponse, schedulesResponse, daysResponse, categoriesResponse] = await Promise.all([
           fetch(`${VITE_URL}/api/users/role/monitor`, {
             headers: {
               "Content-Type": "application/json",
@@ -54,7 +55,13 @@ const Activities = () => {
               "Authorization": `Bearer ${auth.token}`,
             },
           }),
-          fetch(`${VITE_URL}/api/schedulesDays`, {
+          fetch(`${VITE_URL}/api/scheduleDays`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${auth.token}`,
+            },
+          }),
+          fetch(`${VITE_URL}/api/categories`, {
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${auth.token}`,
@@ -62,17 +69,25 @@ const Activities = () => {
           })
         ]);
 
-        const [monitorsData, centersData, schedulesData, daysData] = await Promise.all([
+        if (!monitorsResponse.ok) throw new Error(`Error fetching monitors: ${monitorsResponse.statusText}`);
+        if (!centersResponse.ok) throw new Error(`Error fetching centers: ${centersResponse.statusText}`);
+        if (!schedulesResponse.ok) throw new Error(`Error fetching schedules: ${schedulesResponse.statusText}`);
+        if (!daysResponse.ok) throw new Error(`Error fetching days: ${daysResponse.statusText}`);
+        if (!categoriesResponse.ok) throw new Error(`Error fetching categories: ${categoriesResponse.statusText}`);
+
+        const [monitorsData, centersData, schedulesData, daysData, categoriesData] = await Promise.all([
           monitorsResponse.json(),
           centersResponse.json(),
           schedulesResponse.json(),
-          daysResponse.json()
+          daysResponse.json(),
+          categoriesResponse.json()
         ]);
 
         setMonitors(monitorsData);
         setCenters(centersData);
         setSchedules(schedulesData);
         setDays(daysData);
+        setCategories(categoriesData);
       } catch (error) {
         console.error('Error fetching options:', error);
       }
@@ -161,16 +176,24 @@ const Activities = () => {
                   <div className="text-sm text-gray-900">{activity?.centers?.map(center => center.name).join(', ') || 'Centro no disponible'}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.scheduleHour?.map(hour => hour.range).join(', ') || 'Horario no disponible'}</div>
+                  <div className="text-sm text-gray-900">{activity?.scheduleHour?.map(schedule => schedule.range).join(', ') || 'Horario no disponible'}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-900">{activity?.scheduleDay?.map(day => day.days).join(', ') || 'Días no disponibles'}</div>
                 </td>
-                <td className="flex px-6 py-3 text-center text-sm font-medium">
-                  <button title="Editar Actividad" onClick={() => handleEdit(activity)} className="text-white p-2 m-2 bg-blue-800 rounded">
+                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                  <button
+                    className="text-indigo-600 hover:text-indigo-900 p-2 m-2 bg-yellow-300 rounded flex items-center justify-center"
+                    onClick={() => handleEdit(activity)}
+                    title="Editar Actividad"
+                  >
                     <FaEdit />
                   </button>
-                  <button title="Eliminar Actividad" onClick={() => handleDelete(activity._id)} className="text-white p-2 m-2 bg-red-700 rounded">
+                  <button
+                    className="text-red-600 hover:text-red-900 p-2 m-2 bg-yellow-300 rounded flex items-center justify-center"
+                    onClick={() => handleDelete(activity._id)}
+                    title="Eliminar Actividad"
+                  >
                     <MdDelete />
                   </button>
                   <Link to={`/intranet/actividades/${activity._id}`} className="p-2 m-2 bg-yellow-300 rounded flex items-center justify-center" title="Ver Detalles de la Actividad">
@@ -265,7 +288,21 @@ const Activities = () => {
                       ))}
                     </select>
                   </div>
-                  {/* Add more fields here as necessary */}
+                  <div className="mb-4">
+                    <label htmlFor="activityCategory" className="block text-sm font-medium text-gray-700 m-2">Categoría:</label>
+                    <select
+                      id="activityCategory"
+                      name="activityCategory"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      value={selectedActivity?.categories?.[0]?._id || ''}
+                      onChange={(e) => setSelectedActivity({ ...selectedActivity, categories: [categories.find(category => category._id === e.target.value)] })}
+                    >
+                      <option value="">Seleccione una categoría</option>
+                      {categories.map(category => (
+                        <option key={category._id} value={category._id}>{category.name}</option>
+                      ))}
+                    </select>
+                  </div>
                   <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
                     <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={saveActivity}>
                       Guardar Cambios
