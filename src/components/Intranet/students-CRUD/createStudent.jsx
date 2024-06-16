@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuthContext } from '../../../context/authContext';
 
 const CreateStudent = () => {
   const [formData, setFormData] = useState({
@@ -16,12 +17,18 @@ const CreateStudent = () => {
   const [partners, setPartners] = useState([]);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const { VITE_URL } = import.meta.env
+  const { VITE_URL } = import.meta.env;
+  const { auth } = useAuthContext();
 
   useEffect(() => {
     const fetchCenters = async () => {
       try {
-        const response = await axios.get(`${VITE_URL}/api/centers`);
+        const response = await axios.get(`${VITE_URL}/api/centers`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
         setCenters(response.data);
       } catch (error) {
         console.error('Error fetching centers:', error);
@@ -30,7 +37,12 @@ const CreateStudent = () => {
 
     const fetchPartners = async () => {
       try {
-        const response = await axios.get(`${VITE_URL}/api/users/role/partner`);
+        const response = await axios.get(`${VITE_URL}/api/users/role/partner`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
         setPartners(response.data);
       } catch (error) {
         console.error('Error fetching partners:', error);
@@ -39,7 +51,7 @@ const CreateStudent = () => {
 
     fetchCenters();
     fetchPartners();
-  }, []);
+  }, [VITE_URL, auth.token]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -52,11 +64,26 @@ const CreateStudent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${VITE_URL}/api/students`, formData);
+      const response = await axios.post(`${VITE_URL}/api/students`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
       setSubmitted(true);
+      setFormData({
+        name: '',
+        lastname: '',
+        breakfast: false,
+        observations: '',
+        course: '',
+        partner_number: '',
+        centerName: '',
+      });
       setErrors({});
       console.log(response.data);
     } catch (error) {
+      setSubmitted(false);
       setErrors(error.response.data.errors || { message: error.response.data.message });
     }
   };
@@ -68,15 +95,15 @@ const CreateStudent = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
           <div>
             <label htmlFor="name" className="block text-gray-700">Nombre:</label>
-            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
+            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required className="mt-1 p-2 w-full border rounded" />
           </div>
           <div>
             <label htmlFor="lastname" className="block text-gray-700">Apellido:</label>
-            <input type="text" id="lastname" name="lastname" value={formData.lastname} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
+            <input type="text" id="lastname" name="lastname" value={formData.lastname} onChange={handleChange} required className="mt-1 p-2 w-full border rounded" />
           </div>
           <div>
             <label htmlFor="breakfast" className="block text-gray-700">Desayuno:</label>
-            <input type="checkbox" id="breakfast" name="breakfast" checked={formData.breakfast} onChange={handleChange} className="mt-1"/>
+            <input type="checkbox" id="breakfast" name="breakfast" checked={formData.breakfast} onChange={handleChange} className="mt-1" />
           </div>
           <div>
             <label htmlFor="observations" className="block text-gray-700">Observaciones:</label>
@@ -84,7 +111,7 @@ const CreateStudent = () => {
           </div>
           <div>
             <label htmlFor="course" className="block text-gray-700">Curso:</label>
-            <input type="text" id="course" name="course" value={formData.course} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
+            <input type="text" id="course" name="course" value={formData.course} onChange={handleChange} required className="mt-1 p-2 w-full border rounded" />
           </div>
           <div>
             <label htmlFor="partner_number" className="block text-gray-700">Número de Socio:</label>
