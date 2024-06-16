@@ -35,7 +35,7 @@ const PartnersTable = () => {
     } catch (error) {
       console.error("Error fetching partners:", error);
     }
-  }, []);
+  }, [VITE_URL, auth.token]);
 
   useEffect(() => {
     fetchPartners();
@@ -63,6 +63,10 @@ const PartnersTable = () => {
     try {
       await fetch(`${VITE_URL}/api/users/${selectedPartner._id}`, {
         method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
       });
       setPartners(
         partners.filter((partner) => partner._id !== selectedPartner._id)
@@ -88,6 +92,7 @@ const PartnersTable = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
           },
           body: JSON.stringify(selectedPartner),
         }

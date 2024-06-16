@@ -31,19 +31,42 @@ const UserForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Prepare the data to be sent to the backend
+    const dataToSubmit = { ...formData };
+    if (formData.roleName !== 'partner') {
+      delete dataToSubmit.phone_number;
+      delete dataToSubmit.partner_number;
+    }
+
     try {
-      const response = await axios.post(`${VITE_URL}/api/users`, formData, {
+      const response = await axios.post(`${VITE_URL}/api/users`, dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${auth.token}`,
         },
       });
       setSubmitted(true);
+      setFormData({
+        username: '',
+        email: '',
+        roleName: '',
+        lastname: '',
+        name: '',
+        phone_number: '',
+        partner_number: ''
+      });
+      setErrors({});
       console.log(response.data);
     } catch (error) {
       setSubmitted(false);
-      if (error.response && error.response.data && error.response.data.errors) {
-        setErrors(error.response.data.errors);
+      if (error.response && error.response.data) {
+        console.error("Error response data:", error.response.data);
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        } else {
+          setErrors({ general: error.response.data.message || 'Error creando el usuario' });
+        }
       } else {
         setErrors({ general: 'Error creando el usuario' });
       }
