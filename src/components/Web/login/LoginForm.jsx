@@ -28,11 +28,12 @@ const LoginForm = () => {
         body: JSON.stringify({ usernameOrEmail, password }),
       });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
       const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Network response was not ok");
+        return;
+      }
 
       if (data.token) {
         const { token, role, name } = data;
@@ -43,7 +44,7 @@ const LoginForm = () => {
       }
     } catch (error) {
       console.error("Error al verificar las credenciales", error);
-      setError("Error al verificar las credenciales");
+      setError("Credenciales incorrectas. Por favor, verifica tus datos.");
     }
     onResetForm();
   };

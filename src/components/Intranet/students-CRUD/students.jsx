@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+import { useAuthContext } from '../../../context/authContext';
 
 const Students = () => {
-
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -12,20 +12,28 @@ const Students = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
-  const { VITE_URL } = import.meta.env
+  const [message, setMessage] = useState('');
+  const { VITE_URL } = import.meta.env;
+  const { auth } = useAuthContext();
 
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
     try {
-      const response = await fetch(`${VITE_URL}/api/students/`);
+      const response = await fetch(`${VITE_URL}/api/students/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
       if (!response.ok) throw new Error('Error fetching students');
       const data = await response.json();
       setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);
     }
-  }, [VITE_URL]);
+  }, [VITE_URL, auth.token]);
 
   useEffect(() => {
     fetchStudents();
@@ -52,12 +60,17 @@ const Students = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setMessage('');
   };
 
   const deleteStudent = async () => {
     try {
       await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        }
       });
       setStudents(students.filter(student => student._id !== selectedStudent._id));
       setShouldRefetch(true);
@@ -90,6 +103,7 @@ const Students = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
         },
         body: JSON.stringify(updatedStudentData),
       });
@@ -97,14 +111,18 @@ const Students = () => {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error updating student:', errorData);
-        throw new Error('Error updating student');
+        setMessage(`Error actualizando el estudiante: ${errorData.message}`);
+        return;
       }
 
+      const data = await response.json();
+      setMessage('Estudiante modificado con éxito');
+      setStudents(students.map(student => student._id === data._id ? data : student));
       setShouldRefetch(true);
       closeModal();
     } catch (error) {
       console.error('Error updating student:', error.message);
-      closeModal();
+      setMessage(`Error actualizando el estudiante: ${error.message}`);
     }
   };
 
@@ -214,7 +232,7 @@ const Students = () => {
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div>
             <p className="text-sm text-gray-700">
-              Showing <span className="font-medium">{offset + 1}</span> to <span className="font-medium">{Math.min(offset + itemsPerPage, filteredStudents.length)}</span> of <span className="font-medium">{filteredStudents.length}</span> results
+              Mostrando <span className="font-medium">{offset + 1}</span> a <span className="font-medium">{Math.min(offset + itemsPerPage, filteredStudents.length)}</span> de <span className="font-medium">{filteredStudents.length}</span> resultados
             </p>
           </div>
           <div>
@@ -253,6 +271,15 @@ const Students = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:max-w-lg">
             <h2 className="text-xl font-bold mb-4">Editar Estudiante</h2>
+            {message && (
+              <div
+                className={`${
+                  message.includes('éxito') ? 'text-green-500' : 'text-red-500'
+                } mb-4`}
+              >
+                {message}
+              </div>
+            )}
             <form onSubmit={updateStudent}>
               <div className="mb-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -284,7 +311,7 @@ const Students = () => {
                 </label>
                 <select
                   id="breakfast"
-                  value={selectedStudent.breakfast}
+                  value={selectedStudent.breakfast ? 'true' : 'false'}
                   onChange={(e) => setSelectedStudent({ ...selectedStudent, breakfast: e.target.value === 'true' })}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
@@ -306,10 +333,13 @@ const Students = () => {
               <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={closeModal}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    window.location.href = '/intranet/allstudents';
+                  }}
                   className="mr-2 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Cancelar
+                  Volver a Estudiantes
                 </button>
                 <button
                   type="submit"
@@ -350,3 +380,4 @@ const Students = () => {
 };
 
 export default Students;
+
