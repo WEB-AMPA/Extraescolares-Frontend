@@ -27,6 +27,8 @@ import AssignActivity from "./components/Intranet/assign-activities/assign-activ
 import Activities from "./components/Intranet/activities-CRUD/ActivitiesCrud.jsx";
 import RequestPasswordReset from "./components/Web/password-reset/password-reset-request.jsx";
 import ResetPassword from "./components/Web/password-reset/password-reset-form.jsx";
+import CreateActivityForm from "./components/Intranet/activities-CRUD/CreateActivity.jsx";
+
 
 function App() {
   return (
@@ -59,12 +61,14 @@ function App() {
                 <Route path="createstudent" element={<CreateStudent />} />
                 <Route path="asignactivities/:studentId" element={<AssignActivity />} />
                 <Route path="activities" element={<Activities />} />
+                <Route path="createactivity" element={<CreateActivityForm />} />
               </Route>
 
               {/* Rutas específicas para partner */}
               <Route element={<PrivateRoute roles={['partner','admin']} />}>
                 <Route path="students/:partnerId" element={<StudentsPartner />} />
                 <Route path="activities-student/:studentId" element={<ActivitiesStudent />} />
+                <Route path="allstudents" element={<Students />} />
               </Route>
 
               {/* Rutas específicas para monitor */}
@@ -72,6 +76,7 @@ function App() {
                 <Route path="attendances" element={<ActivitiesAttendancePage />} />
                 <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
                 <Route path="allstudents" element={<Students />} />
+              
               </Route>
 
               {/* Rutas específicas para coordinator */}

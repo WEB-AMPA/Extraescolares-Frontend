@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { CiViewList } from "react-icons/ci";
-import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../../context/authContext';
 
 const Activities = () => {
@@ -14,6 +12,12 @@ const Activities = () => {
   const [schedules, setSchedules] = useState([]);
   const [days, setDays] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Change this value to set items per page
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [activityToDelete, setActivityToDelete] = useState(null);
   const { VITE_URL } = import.meta.env;
   const { auth } = useAuthContext();
 
@@ -102,9 +106,19 @@ const Activities = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (activityId) => {
+  const openDeleteModal = (activityId) => {
+    setActivityToDelete(activityId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setActivityToDelete(null);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDelete = async () => {
     try {
-      const response = await fetch(`${VITE_URL}/api/activities/${activityId}`, {
+      const response = await fetch(`${VITE_URL}/api/activities/${activityToDelete}`, {
         method: 'DELETE',
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +126,8 @@ const Activities = () => {
         },
       });
       if (!response.ok) throw new Error('Error deleting activity');
-      setActivities(activities.filter(activity => activity._id !== activityId));
+      setActivities(activities.filter(activity => activity._id !== activityToDelete));
+      closeDeleteModal();
     } catch (error) {
       console.error('Error deleting activity:', error);
     }
@@ -122,27 +137,81 @@ const Activities = () => {
     setIsModalOpen(false);
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(0);
+  };
+
   const saveActivity = async () => {
     try {
+      const activityData = {
+        name: selectedActivity.name,
+        monitorUsername: selectedActivity.monitor?._id || selectedActivity.monitor?.username,
+        categoryNames: selectedActivity.categories?.map(category => category.name),
+        scheduleDays: selectedActivity.scheduleDay?.map(day => day.days),
+        scheduleHours: selectedActivity.scheduleHour?.map(hour => hour.range),
+        centerNames: selectedActivity.centers?.map(center => center.name),
+      };
+
       const response = await fetch(`${VITE_URL}/api/activities/${selectedActivity._id}`, {
         method: 'PUT',
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${auth.token}`,
         },
-        body: JSON.stringify(selectedActivity),
+        body: JSON.stringify(activityData),
       });
-      if (!response.ok) throw new Error('Error updating activity');
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error updating activity:', errorText);
+        throw new Error(`Error updating activity: ${response.status} - ${errorText}`);
+      }
+
       const updatedActivity = await response.json();
+      console.log('updatedActivity:', updatedActivity);
+
       setActivities(activities.map(activity => activity._id === updatedActivity._id ? updatedActivity : activity));
       closeModal();
     } catch (error) {
-      console.error('Error updating activity:', error);
+      console.error('Error updating activity:', error.message);
     }
   };
 
+  const filteredActivities = activities.filter(activity =>
+    `${activity.name}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage(currentPage > 1 ? currentPage - 1 : currentPage);
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage < Math.ceil(filteredActivities.length / itemsPerPage) ? currentPage + 1 : currentPage);
+  };
+
+  const indexOfLastActivity = currentPage * itemsPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - itemsPerPage;
+  const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
+
   return (
-    <div className="flex justify-center overflow-x-auto m-4 p-4">
+    <div className="flex flex-col justify-center overflow-x-auto m-4 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <input
+          type="text"
+          placeholder="Buscar por Nombre y Apellidos..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          style={{ maxWidth: '300px' }}
+        />
+        <button
+          onClick={() => window.location.href = '/intranet/createactivity'}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Crear Actividad
+        </button>
+      </div>
       <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
         <thead className="bg-gray-200 gap-3 items-center">
           <tr>
@@ -151,168 +220,136 @@ const Activities = () => {
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Monitor</th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Centro</th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Horario</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Días</th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Ajustes</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Acciones</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {activities.length === 0 ? (
-            <tr>
-              <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">No hay actividades disponibles.</td>
+          {currentActivities.map((activity) => (
+            <tr key={activity._id}>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b border-gray-300">{activity.name}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.categories.map(category => category.name).join(', ')}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.monitor?.username || 'N/A'}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.centers.map(center => center.name).join(', ')}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.scheduleDay?.map(day => day.days).join(', ')} {activity.scheduleHour?.map(hour => hour.range).join(', ')}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium border-b border-gray-300">
+                <button onClick={() => handleEdit(activity)} className="text-white p-2 m-2 bg-blue-800 rounded"><FaEdit /></button>
+                <button onClick={() => openDeleteModal(activity._id)} className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-2 rounded"><MdDelete /></button>
+              </td>
             </tr>
-          ) : (
-            activities.map((activity) => (
-              <tr key={activity._id} className="border-b border-gray-300">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.name || 'Nombre no disponible'}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.categories?.map(category => category.name).join(', ') || 'Categoría no disponible'}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.monitor?.name || 'Monitor no disponible'}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.centers?.map(center => center.name).join(', ') || 'Centro no disponible'}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.scheduleHour?.map(schedule => schedule.range).join(', ') || 'Horario no disponible'}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.scheduleDay?.map(day => day.days).join(', ') || 'Días no disponibles'}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                  <button
-                    className="text-indigo-600 hover:text-indigo-900 p-2 m-2 bg-yellow-300 rounded flex items-center justify-center"
-                    onClick={() => handleEdit(activity)}
-                    title="Editar Actividad"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-900 p-2 m-2 bg-yellow-300 rounded flex items-center justify-center"
-                    onClick={() => handleDelete(activity._id)}
-                    title="Eliminar Actividad"
-                  >
-                    <MdDelete />
-                  </button>
-                  <Link to={`/intranet/actividades/${activity._id}`} className="p-2 m-2 bg-yellow-300 rounded flex items-center justify-center" title="Ver Detalles de la Actividad">
-                    <CiViewList />
-                  </Link>
-                </td>
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
+      <div className="flex justify-between mt-4">
+        <button onClick={handlePreviousPage} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+          <FaArrowLeft className="mr-2" />
+          Anterior
+        </button>
+        <button onClick={handleNextPage} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+          Siguiente
+          <FaArrowRight className="ml-2" />
+        </button>
+      </div>
 
       {isModalOpen && (
-        <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
+          <div className="bg-white rounded-lg p-6 z-10">
+            <h2 className="text-2xl font-bold mb-4">Editar Actividad</h2>
+            <form>
+              <label className="block mb-2">Nombre:</label>
+              <input
+                type="text"
+                value={selectedActivity.name}
+                onChange={(e) => setSelectedActivity({ ...selectedActivity, name: e.target.value })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+              />
+              <label className="block mb-2">Monitor:</label>
+              <select
+                value={selectedActivity.monitor?._id || selectedActivity.monitor?.username}
+                onChange={(e) => setSelectedActivity({
+                  ...selectedActivity,
+                  monitor: monitors.find((monitor) => monitor._id === e.target.value)
+                })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+              >
+                {monitors.map((monitor) => (
+                  <option key={monitor._id} value={monitor._id}>{monitor.username}</option>
+                ))}
+              </select>
+              <label className="block mb-2">Categorías:</label>
+              <select
+                multiple
+                value={selectedActivity.categories?.map((category) => category._id)}
+                onChange={(e) => setSelectedActivity({
+                  ...selectedActivity,
+                  categories: Array.from(e.target.selectedOptions, (option) => categories.find((category) => category._id === option.value))
+                })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+              >
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>{category.name}</option>
+                ))}
+              </select>
+              <label className="block mb-2">Días de Horario:</label>
+              <select
+                multiple
+                value={selectedActivity.scheduleDay?.map((day) => day._id)}
+                onChange={(e) => setSelectedActivity({
+                  ...selectedActivity,
+                  scheduleDay: Array.from(e.target.selectedOptions, (option) => days.find((day) => day._id === option.value))
+                })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+              >
+                {days.map((day) => (
+                  <option key={day._id} value={day._id}>{day.days}</option>
+                ))}
+              </select>
+              <label className="block mb-2">Horas de Horario:</label>
+              <select
+                multiple
+                value={selectedActivity.scheduleHour?.map((hour) => hour._id)}
+                onChange={(e) => setSelectedActivity({
+                  ...selectedActivity,
+                  scheduleHour: Array.from(e.target.selectedOptions, (option) => schedules.find((hour) => hour._id === option.value))
+                })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+              >
+                {schedules.map((hour) => (
+                  <option key={hour._id} value={hour._id}>{hour.range}</option>
+                ))}
+              </select>
+              <label className="block mb-2">Centros:</label>
+              <select
+                multiple
+                value={selectedActivity.centers?.map((center) => center._id)}
+                onChange={(e) => setSelectedActivity({
+                  ...selectedActivity,
+                  centers: Array.from(e.target.selectedOptions, (option) => centers.find((center) => center._id === option.value))
+                })}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
+              >
+                {centers.map((center) => (
+                  <option key={center._id} value={center._id}>{center.name}</option>
+                ))}
+              </select>
+            </form>
+            <div className="flex justify-end">
+              <button onClick={closeModal} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4">Cancelar</button>
+              <button onClick={saveActivity} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
             </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <form className="p-8 border border-black rounded">
-                  <h3 className="mb-5 text-xl text-center leading-6 font-medium text-gray-400">Editar Actividad</h3>
-                  <div className="mb-4">
-                    <label htmlFor="activityName" className="block text-sm font-medium text-gray-700 m-2">Nombre de la Actividad:</label>
-                    <input
-                      type="text"
-                      name="activityName"
-                      id="activityName"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      value={selectedActivity?.name || ''}
-                      onChange={(e) => setSelectedActivity({ ...selectedActivity, name: e.target.value })}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="activityMonitor" className="block text-sm font-medium text-gray-700 m-2">Monitor:</label>
-                    <select
-                      id="activityMonitor"
-                      name="activityMonitor"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      value={selectedActivity?.monitor?._id || ''}
-                      onChange={(e) => setSelectedActivity({ ...selectedActivity, monitor: monitors.find(monitor => monitor._id === e.target.value) })}
-                    >
-                      <option value="">Seleccione un monitor</option>
-                      {monitors.map(monitor => (
-                        <option key={monitor._id} value={monitor._id}>{monitor.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="activityCenter" className="block text-sm font-medium text-gray-700 m-2">Centro:</label>
-                    <select
-                      id="activityCenter"
-                      name="activityCenter"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      value={selectedActivity?.centers?.[0]?._id || ''}
-                      onChange={(e) => setSelectedActivity({ ...selectedActivity, centers: [centers.find(center => center._id === e.target.value)] })}
-                    >
-                      <option value="">Seleccione un centro</option>
-                      {centers.map(center => (
-                        <option key={center._id} value={center._id}>{center.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="activitySchedule" className="block text-sm font-medium text-gray-700 m-2">Horario:</label>
-                    <select
-                      id="activitySchedule"
-                      name="activitySchedule"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      value={selectedActivity?.scheduleHour?.[0]?._id || ''}
-                      onChange={(e) => setSelectedActivity({ ...selectedActivity, scheduleHour: [schedules.find(schedule => schedule._id === e.target.value)] })}
-                    >
-                      <option value="">Seleccione un horario</option>
-                      {schedules.map(schedule => (
-                        <option key={schedule._id} value={schedule._id}>{schedule.range}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="activityDay" className="block text-sm font-medium text-gray-700 m-2">Días:</label>
-                    <select
-                      id="activityDay"
-                      name="activityDay"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      value={selectedActivity?.scheduleDay?.[0]?._id || ''}
-                      onChange={(e) => setSelectedActivity({ ...selectedActivity, scheduleDay: [days.find(day => day._id === e.target.value)] })}
-                    >
-                      <option value="">Seleccione un día</option>
-                      {days.map(day => (
-                        <option key={day._id} value={day._id}>{day.days}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="activityCategory" className="block text-sm font-medium text-gray-700 m-2">Categoría:</label>
-                    <select
-                      id="activityCategory"
-                      name="activityCategory"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      value={selectedActivity?.categories?.[0]?._id || ''}
-                      onChange={(e) => setSelectedActivity({ ...selectedActivity, categories: [categories.find(category => category._id === e.target.value)] })}
-                    >
-                      <option value="">Seleccione una categoría</option>
-                      {categories.map(category => (
-                        <option key={category._id} value={category._id}>{category.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mt-9 justify-center bg-gray-50 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm" onClick={saveActivity}>
-                      Guardar Cambios
-                    </button>
-                    <button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" onClick={closeModal}>
-                      Cancelar
-                    </button>
-                  </div>
-                </form>
-              </div>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
+          <div className="bg-white rounded-lg p-6 z-10">
+            <h2 className="text-2xl font-bold mb-4">Confirmar Eliminación</h2>
+            <p className="mb-4">¿Estás seguro de que deseas eliminar esta actividad?</p>
+            <div className="flex justify-end">
+              <button onClick={closeDeleteModal} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-4">Cancelar</button>
+              <button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Eliminar</button>
             </div>
           </div>
         </div>
