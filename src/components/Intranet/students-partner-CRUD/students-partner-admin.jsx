@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useAuthContext } from '../../../context/authContext';
 
-const StudentsPartner = () => {
-
+const StudentsPartnerAdmin = () => {
+  const { partnerId } = useParams();
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -16,17 +17,25 @@ const StudentsPartner = () => {
   const {VITE_URL } = import.meta.env
   const {auth} = useAuthContext()
 
-  let partnerId = auth.partnerId
 
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
     if (!partnerId) return;
     try {
-      const response = await fetch(`${VITE_URL}/api/students/partner/${partnerId}`);
+      const response = await fetch(`${VITE_URL}/api/students/partner/${partnerId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+      }}
+
+      );
       if (!response.ok) throw new Error('Error fetching students');
 
       const data = await response.json();
+      console.log(data)
       setStudents(data);
     } catch (error) {
       console.error('Error fetching students:', error);
@@ -64,6 +73,10 @@ const StudentsPartner = () => {
     try {
       await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
+        }
       });
       setStudents(students.filter(student => student._id !== selectedStudent._id));
       setShouldRefetch(true);
@@ -97,6 +110,7 @@ const StudentsPartner = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
         },
         body: JSON.stringify(updatedStudentData),
       });
@@ -332,4 +346,4 @@ const StudentsPartner = () => {
   );
 };
 
-export default StudentsPartner;
+export default StudentsPartnerAdmin;

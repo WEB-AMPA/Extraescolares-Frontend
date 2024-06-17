@@ -20,7 +20,7 @@ import UserForm from "./components/Intranet/user-CRUD/createUser.jsx";
 import PartnersTable from "./components/Intranet/partner-CRUD/partner.jsx";
 import ActivitiesStudent from "./components/Intranet/activities-students-CRUD/activities-students.jsx";
 import CoordinatorTable from "./components/Intranet/coordinator-CRUD/coordinator.jsx";
-import StudentsPartner from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
+import StudentsPartner from "./components/Intranet/students-partner-CRUD/students-partner-admin.jsx";
 import Students from "./components/Intranet/students-CRUD/students.jsx";
 import CreateStudent from "./components/Intranet/students-CRUD/createStudent.jsx";
 import AssignActivity from "./components/Intranet/assign-activities/assign-activities.jsx";
@@ -28,6 +28,7 @@ import Activities from "./components/Intranet/activities-CRUD/ActivitiesCrud.jsx
 import RequestPasswordReset from "./components/Web/password-reset/password-reset-request.jsx";
 import ResetPassword from "./components/Web/password-reset/password-reset-form.jsx";
 import CreateActivityForm from "./components/Intranet/activities-CRUD/CreateActivity.jsx";
+import StudentsPartnerAdmin from "./components/Intranet/students-partner-CRUD/students-partner-admin.jsx";
 
 
 function App() {
@@ -57,16 +58,18 @@ function App() {
                 <Route path="users/monitor" element={<MonitoresTable />} />
                 <Route path="users/socios" element={<PartnersTable />} />
                 <Route path="users/coordinator" element={<CoordinatorTable />} />
+                <Route path="students/:partnerId" element={<StudentsPartnerAdmin />} />
                 <Route path="allstudents" element={<Students />} />
                 <Route path="createstudent" element={<CreateStudent />} />
                 <Route path="asignactivities/:studentId" element={<AssignActivity />} />
                 <Route path="activities" element={<Activities />} />
                 <Route path="createactivity" element={<CreateActivityForm />} />
+
               </Route>
 
               {/* Rutas específicas para partner */}
               <Route element={<PrivateRoute roles={['partner','admin']} />}>
-                <Route path="students/:partnerId" element={<StudentsPartner />} />
+                <Route path="partner-students" element={<StudentsPartner />} />
                 <Route path="activities-student/:studentId" element={<ActivitiesStudent />} />
                 <Route path="allstudents" element={<Students />} />
               </Route>

@@ -145,7 +145,7 @@ export const PARTNER_SIDEBAR_LINKS = [
     label: 'Hijos',
     level: 1,
     icon: <FontAwesomeIcon icon={faUserGraduate} />,
-    path: '/intranet/allstudents'
+    path: '/intranet/partner-students'
   },
   
 ];
