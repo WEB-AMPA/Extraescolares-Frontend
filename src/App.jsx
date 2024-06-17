@@ -30,6 +30,11 @@ import ResetPassword from "./components/Web/password-reset/password-reset-form.j
 import CreateActivityForm from "./components/Intranet/activities-CRUD/CreateActivity.jsx";
 import StudentsPartnerAdmin from "./components/Intranet/students-partner-CRUD/students-partner-admin.jsx";
 
+// Import FontAwesome library and add icons
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
+library.add(fas);
 
 function App() {
   return (
@@ -64,7 +69,6 @@ function App() {
                 <Route path="asignactivities/:studentId" element={<AssignActivity />} />
                 <Route path="activities" element={<Activities />} />
                 <Route path="createactivity" element={<CreateActivityForm />} />
-
               </Route>
 
               {/* Rutas específicas para partner */}
@@ -79,7 +83,6 @@ function App() {
                 <Route path="attendances" element={<ActivitiesAttendancePage />} />
                 <Route path="calendar/activities/:activitiesStudentId" element={<ActivitiesCalendar />} />
                 <Route path="allstudents" element={<Students />} />
-              
               </Route>
 
               {/* Rutas específicas para coordinator */}
@@ -97,3 +100,4 @@ function App() {
 }
 
 export default App;
+
