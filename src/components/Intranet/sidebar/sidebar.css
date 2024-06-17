@@ -1,4 +1,4 @@
-
+/* 
 section {
   display: flex;
 }
@@ -17,9 +17,9 @@ section {
 
 .hover-bg-gray-100:hover {
     background-color: #ffff23; /* Color de fondo gris claro */
-  }
+  /* }
   
   .hover-text-gray-700:hover {
     color: #000000; /* Color de texto gris oscuro */
-  }
-  
+  /* }
+   */ 

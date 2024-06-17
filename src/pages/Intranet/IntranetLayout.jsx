@@ -12,7 +12,7 @@ const IntranetLayout = () => {
       <NavbarIntranet user={userName} />
       <section className="flex">
         <Sidebar userRole={auth.role} />
-        <div className="flex-grow p-4 ml-64">
+        <div className="flex-grow p-4 lg:ml-64 ml-0">
           <Outlet />
         </div>
       </section>

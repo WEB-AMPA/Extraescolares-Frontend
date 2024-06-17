@@ -14,6 +14,8 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const { VITE_URL } = import.meta.env;
 
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!termsAccepted) {
@@ -52,11 +54,9 @@ const LoginForm = () => {
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
-        <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">¡Inicia sesión ahora!</h1>
-          <p className="py-6">
-            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.
-          </p>
+        <div className="text-center lg:text">
+          <h1 className="text-5xl font-bold">¡Bienvenida!</h1>
+          <p className="py-6">Esperamos que te disfrutes tu visita</p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form className="card-body" onSubmit={handleSubmit}>
@@ -106,7 +106,7 @@ const LoginForm = () => {
               </label>
             </div>
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary">Ingresar</button>
+              <button type="submit" className="btn btn-primary text-lg">Ingresar</button>
             </div>
           </form>
         </div>
