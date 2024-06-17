@@ -128,8 +128,8 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
   };
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex justify-end p-6">
+    <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4 shadow-md sm:rounded-lg">
+      <div className="flex items-center justify-between mb-4">
         <select
           value={selectedActivity}
           onChange={handleActivityChange}
@@ -148,58 +148,50 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
           className="border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5"
         />
       </div>
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg">
+        <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-6 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Fecha
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-6 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Estudiante
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-6 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Asistencia
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-6 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Acciones
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {students.map((student, index) => (
-            <tr
-              key={student._id}
-              className={`${
-                index % 2 === 0
-                  ? "bg-white dark:bg-gray-900"
-                  : "bg-gray-50 dark:bg-gray-800"
-              } border-b dark:border-gray-700`}
-            >
-              <td className="px-6 py-4">{date}</td>
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {student.student.name} {student.student.lastname}
-              </th>
-              <td className="px-6 py-4">
+            <tr key={student._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-m text-gray-900">{date}</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-m text-gray-900">{student.student.name} {student.student.lastname}</div>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
                 <select
                   value={student.attendance}
-                  onChange={(e) =>
-                    handleAttendanceChange(student.student._id, e.target.value)
-                  }
+                  onChange={(e) => handleAttendanceChange(student.student._id, e.target.value)}
+                  className="border border-gray-300 text-gray-900 text-m rounded-lg p-2.5"
                 >
                   <option value="none">Seleccionar</option>
                   <option value="present">Sí</option>
                   <option value="absent">No</option>
                 </select>
               </td>
-              <td className="px-6 py-4">
+              <td className="px-6 py-4 whitespace-nowrap text-center">
                 <button
-                  onClick={() => handleViewMore(student._id)} // Usar student._id como activitiesStudentId
-                  className="bg-yellow-400 text-white px-4 py-2 rounded-lg flex items-center"
+                  onClick={() => handleViewMore(student._id)}
+                  className="text-white bg-green-500 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105"
                 >
-                  <FaEye className="mr-2" /> Ver más
+                  <FaEye className="w-5 h-5 mb-1" />
+                  <span className="text-xs font-light">Ver Más</span>
                 </button>
               </td>
             </tr>
@@ -207,10 +199,7 @@ const ActivityAttendanceTable = ({ onAttendanceAdded }) => {
         </tbody>
       </table>
       <div className="flex justify-end p-6">
-        <button
-          onClick={handleSaveAll}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg mr-2"
-        >
+        <button onClick={handleSaveAll} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full rounded transition duration-300 ease-in-out transform hover:scale-105">
           Guardar Todo
         </button>
       </div>
@@ -232,7 +221,7 @@ const ActivitiesAttendancePage = () => {
 
   return (
     <div className="App">
-      <h1>Registro de Asistencia</h1>
+      <h1 className="text-3xl font-bold text-center mb-4">Registro de Asistencia</h1>
       <ActivityAttendanceTable onAttendanceAdded={handleAttendanceAdded} />
     </div>
   );

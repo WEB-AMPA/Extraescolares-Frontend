@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FaEdit, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaEdit, FaArrowLeft, FaArrowRight, FaSearch } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useAuthContext } from '../../../context/authContext';
 
@@ -13,8 +13,7 @@ const Activities = () => {
   const [days, setDays] = useState([]);
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Change this value to set items per page
-
+  const [itemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [activityToDelete, setActivityToDelete] = useState(null);
@@ -175,12 +174,12 @@ const Activities = () => {
     } catch (error) {
       console.error('Error updating activity:', error.message);
     }
-    
   };
+
   const filteredActivities = activities.filter(activity =>
     activity.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   const handlePreviousPage = () => {
     setCurrentPage(currentPage > 1 ? currentPage - 1 : currentPage);
   };
@@ -192,53 +191,73 @@ const Activities = () => {
   const indexOfLastActivity = currentPage * itemsPerPage;
   const indexOfFirstActivity = indexOfLastActivity - itemsPerPage;
   const currentActivities = filteredActivities.slice(indexOfFirstActivity, indexOfLastActivity);
-  
+
   return (
     <div className="flex flex-col justify-center overflow-x-auto m-4 p-4">
       <div className="flex items-center justify-between mb-4">
-        <input
-          type="text"
-          placeholder="Buscar Actividad"
-          value={searchTerm}
-          onChange={handleSearch}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          style={{ maxWidth: '300px' }}
-        />
+        <div className="relative" style={{ maxWidth: '300px' }}>
+          <input
+            type="text"
+            placeholder="Buscar Actividad"
+            value={searchTerm}
+            onChange={handleSearch}
+            className="shadow appearance-none border rounded-full w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <FaSearch className="absolute left-3 top-3 text-gray-500" />
+        </div>
         <button
           onClick={() => window.location.href = '/intranet/createactivity'}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full"
         >
           Crear Actividad
         </button>
       </div>
-      <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
-        <thead className="bg-gray-200 gap-3 items-center">
+      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+        <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Actividad</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Categoría</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Monitor</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Centro</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Horario</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Acciones</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Actividad</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Categoría</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Monitor</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Centro</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Horario</th>
+            <th scope="col" className="px-4 py-3 text-center text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Acciones</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {currentActivities.map((activity) => (
-            <tr key={activity._id}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b border-gray-300">{activity.name}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.categories.map(category => category.name).join(', ')}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.monitor?.username || 'N/A'}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.centers.map(center => center.name).join(', ')}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">{activity.scheduleDay?.map(day => day.days).join(', ')} {activity.scheduleHour?.map(hour => hour.range).join(', ')}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium border-b border-gray-300">
-                <button onClick={() => handleEdit(activity)} className="text-white p-2 m-2 bg-blue-800 rounded"><FaEdit /></button>
-                <button onClick={() => openDeleteModal(activity._id)} className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-2 rounded"><MdDelete /></button>
+            <tr key={activity._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{activity.name}</div>
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{activity.categories.map(category => category.name).join(', ')}</div>
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{activity.monitor?.username || 'N/A'}</div>
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{activity.centers.map(center => center.name).join(', ')}</div>
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{activity.scheduleDay?.map(day => day.days).join(', ')} {activity.scheduleHour?.map(hour => hour.range).join(', ')}</div>
+              </td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="flex flex-col sm:flex-row justify-center items-center space-x-0 sm:space-x-2 sm:space-y-0 space-y-2">
+                  <button title="Editar Actividad" onClick={() => handleEdit(activity)} className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                    <FaEdit className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Editar</span>
+                  </button>
+                  <button title="Eliminar Actividad" onClick={() => openDeleteModal(activity._id)} className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                    <MdDelete className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Eliminar</span>
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="flex justify-between mt-4">
+      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-b-lg shadow-lg">
         <button onClick={handlePreviousPage} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
           <FaArrowLeft className="mr-2" />
           Anterior
@@ -252,8 +271,8 @@ const Activities = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
-          <div className="bg-white rounded-lg p-6 z-10">
-            <h2 className="text-2xl font-bold mb-4">Editar Actividad</h2>
+          <div className="bg-white rounded-lg p-6 z-10 shadow-lg w-full max-w-2xl mx-4">
+            <h2 className="text-xl font-bold mb-4">Editar Actividad</h2>
             <form>
               <label className="block mb-2">Nombre:</label>
               <input
@@ -333,7 +352,7 @@ const Activities = () => {
               </select>
             </form>
             <div className="flex justify-end">
-              <button onClick={closeModal} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4">Cancelar</button>
+              <button onClick={closeModal} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-4">Cancelar</button>
               <button onClick={saveActivity} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
             </div>
           </div>
@@ -343,8 +362,8 @@ const Activities = () => {
       {isDeleteModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
-          <div className="bg-white rounded-lg p-6 z-10">
-            <h2 className="text-2xl font-bold mb-4">Confirmar Eliminación</h2>
+          <div className="bg-white rounded-lg p-6 z-10 shadow-lg w-full max-w-md mx-4">
+            <h2 className="text-xl font-bold mb-4">Confirmar Eliminación</h2>
             <p className="mb-4">¿Estás seguro de que deseas eliminar esta actividad?</p>
             <div className="flex justify-end">
               <button onClick={closeDeleteModal} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-4">Cancelar</button>

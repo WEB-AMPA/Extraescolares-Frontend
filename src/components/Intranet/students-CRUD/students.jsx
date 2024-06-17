@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaSearch, FaEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useAuthContext } from '../../../context/authContext';
@@ -146,73 +146,80 @@ const Students = () => {
   return (
     <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4">
       <div className="flex items-center justify-between mb-4">
-        <input
-          type="text"
-          placeholder="Buscar por Nombre y Apellidos..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          style={{ maxWidth: '300px' }}
-        />
+        <div className="relative" style={{ maxWidth: '300px' }}>
+          <input
+            type="text"
+            placeholder="Buscar Estudiante"
+            value={searchTerm}
+            onChange={handleSearch}
+            className="shadow appearance-none border rounded-full w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <FaSearch className="absolute left-3 top-3 text-gray-500" />
+        </div>
         <button
           onClick={() => window.location.href = '/intranet/createstudent'}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full"
         >
           Crear Estudiante
         </button>
       </div>
-      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg">
+      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Nombre Completo
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Curso
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Desayuno
             </th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Observaciones
             </th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+            <th scope="col" className="px-4 py-3 text-center text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
               Ajustes
             </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {currentPageData.map((student) => (
-            <tr key={student._id} className="border-b border-gray-300">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{`${student.name} ${student.lastname}`}</div>
+            <tr key={student._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{`${student.name} ${student.lastname}`}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{student.course}</div>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{student.course}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{student.breakfast ? 'Sí' : 'No'}</div>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{student.breakfast ? 'Sí' : 'No'}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{student.observations}</div>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{student.observations}</div>
               </td>
-              <td className="flex justify-center px-6 py-3 text-sm font-medium">
-                <button title="Ver Más" onClick={() => viewMore(student._id)} className="text-white p-2 m-2 bg-green-500 rounded">
-                  Ver Más
-                </button>
-                <button title="Editar Estudiante" onClick={() => handleEdit(student)} className="text-white p-2 m-2 bg-blue-800 rounded">
-                  <FaEdit />
-                </button>
-                <button title="Eliminar Estudiante" onClick={() => handleDelete(student)} className="text-white p-2 m-2 bg-red-700 rounded">
-                  <MdDelete />
-                </button>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="flex flex-col sm:flex-row justify-center items-center space-x-0 sm:space-x-2 sm:space-y-0 space-y-2">
+                  <button title="Ver Más" onClick={() => viewMore(student._id)} className="text-white bg-green-500 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                    <FaEye className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Ver Más</span>
+                  </button>
+                  <button title="Editar Estudiante" onClick={() => handleEdit(student)} className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                    <FaEdit className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Editar</span>
+                  </button>
+                  <button title="Eliminar Estudiante" onClick={() => handleDelete(student)} className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                    <MdDelete className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Eliminar</span>
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-b-lg shadow-lg">
         <div className="flex flex-1 justify-between sm:hidden">
           <button
             onClick={() => handlePageClick(currentPage - 1)}
