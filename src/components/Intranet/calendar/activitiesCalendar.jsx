@@ -39,12 +39,13 @@ const ActivitiesCalendar = () => {
                     },
                 }
             );
-            setAttendanceHistory(response.data);
-            if (response.data.length > 0) {
-                setStudentName(`${response.data[0].student_id.name} ${response.data[0].student_id.lastname}`);
+            if (response.data.attendances.length > 0) {
+                setStudentName(response.data.studentName);
             } else {
                 setStudentName(""); // En caso de que no haya registros
             }
+            console.log(studentName);
+            setAttendanceHistory(response.data.attendances);
         } catch (error) {
             setError('Error fetching attendance history');
             console.error('Error fetching attendance history:', error.response || error.message || error);
@@ -103,7 +104,7 @@ const ActivitiesCalendar = () => {
                     onActiveStartDateChange={handleActiveStartDateChange}
                 />
             </div>
-            <Link to={`/intranet/activities/`} className="mt-4 underline">
+            <Link to={`/intranet/attendances/`} className="mt-4 underline">
                 Volver a la lista de asistencia
             </Link>
         </div>
