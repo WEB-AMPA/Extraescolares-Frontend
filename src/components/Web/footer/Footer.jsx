@@ -6,21 +6,22 @@ function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h2 className="mb-6 text-sm font-semibold uppercase">
-                Sobre Nosotros
+                
+                <a href="/about-us">Sobre Nosotros </a>
               </h2>
               <ul className="font-medium">
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <a href="/contact" className="hover:underline">
                     Contacto
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <a href="/centros" className="hover:underline">
                     Centros
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <a href="/activities" className="hover:underline">
                     Actividades
                   </a>
                 </li>
@@ -32,17 +33,17 @@ function Footer() {
               </h2>
               <ul className="font-medium">
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <a href="/Privacy-Policy" className="hover:underline">
                     Aviso Legal
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <a href="/Privacy-Policy" className="hover:underline">
                     Política de Privacidad
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <a href="/Privacy-Policy" className="hover:underline">
                     Política de Cookies
                   </a>
                 </li>
