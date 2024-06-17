@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrashAlt, faEye, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useAuthContext } from "../../../context/authContext";
 
@@ -18,7 +18,6 @@ const PartnersTable = () => {
   const itemsPerPage = 10;
 
   const fetchPartners = useCallback(async () => {
-    console.log(auth.token)
     try {
       const response = await fetch(`${VITE_URL}/api/users/role/partner`, {
         method: "GET",
@@ -130,51 +129,56 @@ const PartnersTable = () => {
   return (
     <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4">
       <div className="flex items-center justify-between mb-4">
-        <input
-          type="text"
-          placeholder="Buscar por Nombre y Apellidos..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          style={{ maxWidth: "300px" }}
-        />
+        <div className="relative" style={{ maxWidth: "300px" }}>
+          <input
+            type="text"
+            placeholder="Buscar Socio"
+            value={searchTerm}
+            onChange={handleSearch}
+            className="shadow appearance-none border rounded-full w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+          <FontAwesomeIcon
+            icon={faSearch}
+            className="absolute left-3 top-3 text-gray-500"
+          />
+        </div>
         <button
           onClick={() => (window.location.href = "/intranet/createuser")}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full"
         >
           Crear Socio
         </button>
       </div>
-      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg">
+      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+              className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300"
             >
               Nº Socio
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+              className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300"
             >
               Nombre Completo
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+              className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300"
             >
               Número de Teléfono
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+              className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300"
             >
               Correo
             </th>
             <th
               scope="col"
-              className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300"
+              className="px-4 py-3 text-center text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300"
             >
               Ajustes
             </th>
@@ -182,44 +186,47 @@ const PartnersTable = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {currentPageData.map((partner) => (
-            <tr key={partner._id} className="border-b border-gray-300">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">
+            <tr key={partner._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">
                   {partner.partner_number}
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{`${partner.name} ${partner.lastname}`}</div>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{`${partner.name} ${partner.lastname}`}</div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">
                   {partner.phone_number}
                 </div>
               </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{partner.email}</div>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="text-m text-gray-900">{partner.email}</div>
               </td>
-              <td className="flex justify-center px-6 py-3 text-sm font-medium">
+              <td className="flex flex-col sm:flex-row justify-center px-4 py-3 text-sm font-medium space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
                   title="Ver Más"
                   onClick={() => viewMore(partner._id)}
-                  className="text-white p-2 m-2 bg-green-500 rounded"
+                  className="text-white bg-green-500 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105"
                 >
-                  Ver Más
+                  <FontAwesomeIcon icon={faEye} className="w-5 h-5 mb-1" />
+                  <span className="text-xs font-light">Ver Más</span>
                 </button>
                 <button
                   title="Editar Socio"
                   onClick={() => handleEdit(partner)}
-                  className="text-white p-2 m-2 bg-blue-800 rounded"
+                  className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105"
                 >
-                  <FaEdit />
+                  <FontAwesomeIcon icon={faEdit} className="w-5 h-5 mb-1" />
+                  <span className="text-xs font-light">Editar</span>
                 </button>
                 <button
                   title="Eliminar Socio"
                   onClick={() => handleDelete(partner)}
-                  className="text-white p-2 m-2 bg-red-700 rounded"
+                  className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105"
                 >
-                  <MdDelete />
+                  <FontAwesomeIcon icon={faTrashAlt} className="w-5 h-5 mb-1" />
+                  <span className="text-xs font-light">Eliminar</span>
                 </button>
               </td>
             </tr>
@@ -227,21 +234,21 @@ const PartnersTable = () => {
         </tbody>
       </table>
 
-      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-b-lg shadow-lg">
         <div className="flex flex-1 justify-between sm:hidden">
           <button
             onClick={() => handlePageClick(currentPage - 1)}
             disabled={currentPage === 0}
             className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
-            Previous
+            Anterior
           </button>
           <button
             onClick={() => handlePageClick(currentPage + 1)}
             disabled={currentPage >= pageCount - 1}
             className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
-            Next
+            Siguiente
           </button>
         </div>
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
@@ -320,7 +327,7 @@ const PartnersTable = () => {
                         name: e.target.value,
                       })
                     }
-                    className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
                 <div className="mb-4">
@@ -340,7 +347,7 @@ const PartnersTable = () => {
                         lastname: e.target.value,
                       })
                     }
-                    className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
                 <div className="mb-4">
@@ -360,7 +367,7 @@ const PartnersTable = () => {
                         phone_number: e.target.value,
                       })
                     }
-                    className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
                 <div className="mb-4">
@@ -380,20 +387,20 @@ const PartnersTable = () => {
                         email: e.target.value,
                       })
                     }
-                    className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
                 <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="submit"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="w-full inline-flex justify-center rounded-full border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
                     Guardar
                   </button>
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
+                    className="mt-3 w-full inline-flex justify-center rounded-full border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
                   >
                     Cancelar
                   </button>
@@ -420,14 +427,14 @@ const PartnersTable = () => {
                   <button
                     type="button"
                     onClick={closeConfirmModal}
-                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full mr-2"
                   >
                     Cancelar
                   </button>
                   <button
                     type="button"
                     onClick={deletePartner}
-                    className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded"
+                    className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full"
                   >
                     Eliminar
                   </button>
