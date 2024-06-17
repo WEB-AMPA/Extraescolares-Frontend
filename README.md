@@ -1,8 +1,9 @@
 # Front clientes Grupo Actividades ExtrasEscolares
 
-Proyecto innovador del *Grupo Actividades ExtrasEscolares*, enfocado en realizar un front para los usuarios de las actividades del centro deportivo ciudad de los ángeles. Se puede ver una página compuesta por varias paginas que hablan de las actividades y el inicio al dashboard para los usuarios registrados. Teniendo en cuenta colores del logo Grupo Actividades ExtrasEscolares.
+Proyecto innovador del *Grupo Actividades ExtrasEscolares*, enfocado en ofrecer una página que pueda mostrar información de las actividades que ofrece el Club Deportivo Ciudad de los Ángeles. Además, se quiere aportar una solución para gestionar asistencias, usuarios y actividades del club deportivo. Se puede ver una página compuesta por varias paginas que hablan de las actividades y el inicio al dashboard para los usuarios registrados. Teniendo en cuenta colores del logo Grupo Actividades ExtrasEscolares.
 
-![Grupo Actividades ExtrasEscolares](#)
+
+![Grupo Actividades ExtrasEscolares](../Extraescolares-Frontend/public/logo.png)
 
 ## Tabla de Contenidos
 
@@ -15,17 +16,15 @@ Proyecto innovador del *Grupo Actividades ExtrasEscolares*, enfocado en realizar
 El proyecto se encuentra en estado de producción con posibles cambios de mejoras y actualizaciones..
 
 ## Instalación
-💻
-
-Al instalarse el proyecto en la consola se deben tener en cuenta las siguientes indicaciones: <br>
+💻 Al instalarse el proyecto en la consola se deben tener en cuenta las siguientes indicaciones: <br>
+- Se debe instalar pnpm en el ordenador de manera global: npm install -g pnpm
 - Se debe instalar Node.js en el ordenador: pnpm install
-- Dentro de la carpeta debemos escribir en la terminal:
-pnpm run dev
+- Dentro de la carpeta debemos escribir en la terminal: pnpm run dev
 
 
 ## Uso
 
-Teniendo en cuenta la anterior información se podría navegar por todas las páginas de manera libre. 
+Teniendo en cuenta la anterior información se podría navegar por todas las páginas de manera libre. Teniendo en cuenta que la intranet está protegida y será necesaria unas credenciales para poder acceder.
 
 ## Créditos
 
@@ -56,7 +55,7 @@ Teniendo en cuenta la anterior información se podría navegar por todas las pá
 - <a href="https://trello.com/invite/b/7vUFwRF3/ATTId577aeac3dc017cea2bd4976a4a253b8EED8DA35/proyecto-final"> Trello </a> </br> 
 - <a href="https://www.figma.com/design/jzLjPd7euVQiLo390r2LSm/Proyecto-Final---Actividades-Extraescolares?node-id=0-1&t=A50MNfyEznANaHcd-1"> Figma </a> </br>
 - <a href="https://github.com/WEB-AMPA">GitHub</a> </br>
-- <a href="#">Deploy</a>
+- <a href="https://ciudadangelescd.netlify.app/">Deploy</a>
 
 ## Licencia
 
@@ -70,4 +69,4 @@ Se han hecho varios test para el frontend
 ![Enlace a los test](#)
 
 ## Auditoria de la página
-Documento drive <a href="#">Auditoria</a>
+Documento drive <a href="https://docs.google.com/document/d/1DCitY6bdP-OATygXNuJkQNOHDs2ysGejdwPJjzjWZ1s/edit?usp=sharing">Auditoria</a>

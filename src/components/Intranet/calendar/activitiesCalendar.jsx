@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './CalendarCustom.css'; // Importa el archivo CSS personalizado
@@ -9,10 +9,10 @@ import { useAuthContext } from '../../../context/authContext';
 const ActivitiesCalendar = () => {
     const { activitiesStudentId } = useParams();
     const [attendanceHistory, setAttendanceHistory] = useState([]);
+    const [studentName, setStudentName] = useState("");
     const [error, setError] = useState('');
-    const { VITE_URL } = import.meta.env
+    const { VITE_URL } = import.meta.env;
     const { auth } = useAuthContext();
-
 
     // Función para obtener el rango de fechas del mes actual
     const getCurrentMonthRange = () => {
@@ -24,30 +24,36 @@ const ActivitiesCalendar = () => {
 
     const [dateRange, setDateRange] = useState(getCurrentMonthRange);
 
-    useEffect(() => {
-        const fetchAttendanceHistory = async () => {
-            try {
-                const timezoneOffset = new Date().getTimezoneOffset() * 60000; // Desplazamiento de la zona horaria en milisegundos
-                const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
-                const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
+    const fetchAttendanceHistory = useCallback(async () => {
+        try {
+            const timezoneOffset = new Date().getTimezoneOffset() * 60000; // Desplazamiento de la zona horaria en milisegundos
+            const start_date = new Date(dateRange[0].getTime() - timezoneOffset).toISOString().split('T')[0];
+            const end_date = new Date(dateRange[1].getTime() - timezoneOffset).toISOString().split('T')[0];
 
-                const response = await axios.get(`${VITE_URL}/api/attendance/activities_student/${activitiesStudentId}/date-range/${start_date}/${end_date}`,
-                    {
-                        headers: {
-                          "Content-Type": "application/json",
-                          Authorization: `Bearer ${auth.token}`,
-                        },
-                      }
-                );
-                setAttendanceHistory(response.data);
-            } catch (error) {
-                setError('Error fetching attendance history');
-                console.error('Error fetching attendance history:', error.response || error.message || error);
+            const response = await axios.get(
+                `${VITE_URL}/api/attendance/activities_student/${activitiesStudentId}/date-range/${start_date}/${end_date}`,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${auth.token}`,
+                    },
+                }
+            );
+            setAttendanceHistory(response.data);
+            if (response.data.length > 0) {
+                setStudentName(`${response.data[0].student_id.name} ${response.data[0].student_id.lastname}`);
+            } else {
+                setStudentName(""); // En caso de que no haya registros
             }
-        };
+        } catch (error) {
+            setError('Error fetching attendance history');
+            console.error('Error fetching attendance history:', error.response || error.message || error);
+        }
+    }, [activitiesStudentId, dateRange, VITE_URL, auth.token]);
 
+    useEffect(() => {
         fetchAttendanceHistory();
-    }, [activitiesStudentId, dateRange]);
+    }, [fetchAttendanceHistory]);
 
     const handleDateChange = (range) => {
         setDateRange(range);
@@ -59,7 +65,7 @@ const ActivitiesCalendar = () => {
         setDateRange([startOfMonth, endOfMonth]);
     };
 
-    const tileContent = ({ date, view }) => {
+    const tileContent = useCallback(({ date, view }) => {
         if (view === 'month') {
             const timezoneOffset = date.getTimezoneOffset() * 60000;
             const formattedDate = new Date(date.getTime() - timezoneOffset).toISOString().split('T')[0];
@@ -80,14 +86,16 @@ const ActivitiesCalendar = () => {
             }
         }
         return null;
-    };
+    }, [attendanceHistory]);
 
     return (
-        <div className="container mx-auto p-6 bg-white shadow-md rounded-lg">
+        <div className="flex flex-col items-center mt-10">
             <h2 className="text-2xl font-bold mb-4">Historial de Asistencias</h2>
             {error && <p className="text-red-500">{error}</p>}
+            <p className="text-lg font-semibold mb-4">Alumno/a: {studentName}</p>
             <div>
                 <Calendar
+                    className="custom-calendar"
                     selectRange={true}
                     onChange={handleDateChange}
                     value={dateRange}
@@ -95,6 +103,9 @@ const ActivitiesCalendar = () => {
                     onActiveStartDateChange={handleActiveStartDateChange}
                 />
             </div>
+            <Link to={`/intranet/activities/`} className="mt-4 underline">
+                Volver a la lista de asistencia
+            </Link>
         </div>
     );
 };

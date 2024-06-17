@@ -36,8 +36,9 @@ const LoginForm = () => {
       }
 
       if (data.token) {
-        const { token, role, name } = data;
-        login(token, usernameOrEmail, name, role);
+        const { token, role, name, partnerId } = data;
+        login(token, usernameOrEmail, name, role, partnerId);
+        console.log(data)
         navigate("/intranet");
       } else {
         setError("Credenciales incorrectas. Por favor, verifica tus datos.");

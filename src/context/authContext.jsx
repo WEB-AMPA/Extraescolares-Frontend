@@ -9,19 +9,22 @@ export function AuthContextProvider({ children }) {
     user: sessionStorage.getItem("usernameOrEmail") || null,
     name: sessionStorage.getItem("name") || null,
     role: sessionStorage.getItem("role") || null,
+    partnerId: sessionStorage.getItem("partnerId") || null,
   });
 
-  const login = useCallback((token, username, name, role) => {
+  const login = useCallback((token, username, name, role, partnerId) => {
     sessionStorage.setItem("token", token);
     sessionStorage.setItem("usernameOrEmail", username);
     sessionStorage.setItem("name", name);
     sessionStorage.setItem("role", role);
+    sessionStorage.setItem("partnerId", partnerId);
     setAuthState({
       isAuth: true,
       token,
       user: username,
       name,
       role,
+      partnerId
     });
   }, []);
 
@@ -30,12 +33,14 @@ export function AuthContextProvider({ children }) {
     sessionStorage.removeItem("usernameOrEmail");
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("role");
+    sessionStorage.removeItem("partnerId");
     setAuthState({
       isAuth: false,
       token: null,
       user: null,
       name: null,
       role: null,
+      partnerId: null
     });
   }, []);
 
@@ -47,5 +52,6 @@ export function AuthContextProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
 
 export const useAuthContext = () => useContext(AuthContext);
