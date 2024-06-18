@@ -1,8 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import { CiViewList } from "react-icons/ci";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrashAlt, faEye, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useAuthContext } from '../../../context/authContext';
 
 const ActivitiesStudent = () => {
@@ -89,16 +88,16 @@ const ActivitiesStudent = () => {
           Asignar Actividad
         </button>
       </div>
-      <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
-        <thead className="bg-gray-200 gap-3 items-center">
+      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+        <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Actividad</th>
-            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Categoría</th>
-            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Monitor</th>
-            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Horario</th>
-            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Días</th>
-            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Observaciones</th>
-            <th scope="col" className="px-6 py-3 text-center text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Ajustes</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Actividad</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Categoría</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Monitor</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Horario</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Días</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Observaciones</th>
+            <th scope="col" className="px-4 py-3 text-center text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Ajustes</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
@@ -108,34 +107,37 @@ const ActivitiesStudent = () => {
             </tr>
           ) : (
             activities.map((activity) => (
-              <tr key={activity._id} className="border-b border-gray-300">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.activity?.name || 'Nombre no disponible'}</div>
+              <tr key={activity._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <div className="text-m text-gray-900">{activity?.activity?.name || 'Nombre no disponible'}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.activity?.categories?.[0]?.name || 'Categoría no disponible'}</div>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <div className="text-m text-gray-900">{activity?.activity?.categories?.[0]?.name || 'Categoría no disponible'}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.activity?.monitor?.name || 'Monitor no disponible'}</div>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <div className="text-m text-gray-900">{activity?.activity?.monitor?.name || 'Monitor no disponible'}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.activity?.scheduleHour?.[0]?.range || 'Horario no disponible'}</div>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <div className="text-m text-gray-900">{activity?.activity?.scheduleHour?.[0]?.range || 'Horario no disponible'}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.activity?.scheduleDay?.[0]?.days || 'Días no disponibles'}</div>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <div className="text-m text-gray-900">{activity?.activity?.scheduleDay?.[0]?.days || 'Días no disponibles'}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{activity?.activity?.observations || 'Observaciones no disponibles'}</div>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  <div className="text-m text-gray-900">{activity?.activity?.observations || 'Observaciones no disponibles'}</div>
                 </td>
-                <td className="flex px-6 py-3 text-center text-sm font-medium">
-                  <button title="Editar Actividad" onClick={() => handleEdit(activity)} className="text-white p-2 m-2 bg-blue-800 rounded">
-                    <FaEdit />
+                <td className="flex flex-col sm:flex-row justify-center items-center px-4 py-3 text-sm font-medium space-y-2 sm:space-y-0 sm:space-x-2">
+                  <button title="Editar Actividad" onClick={() => handleEdit(activity)} className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                    <FontAwesomeIcon icon={faEdit} className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Editar</span>
                   </button>
-                  <button title="Eliminar Actividad" onClick={() => handleDelete(activity)} className="text-white p-2 m-2 bg-red-700 rounded">
-                    <MdDelete />
+                  <button title="Eliminar Actividad" onClick={() => handleDelete(activity)} className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                    <FontAwesomeIcon icon={faTrashAlt} className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Eliminar</span>
                   </button>
-                  <Link to={`/intranet/actividades/${activity._id}`} className="p-2 m-2 bg-yellow-300 rounded flex items-center justify-center" title="Ver Detalles de la Actividad">
-                    <CiViewList />
+                  <Link to={`/intranet/actividades/${activity._id}`} className="text-white bg-green-500 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105" title="Ver Detalles de la Actividad">
+                    <FontAwesomeIcon icon={faEye} className="w-5 h-5 mb-1" />
+                    <span className="text-xs font-light">Ver Más</span>
                   </Link>
                 </td>
               </tr>
