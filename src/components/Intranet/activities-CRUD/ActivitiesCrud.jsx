@@ -212,8 +212,7 @@ const Activities = () => {
       <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
         <thead className="bg-gray-200">
           <tr>
-            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Actividad</th>
-            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Categoría</th>
+            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Actividad y Categoría</th>
             <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Monitor</th>
             <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Centro</th>
             <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">Horario</th>
@@ -224,21 +223,24 @@ const Activities = () => {
           {currentActivities.map((activity) => (
             <tr key={activity._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
               <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{activity.name}</div>
+                <div className="text-sm text-gray-900">{activity.name}</div>
+                <div className="text-xs text-gray-500">{activity.categories.map(category => category.name).join(', ')}</div>
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{activity.categories.map(category => category.name).join(', ')}</div>
+                <div className="text-sm text-gray-900">{activity.monitor?.username || 'N/A'}</div>
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{activity.monitor?.username || 'N/A'}</div>
+                <div className="text-sm text-gray-900">{activity.centers.map(center => center.name).join(', ')}</div>
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{activity.centers.map(center => center.name).join(', ')}</div>
+                <div className="text-sm text-gray-900">
+                  {activity.scheduleDay?.map(day => day.days).join(', ')}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {activity.scheduleHour?.map(hour => hour.range).join(', ')}
+                </div>
               </td>
-              <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{activity.scheduleDay?.map(day => day.days).join(', ')} {activity.scheduleHour?.map(hour => hour.range).join(', ')}</div>
-              </td>
-              <td className="px-4 py-3 whitespace-nowrap">
+              <td className="px-5 py-3 whitespace-nowrap">
                 <div className="flex flex-col sm:flex-row justify-center items-center space-x-0 sm:space-x-2 sm:space-y-0 space-y-2">
                   <button title="Editar Actividad" onClick={() => handleEdit(activity)} className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
                     <FaEdit className="w-5 h-5 mb-1" />
@@ -322,111 +324,135 @@ const Activities = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
-          <div className="bg-white rounded-lg p-6 z-10 shadow-lg w-full max-w-2xl mx-4">
-            <h2 className="text-xl font-bold mb-4">Editar Actividad</h2>
-            <form>
-              <label className="block mb-2">Nombre:</label>
-              <input
-                type="text"
-                value={selectedActivity.name}
-                onChange={(e) => setSelectedActivity({ ...selectedActivity, name: e.target.value })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-              />
-              <label className="block mb-2">Monitor:</label>
-              <select
-                value={selectedActivity.monitor?._id || selectedActivity.monitor?.username}
-                onChange={(e) => setSelectedActivity({
-                  ...selectedActivity,
-                  monitor: monitors.find((monitor) => monitor._id === e.target.value)
-                })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-              >
-                {monitors.map((monitor) => (
-                  <option key={monitor._id} value={monitor._id}>{monitor.username}</option>
-                ))}
-              </select>
-              <label className="block mb-2">Categorías:</label>
-              <select
-                multiple
-                value={selectedActivity.categories?.map((category) => category._id)}
-                onChange={(e) => setSelectedActivity({
-                  ...selectedActivity,
-                  categories: Array.from(e.target.selectedOptions, (option) => categories.find((category) => category._id === option.value))
-                })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-              >
-                {categories.map((category) => (
-                  <option key={category._id} value={category._id}>{category.name}</option>
-                ))}
-              </select>
-              <label className="block mb-2">Días de Horario:</label>
-              <select
-                multiple
-                value={selectedActivity.scheduleDay?.map((day) => day._id)}
-                onChange={(e) => setSelectedActivity({
-                  ...selectedActivity,
-                  scheduleDay: Array.from(e.target.selectedOptions, (option) => days.find((day) => day._id === option.value))
-                })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-              >
-                {days.map((day) => (
-                  <option key={day._id} value={day._id}>{day.days}</option>
-                ))}
-              </select>
-              <label className="block mb-2">Horas de Horario:</label>
-              <select
-                multiple
-                value={selectedActivity.scheduleHour?.map((hour) => hour._id)}
-                onChange={(e) => setSelectedActivity({
-                  ...selectedActivity,
-                  scheduleHour: Array.from(e.target.selectedOptions, (option) => schedules.find((hour) => hour._id === option.value))
-                })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-              >
-                {schedules.map((hour) => (
-                  <option key={hour._id} value={hour._id}>{hour.range}</option>
-                ))}
-              </select>
-              <label className="block mb-2">Centros:</label>
-              <select
-                multiple
-                value={selectedActivity.centers?.map((center) => center._id)}
-                onChange={(e) => setSelectedActivity({
-                  ...selectedActivity,
-                  centers: Array.from(e.target.selectedOptions, (option) => centers.find((center) => center._id === option.value))
-                })}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4"
-              >
-                {centers.map((center) => (
-                  <option key={center._id} value={center._id}>{center.name}</option>
-                ))}
-              </select>
-            </form>
-            <div className="flex justify-end">
-              <button onClick={closeModal} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-4">Cancelar</button>
-              <button onClick={saveActivity} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Guardar</button>
-            </div>
-          </div>
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
+    <div className="bg-white rounded-lg p-6 z-10 shadow-lg w-full max-w-4xl mx-4">
+      <h2 className="text-2xl font-bold mb-6 text-center">Editar Actividad</h2>
+      <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="col-span-1">
+          <label className="block mb-2 font-medium">Nombre de la Actividad:</label>
+          <input
+            type="text"
+            value={selectedActivity.name}
+            onChange={(e) => setSelectedActivity({ ...selectedActivity, name: e.target.value })}
+            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
         </div>
-      )}
+        <div className="col-span-1">
+          <label className="block mb-2 font-medium">Monitor Asignado:</label>
+          <select
+            value={selectedActivity.monitor?._id || selectedActivity.monitor?.username}
+            onChange={(e) => setSelectedActivity({
+              ...selectedActivity,
+              monitor: monitors.find((monitor) => monitor._id === e.target.value)
+            })}
+            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            {monitors.map((monitor) => (
+              <option key={monitor._id} value={monitor._id}>{monitor.username}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col-span-1">
+          <label className="block mb-2 font-medium rounded-lg">Categoría:</label>
+          <select
+            multiple
+            value={selectedActivity.categories?.map((category) => category._id)}
+            onChange={(e) => setSelectedActivity({
+              ...selectedActivity,
+              categories: Array.from(e.target.selectedOptions, (option) => categories.find((category) => category._id === option.value))
+            })}
+            className="shadow appearance-none border rounded-lgl w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            {categories.map((category) => (
+              <option key={category._id} value={category._id}>{category.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col-span-1">
+          <label className="block mb-2 font-medium">Días:</label>
+          <select
+            multiple
+            value={selectedActivity.scheduleDay?.map((day) => day._id)}
+            onChange={(e) => setSelectedActivity({
+              ...selectedActivity,
+              scheduleDay: Array.from(e.target.selectedOptions, (option) => days.find((day) => day._id === option.value))
+            })}
+            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            {days.map((day) => (
+              <option key={day._id} value={day._id}>{day.days}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col-span-1">
+          <label className="block mb-2 font-medium">Hora:</label>
+          <select
+            multiple
+            value={selectedActivity.scheduleHour?.map((hour) => hour._id)}
+            onChange={(e) => setSelectedActivity({
+              ...selectedActivity,
+              scheduleHour: Array.from(e.target.selectedOptions, (option) => schedules.find((hour) => hour._id === option.value))
+            })}
+            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            {schedules.map((hour) => (
+              <option key={hour._id} value={hour._id}>{hour.range}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col-span-1">
+          <label className="block mb-2 font-medium">Centro:</label>
+          <select
+            multiple
+            value={selectedActivity.centers?.map((center) => center._id)}
+            onChange={(e) => setSelectedActivity({
+              ...selectedActivity,
+              centers: Array.from(e.target.selectedOptions, (option) => centers.find((center) => center._id === option.value))
+            })}
+            className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            {centers.map((center) => (
+              <option key={center._id} value={center._id}>{center.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="col-span-2 flex justify-end mt-4">
+          <button onClick={closeModal} type="button" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full mr-4 transition duration-300 ease-in-out transform hover:scale-105">Cancelar</button>
+          <button onClick={saveActivity} type="button" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
 
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
-          <div className="bg-white rounded-lg p-6 z-10 shadow-lg w-full max-w-md mx-4">
-            <h2 className="text-xl font-bold mb-4">Confirmar Eliminación</h2>
-            <p className="mb-4">¿Estás seguro de que deseas eliminar esta actividad?</p>
-            <div className="flex justify-end">
-              <button onClick={closeDeleteModal} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-4">Cancelar</button>
-              <button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Eliminar</button>
-            </div>
-          </div>
-        </div>
-      )}
+{isDeleteModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-50"></div>
+    <div className="bg-white rounded-lg p-6 z-10 shadow-lg w-full max-w-md mx-4">
+      <h2 className="text-xl font-bold mb-4 text-center">Confirmar Eliminación</h2>
+      <p className="mb-4 text-center">¿Estás seguro de que deseas eliminar esta actividad?</p>
+      <div className="flex justify-end">
+        <button
+          onClick={closeDeleteModal}
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full mr-4 transition duration-300 ease-in-out transform hover:scale-105"
+        >
+          Cancelar
+        </button>
+        <button
+          onClick={handleDelete}
+          className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
 
 export default Activities;
+
