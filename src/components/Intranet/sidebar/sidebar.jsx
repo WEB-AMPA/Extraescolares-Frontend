@@ -32,9 +32,9 @@ function Sidebar() {
 
   const handleSignOut = () => {
     logout();
-    localStorage.removeItem("usernameOrEmail");
-    localStorage.removeItem("role");
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("usernameOrEmail");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("token");
     navigate("/login");
   };
 
