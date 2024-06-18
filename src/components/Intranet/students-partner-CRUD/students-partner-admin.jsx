@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { FaEdit, FaEye, FaSearch } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { useAuthContext } from "../../../context/authContext";
+import { useAuthContext } from "../../../context/authContext.jsx";
 
 const StudentsPartnerAdmin = () => {
   const { partnerId } = useParams();
