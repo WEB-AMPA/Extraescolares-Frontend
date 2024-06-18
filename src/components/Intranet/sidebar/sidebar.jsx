@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { useAuthContext } from '../../../context/authContext';
@@ -98,22 +98,30 @@ function Sidebar() {
                   {dropdowns[link.key] && (
                     <div className="mt-2 space-y-2 pl-8">
                       {link.subLinks.map((subLink) => (
-                        <Link
+                        <NavLink
                           key={subLink.key}
                           to={subLink.path}
-                          className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700"
+                          className={({ isActive }) =>
+                            `relative px-4 py-3 flex items-center space-x-4 rounded-md group hover:bg-gray-100 hover:text-gray-700 ${
+                              isActive ? 'bg-[#F2E30F] text-gray-800' : 'text-gray-500'
+                            }`
+                          }
                         >
                           <FontAwesomeIcon icon={subLink.icon.props.icon} />
                           <span className="ml-2">{subLink.label}</span>
-                        </Link>
+                        </NavLink>
                       ))}
                     </div>
                   )}
                 </>
               ) : (
-                <Link
+                <NavLink
                   to={link.path}
-                  className="relative px-4 py-3 flex items-center space-x-4 rounded-md text-gray-500 group hover:bg-gray-100 hover:text-gray-700 w-full"
+                  className={({ isActive }) =>
+                    `relative px-4 py-3 flex items-center space-x-4 rounded-md group hover:bg-gray-100 hover:text-gray-700 w-full ${
+                      isActive ? 'bg-gray-100 text-gray-800' : 'text-gray-500'
+                    }`
+                  }
                 >
                   <div className="grid mr-2 place-items-center">
                     <FontAwesomeIcon icon={link.icon.props.icon} />
@@ -121,7 +129,7 @@ function Sidebar() {
                   <p className="block mr-auto font-sans text-base antialiased font-normal leading-relaxed text-blue-gray-900">
                     {link.label}
                   </p>
-                </Link>
+                </NavLink>
               )}
             </div>
           ))}
@@ -136,10 +144,18 @@ function Sidebar() {
                     <span className='p-4 space-x-4'>{link.label}</span>
                   </button>
                 ) : (
-                  <Link to={link.path} onClick={toggleSidebar} className="w-full flex items-center">
+                  <NavLink
+                    to={link.path}
+                    className={({ isActive }) =>
+                      `w-full flex items-center ${
+                        isActive ? 'bg-[#F2E30F] text-gray-800' : 'text-gray-500'
+                      }`
+                    }
+                    onClick={toggleSidebar}
+                  >
                     <FontAwesomeIcon icon={link.icon.props.icon} />
                     <span className='p-4 space-x-4'>{link.label}</span>
-                  </Link>
+                  </NavLink>
                 )}
               </li>
             ))}
