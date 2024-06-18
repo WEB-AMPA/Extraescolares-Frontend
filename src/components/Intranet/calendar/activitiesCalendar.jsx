@@ -42,7 +42,7 @@ const ActivitiesCalendar = () => {
             if (response.data.attendances.length > 0) {
                 setStudentName(response.data.studentName);
             } else {
-                setStudentName(""); // En caso de que no haya registros
+                setStudentName(""); 
             }
             console.log(studentName);
             setAttendanceHistory(response.data.attendances);
@@ -78,10 +78,8 @@ const ActivitiesCalendar = () => {
 
             if (attendance) {
                 if (attendance.attendance === 1) {
-                    // Estilo para los días que el estudiante vino
                     return <div className="flex items-center justify-center h-full w-full"><div className="bg-green-400 rounded-full h-6 w-6"></div></div>;
                 } else {
-                    // Estilo para los días que el estudiante no vino
                     return <div className="flex items-center justify-center h-full w-full"><div className="bg-red-400 rounded-full h-6 w-6"></div></div>;
                 }
             }
@@ -93,7 +91,7 @@ const ActivitiesCalendar = () => {
         <div className="flex flex-col items-center mt-10">
             <h2 className="text-2xl font-bold mb-4">Historial de Asistencias</h2>
             {error && <p className="text-red-500">{error}</p>}
-            <p className="text-lg font-semibold mb-4">Alumno/a: {studentName}</p>
+            <p className="text-lg font-semibold mb-4">Alumna: {studentName}</p>
             <div>
                 <Calendar
                     className="custom-calendar"
@@ -104,7 +102,7 @@ const ActivitiesCalendar = () => {
                     onActiveStartDateChange={handleActiveStartDateChange}
                 />
             </div>
-            <Link to={`/intranet/attendances/`} className="mt-4 underline">
+            <Link to={`/intranet/attendances/`} className="mt-4 underline font-semibold text-lg">
                 Volver a la lista de asistencia
             </Link>
         </div>
