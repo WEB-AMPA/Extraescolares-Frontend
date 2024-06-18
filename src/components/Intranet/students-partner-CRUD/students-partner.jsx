@@ -5,7 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useAuthContext } from '../../../context/authContext';
 
 const StudentsPartner = () => {
-
+  const { auth } = useAuthContext();
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -13,25 +13,38 @@ const StudentsPartner = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [shouldRefetch, setShouldRefetch] = useState(false);
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
   const { VITE_URL } = import.meta.env;
-  const { auth } = useAuthContext();
-
-  let partnerId = auth.partnerId;
 
   const itemsPerPage = 10;
 
   const fetchStudents = useCallback(async () => {
-    if (!partnerId) return;
+    if (!auth.partnerId) {
+      console.error('partnerId is not defined');
+      setError('Partner ID is not defined');
+      setLoading(false);
+      return;
+    }
+    setLoading(true); // Iniciar la carga
     try {
-      const response = await fetch(`${VITE_URL}/api/students/partner/${partnerId}`);
+      const response = await fetch(`${VITE_URL}/api/students/partner/${auth.partnerId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
       if (!response.ok) throw new Error('Error fetching students');
-
       const data = await response.json();
       setStudents(data);
+      setLoading(false); // Finalizar la carga
     } catch (error) {
       console.error('Error fetching students:', error);
+      setError('Error fetching students');
+      setLoading(false); // Finalizar la carga
     }
-  }, [partnerId, VITE_URL]);
+  }, [auth.partnerId, VITE_URL, auth.token]);
 
   useEffect(() => {
     fetchStudents();
@@ -63,12 +76,17 @@ const StudentsPartner = () => {
   const deleteStudent = async () => {
     try {
       await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
-        method: 'DELETE',
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
+        },
       });
       setStudents(students.filter(student => student._id !== selectedStudent._id));
       setShouldRefetch(true);
     } catch (error) {
       console.error('Error deleting student:', error);
+      setError('Error deleting student');
     }
     closeConfirmModal();
   };
@@ -93,9 +111,10 @@ const StudentsPartner = () => {
 
     try {
       const response = await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth.token}`,
         },
         body: JSON.stringify(updatedStudentData),
       });
@@ -103,6 +122,7 @@ const StudentsPartner = () => {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error updating student:', errorData);
+        setError('Error updating student');
         throw new Error('Error updating student');
       }
 
@@ -110,6 +130,7 @@ const StudentsPartner = () => {
       closeModal();
     } catch (error) {
       console.error('Error updating student:', error.message);
+      setError('Error updating student');
       closeModal();
     }
   };
@@ -151,116 +172,124 @@ const StudentsPartner = () => {
           Crear Estudiante
         </button>
       </div>
-      <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
-        <thead className="bg-gray-200">
-          <tr>
-            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
-              Nombre Completo
-            </th>
-            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
-              Curso
-            </th>
-            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
-              Desayuno
-            </th>
-            <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
-              Observaciones
-            </th>
-            <th scope="col" className="px-4 py-3 text-center text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
-              Ajustes
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {currentPageData.map((student) => (
-            <tr key={student._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
-              <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{`${student.name} ${student.lastname}`}</div>
-              </td>
-              <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{student.course}</div>
-              </td>
-              <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{student.breakfast ? 'Sí' : 'No'}</div>
-              </td>
-              <td className="px-4 py-3 whitespace-nowrap">
-                <div className="text-m text-gray-900">{student.observations}</div>
-              </td>
-              <td className="px-4 py-3 whitespace-nowrap">
-                <div className="flex flex-col sm:flex-row justify-center items-center space-x-0 sm:space-x-2 sm:space-y-0 space-y-2">
-                  <button title="Ver Más" onClick={() => viewMore(student._id)} className="text-white bg-green-500 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
-                    <FaEye className="w-5 h-5 mb-1" />
-                    <span className="text-xs font-light">Ver Más</span>
-                  </button>
-                  <button title="Editar Estudiante" onClick={() => handleEdit(student)} className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
-                    <FaEdit className="w-5 h-5 mb-1" />
-                    <span className="text-xs font-light">Editar</span>
-                  </button>
-                  <button title="Eliminar Estudiante" onClick={() => handleDelete(student)} className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
-                    <MdDelete className="w-5 h-5 mb-1" />
-                    <span className="text-xs font-light">Eliminar</span>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {loading ? (
+        <p>Cargando...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <>
+          <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+            <thead className="bg-gray-200">
+              <tr>
+                <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
+                  Nombre Completo
+                </th>
+                <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
+                  Curso
+                </th>
+                <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
+                  Desayuno
+                </th>
+                <th scope="col" className="px-4 py-3 text-left text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
+                  Observaciones
+                </th>
+                <th scope="col" className="px-4 py-3 text-center text-[1rem] font-semibold text-black uppercase tracking-wider border-b border-gray-300">
+                  Ajustes
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentPageData.map((student) => (
+                <tr key={student._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-m text-gray-900">{`${student.name} ${student.lastname}`}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-m text-gray-900">{student.course}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-m text-gray-900">{student.breakfast ? 'Sí' : 'No'}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-m text-gray-900">{student.observations}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="flex flex-col sm:flex-row justify-center items-center space-x-0 sm:space-x-2 sm:space-y-0 space-y-2">
+                      <button title="Ver Más" onClick={() => viewMore(student._id)} className="text-white bg-green-500 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                        <FaEye className="w-5 h-5 mb-1" />
+                        <span className="text-xs font-light">Ver Más</span>
+                      </button>
+                      <button title="Editar Estudiante" onClick={() => handleEdit(student)} className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                        <FaEdit className="w-5 h-5 mb-1" />
+                        <span className="text-xs font-light">Editar</span>
+                      </button>
+                      <button title="Eliminar Estudiante" onClick={() => handleDelete(student)} className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
+                        <MdDelete className="w-5 h-5 mb-1" />
+                        <span className="text-xs font-light">Eliminar</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-b-lg shadow-lg">
-        <div className="flex flex-1 justify-between sm:hidden">
-          <button
-            onClick={() => handlePageClick(currentPage - 1)}
-            disabled={currentPage === 0}
-            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Anterior
-          </button>
-          <button
-            onClick={() => handlePageClick(currentPage + 1)}
-            disabled={currentPage >= pageCount - 1}
-            className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Siguiente
-          </button>
-        </div>
-        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-gray-700">
-              Mostrando <span className="font-medium">{offset + 1}</span> a <span className="font-medium">{Math.min(offset + itemsPerPage, filteredStudents.length)}</span> de <span className="font-medium">{filteredStudents.length}</span> resultados
-            </p>
-          </div>
-          <div>
-            <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+          <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-b-lg shadow-lg">
+            <div className="flex flex-1 justify-between sm:hidden">
               <button
                 onClick={() => handlePageClick(currentPage - 1)}
                 disabled={currentPage === 0}
-                className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
-                <span className="sr-only">Previous</span>
-                <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                Anterior
               </button>
-              {Array.from({ length: pageCount }, (_, index) => (
-                <button
-                  key={index}
-                  onClick={() => handlePageClick(index)}
-                  className={`relative inline-flex items-center border ${currentPage === index ? 'border-indigo-500 bg-indigo-50 z-10' : 'border-gray-300 bg-white'} px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20`}
-                >
-                  {index + 1}
-                </button>
-              ))}
               <button
                 onClick={() => handlePageClick(currentPage + 1)}
                 disabled={currentPage >= pageCount - 1}
-                className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
-                <span className="sr-only">Next</span>
-                <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                Siguiente
               </button>
-            </nav>
+            </div>
+            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-gray-700">
+                  Mostrando <span className="font-medium">{offset + 1}</span> a <span className="font-medium">{Math.min(offset + itemsPerPage, filteredStudents.length)}</span> de <span className="font-medium">{filteredStudents.length}</span> resultados
+                </p>
+              </div>
+              <div>
+                <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                  <button
+                    onClick={() => handlePageClick(currentPage - 1)}
+                    disabled={currentPage === 0}
+                    className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                  >
+                    <span className="sr-only">Previous</span>
+                    <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                  {Array.from({ length: pageCount }, (_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handlePageClick(index)}
+                      className={`relative inline-flex items-center border ${currentPage === index ? 'border-indigo-500 bg-indigo-50 z-10' : 'border-gray-300 bg-white'} px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => handlePageClick(currentPage + 1)}
+                    disabled={currentPage >= pageCount - 1}
+                    className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+                  >
+                    <span className="sr-only">Next</span>
+                    <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </nav>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
@@ -337,4 +366,3 @@ const StudentsPartner = () => {
 };
 
 export default StudentsPartner;
-

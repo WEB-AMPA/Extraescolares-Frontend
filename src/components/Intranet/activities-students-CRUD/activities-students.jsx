@@ -1,9 +1,9 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { CiViewList } from "react-icons/ci";
-import { Link } from 'react-router-dom';
+import { useAuthContext } from '../../../context/authContext';
 
 const ActivitiesStudent = () => {
   const { studentId } = useParams();
@@ -11,7 +11,9 @@ const ActivitiesStudent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
-  const { VITE_URL } = import.meta.env
+  const { VITE_URL } = import.meta.env;
+  const { auth } = useAuthContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -20,7 +22,12 @@ const ActivitiesStudent = () => {
           ? `${VITE_URL}/api/activitiesStudents?studentId=${studentId}`
           : `${VITE_URL}/api/activitiesStudents`;
 
-        const response = await fetch(url);
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
         if (!response.ok) throw new Error('Error fetching activities');
         const data = await response.json();
         setActivities(data);
@@ -30,7 +37,7 @@ const ActivitiesStudent = () => {
     };
 
     fetchActivities();
-  }, [studentId]);
+  }, [studentId, VITE_URL, auth.token]);
 
   const handleEdit = (activity) => {
     setSelectedActivity(activity);
@@ -50,12 +57,38 @@ const ActivitiesStudent = () => {
     setIsModalOpen(false);
   };
 
-  const deleteActivity = () => {
-    closeConfirmModal();
+  const deleteActivity = async () => {
+    try {
+      const response = await fetch(`${VITE_URL}/api/activitiesStudents/${selectedActivity._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error deleting activity');
+      }
+
+      setActivities(activities.filter(activity => activity._id !== selectedActivity._id));
+      closeConfirmModal();
+    } catch (error) {
+      console.error('Error deleting activity:', error);
+    }
   };
 
   return (
-    <div className="flex justify-center overflow-x-auto m-4 p-4">
+    <div className="flex flex-col justify-center overflow-x-auto m-4 p-4">
+      <div className="flex justify-between mb-4">
+        <h2 className="text-2xl font-semibold">Actividades del Estudiante</h2>
+        <button
+          onClick={() => navigate(`/intranet/asignactivities/${studentId}`)}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full"
+        >
+          Asignar Actividad
+        </button>
+      </div>
       <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
         <thead className="bg-gray-200 gap-3 items-center">
           <tr>
