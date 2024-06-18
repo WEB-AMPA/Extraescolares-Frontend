@@ -24,7 +24,9 @@ const StudentsPartner = () => {
     if (!partnerId) return;
     try {
       const response = await fetch(`${VITE_URL}/api/students/partner/${partnerId}`, {
+        method: "GET",
         headers: {
+          "Content-Type": "application/json",
           'Authorization': `Bearer ${auth.token}`
         }
       });
@@ -69,6 +71,7 @@ const StudentsPartner = () => {
       await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'DELETE',
         headers: {
+          "Content-Type": "application/json",
           'Authorization': `Bearer ${auth.token}`
         }
       });
