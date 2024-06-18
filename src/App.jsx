@@ -20,7 +20,7 @@ import UserForm from "./components/Intranet/user-CRUD/createUser.jsx";
 import PartnersTable from "./components/Intranet/partner-CRUD/partner.jsx";
 import ActivitiesStudent from "./components/Intranet/activities-students-CRUD/activities-students.jsx";
 import CoordinatorTable from "./components/Intranet/coordinator-CRUD/coordinator.jsx";
-import StudentsPartner from "./components/Intranet/students-partner-CRUD/students-partner-admin.jsx";
+import StudentsPartner from "./components/Intranet/students-partner-CRUD/students-partner.jsx";
 import Students from "./components/Intranet/students-CRUD/students.jsx";
 import CreateStudent from "./components/Intranet/students-CRUD/createStudent.jsx";
 import AssignActivity from "./components/Intranet/assign-activities/assign-activities.jsx";

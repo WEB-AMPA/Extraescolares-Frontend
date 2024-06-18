@@ -23,7 +23,11 @@ const StudentsPartner = () => {
   const fetchStudents = useCallback(async () => {
     if (!partnerId) return;
     try {
-      const response = await fetch(`${VITE_URL}/api/students/partner/${partnerId}`);
+      const response = await fetch(`${VITE_URL}/api/students/partner/${partnerId}`, {
+        headers: {
+          'Authorization': `Bearer ${auth.token}`
+        }
+      });
       if (!response.ok) throw new Error('Error fetching students');
 
       const data = await response.json();
@@ -31,7 +35,7 @@ const StudentsPartner = () => {
     } catch (error) {
       console.error('Error fetching students:', error);
     }
-  }, [partnerId, VITE_URL]);
+  }, [partnerId, VITE_URL, auth.token]);
 
   useEffect(() => {
     fetchStudents();
@@ -64,6 +68,9 @@ const StudentsPartner = () => {
     try {
       await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${auth.token}`
+        }
       });
       setStudents(students.filter(student => student._id !== selectedStudent._id));
       setShouldRefetch(true);
@@ -96,6 +103,7 @@ const StudentsPartner = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${auth.token}`
         },
         body: JSON.stringify(updatedStudentData),
       });
@@ -337,4 +345,3 @@ const StudentsPartner = () => {
 };
 
 export default StudentsPartner;
-
