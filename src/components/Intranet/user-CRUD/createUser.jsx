@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useAuthContext } from '../../../context/authContext';
+import { useNavigate } from 'react-router-dom';
 
-const UserForm = () => {
+const UserForm = ({ closeModal }) => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -17,11 +18,11 @@ const UserForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const { VITE_URL } = import.meta.env;
   const { auth } = useAuthContext();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Ensure that the partner_number field only contains numeric values
     if (name === 'partner_number' && !/^\d*$/.test(value)) {
       return;
     }
@@ -32,7 +33,6 @@ const UserForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Prepare the data to be sent to the backend
     const dataToSubmit = { ...formData };
     if (formData.roleName !== 'partner') {
       delete dataToSubmit.phone_number;
@@ -58,6 +58,9 @@ const UserForm = () => {
       });
       setErrors({});
       console.log(response.data);
+      setTimeout(() => {
+        closeModal();
+      }, 2000); // Cierra el modal después de 2 segundos
     } catch (error) {
       setSubmitted(false);
       if (error.response && error.response.data) {
@@ -73,24 +76,35 @@ const UserForm = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigate(-1); // Navega a la página anterior
+  };
+
   const { roleName } = formData;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-8 bg-white shadow-md rounded-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center">Crear un usuario</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+      <form onSubmit={handleSubmit} className="relative max-w-2xl w-full bg-white p-8 shadow-lg rounded-lg">
+        <button
+          type="button"
+          onClick={closeModal}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
+        <h2 className="text-3xl font-bold mb-8 text-center text-gray-700">Crear un Usuario</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>
-            <label htmlFor="username" className="block text-gray-700">Nombre de Usuario:</label>
-            <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
+            <label htmlFor="username" className="block text-gray-700 font-medium mb-2">Nombre de Usuario:</label>
+            <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
           <div>
-            <label htmlFor="email" className="block text-gray-700">Correo Electrónico:</label>
-            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
+            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
           <div>
-            <label htmlFor="roleName" className="block text-gray-700">Rol:</label>
-            <select id="roleName" name="roleName" value={formData.roleName} onChange={handleChange} required className="mt-1 p-2 w-full border rounded">
+            <label htmlFor="roleName" className="block text-gray-700 font-medium mb-2">Rol:</label>
+            <select id="roleName" name="roleName" value={formData.roleName} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="">Seleccione Rol</option>
               <option value="coordinator">Coordinador</option>
               <option value="partner">Socio</option>
@@ -99,29 +113,32 @@ const UserForm = () => {
             </select>
           </div>
           <div>
-            <label htmlFor="name" className="block text-gray-700">Nombre:</label>
-            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
+            <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Nombre:</label>
+            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
           <div>
-            <label htmlFor="lastname" className="block text-gray-700">Apellido:</label>
-            <input type="text" id="lastname" name="lastname" value={formData.lastname} onChange={handleChange} required className="mt-1 p-2 w-full border rounded"/>
+            <label htmlFor="lastname" className="block text-gray-700 font-medium mb-2">Apellido:</label>
+            <input type="text" id="lastname" name="lastname" value={formData.lastname} onChange={handleChange} required className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
           </div>
           {roleName === 'partner' && (
             <>
               <div>
-                <label htmlFor="phone_number" className="block text-gray-700">Número de Teléfono:</label>
-                <input type="text" id="phone_number" name="phone_number" value={formData.phone_number} onChange={handleChange} required={roleName === 'partner'} className="mt-1 p-2 w-full border rounded"/>
+                <label htmlFor="phone_number" className="block text-gray-700 font-medium mb-2">Número de Teléfono:</label>
+                <input type="text" id="phone_number" name="phone_number" value={formData.phone_number} onChange={handleChange} required={roleName === 'partner'} className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
               </div>
               <div>
-                <label htmlFor="partner_number" className="block text-gray-700">Número de Socio:</label>
-                <input type="text" id="partner_number" name="partner_number" value={formData.partner_number} onChange={handleChange} required={roleName === 'partner'} className="mt-1 p-2 w-full border rounded"/>
+                <label htmlFor="partner_number" className="block text-gray-700 font-medium mb-2">Número de Socio:</label>
+                <input type="text" id="partner_number" name="partner_number" value={formData.partner_number} onChange={handleChange} required={roleName === 'partner'} className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
               </div>
             </>
           )}
         </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded w-full">Guardar</button>
+        <div className="flex justify-end space-x-4">
+          <button type="button" onClick={handleCancel} className="py-2 px-4 bg-gray-400 text-white font-bold rounded-full hover:bg-gray-500 transition duration-300">Cancelar</button>
+          <button type="submit" className="py-2 px-4 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300">Guardar</button>
+        </div>
         {submitted && <p className="text-green-500 mt-4 text-center">¡Usuario creado exitosamente!</p>}
-        {errors && Object.keys(errors).map((key) => <p key={key} className="text-red-500 text-center">{errors[key]}</p>)}
+        {errors && Object.keys(errors).map((key) => <p key={key} className="text-red-500 text-center mt-2">{errors[key]}</p>)}
       </form>
     </div>
   );

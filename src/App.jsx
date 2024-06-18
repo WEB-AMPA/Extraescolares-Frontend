@@ -30,6 +30,8 @@ import ResetPassword from "./components/Web/password-reset/password-reset-form.j
 import CreateActivityForm from "./components/Intranet/activities-CRUD/CreateActivity.jsx";
 import StudentsPartnerAdmin from "./components/Intranet/students-partner-CRUD/students-partner-admin.jsx";
 import IntranetStart from "./components/Intranet/intranet-start/intranet-start.jsx";
+import ActivitiesStudentPartner from "./components/Intranet/activities-students-CRUD/activities-students-partner.jsx";
+
 
 // Import FontAwesome library and add icons
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -78,7 +80,7 @@ function App() {
               {/* Rutas específicas para partner */}
               <Route element={<PrivateRoute roles={['partner','admin']} />}>
                 <Route path="partner-students" element={<StudentsPartner />} />
-                <Route path="activities-student/:studentId" element={<ActivitiesStudent />} />
+                <Route path="activities-student/:studentId" element={<ActivitiesStudentPartner />} />
                 <Route path="allstudents" element={<Students />} />
               </Route>
 

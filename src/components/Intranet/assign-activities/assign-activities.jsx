@@ -76,7 +76,7 @@ const AssignActivity = () => {
       }
 
       alert('Actividad asignada correctamente');
-      setSelectedActivity(''); // Limpiar el estado después de la asignación exitosa
+      setSelectedActivity(''); 
       setErrorMessage('');
     } catch (error) {
       console.error('Error asignando actividad:', error);

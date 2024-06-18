@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FaEdit, FaEye, FaSearch } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useAuthContext } from '../../../context/authContext';
 
@@ -8,7 +7,6 @@ const StudentsPartner = () => {
 
   const [students, setStudents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
@@ -53,39 +51,8 @@ const StudentsPartner = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (student) => {
-    setSelectedStudent(student);
-    setIsConfirmModalOpen(true);
-  };
-
-  const closeConfirmModal = () => {
-    setIsConfirmModalOpen(false);
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const deleteStudent = async () => {
-    try {
-      await fetch(`${VITE_URL}/api/students/${selectedStudent._id}`, {
-        method: 'DELETE',
-        headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${auth.token}`
-        }
-      });
-      setStudents(students.filter(student => student._id !== selectedStudent._id));
-      setShouldRefetch(true);
-    } catch (error) {
-      console.error('Error deleting student:', error);
-    }
-    closeConfirmModal();
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(0);
   };
 
   const updateStudent = async (e) => {
@@ -125,6 +92,11 @@ const StudentsPartner = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(0);
+  };
+
   const filteredStudents = students.filter(student =>
     `${student.name} ${student.lastname}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -148,19 +120,13 @@ const StudentsPartner = () => {
         <div className="relative" style={{ maxWidth: '300px' }}>
           <input
             type="text"
-            placeholder="Buscar por Nombre y Apellidos..."
+            placeholder="Buscar estudiante"
             value={searchTerm}
             onChange={handleSearch}
             className="shadow appearance-none border rounded-full w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
           <FaSearch className="absolute left-3 top-3 text-gray-500" />
         </div>
-        <button
-          onClick={() => window.location.href = '/intranet/createstudent'}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-full"
-        >
-          Crear Estudiante
-        </button>
       </div>
       <table className="min-w-full divide-y divide-gray-200 border border-gray-300 rounded-lg shadow-lg overflow-hidden">
         <thead className="bg-gray-200">
@@ -206,10 +172,6 @@ const StudentsPartner = () => {
                   <button title="Editar Estudiante" onClick={() => handleEdit(student)} className="text-white bg-blue-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
                     <FaEdit className="w-5 h-5 mb-1" />
                     <span className="text-xs font-light">Editar</span>
-                  </button>
-                  <button title="Eliminar Estudiante" onClick={() => handleDelete(student)} className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105">
-                    <MdDelete className="w-5 h-5 mb-1" />
-                    <span className="text-xs font-light">Eliminar</span>
                   </button>
                 </div>
               </td>
@@ -317,29 +279,6 @@ const StudentsPartner = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {isConfirmModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Confirmar Eliminación</h2>
-            <p>¿Estás seguro de que deseas eliminar a este estudiante?</p>
-            <div className="flex items-center justify-between mt-4">
-              <button
-                onClick={deleteStudent}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Eliminar
-              </button>
-              <button
-                onClick={closeConfirmModal}
-                className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Cancelar
-              </button>
-            </div>
           </div>
         </div>
       )}

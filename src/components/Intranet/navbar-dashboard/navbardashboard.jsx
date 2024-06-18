@@ -23,13 +23,10 @@ const NavbarIntranet = ({ user }) => {
   };
 
   const handleSignOut = () => {
-    // Llamar a la función logout del contexto para actualizar el estado de autenticación
     logout();
-    // Limpiar el localStorage
     localStorage.removeItem("usernameOrEmail");
     localStorage.removeItem("role");
     localStorage.removeItem("token");
-    // Redirigir al usuario a la página de login
     navigate("/login");
   };
 
