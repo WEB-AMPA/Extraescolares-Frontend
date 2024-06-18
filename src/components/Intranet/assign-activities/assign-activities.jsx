@@ -9,34 +9,46 @@ const AssignActivity = () => {
   const [selectedActivity, setSelectedActivity] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const { VITE_URL } = import.meta.env;
-  const {auth} = useAuthContext();
+  const { auth } = useAuthContext();
 
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`${VITE_URL}/api/students/${studentId}`);
+        const response = await fetch(`${VITE_URL}/api/students/${studentId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
         if (!response.ok) throw new Error('Error fetching student data');
         const data = await response.json();
         setStudent(data);
       } catch (error) {
         console.error('Error fetching student data:', error);
+        setErrorMessage('Error fetching student data');
       }
     };
 
     const fetchActivities = async () => {
       try {
-        const response = await fetch(`${VITE_URL}/api/activities`);
+        const response = await fetch(`${VITE_URL}/api/activities`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${auth.token}`,
+          },
+        });
         if (!response.ok) throw new Error('Error fetching activities');
         const data = await response.json();
         setActivities(data);
       } catch (error) {
         console.error('Error fetching activities:', error);
+        setErrorMessage('Error fetching activities');
       }
     };
 
     fetchStudent();
     fetchActivities();
-  }, [studentId]);
+  }, [studentId, auth.token, VITE_URL]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

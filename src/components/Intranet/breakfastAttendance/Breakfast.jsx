@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye } from 'react-icons/fa';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useAuthContext } from '../../../context/authContext';
 
 const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
   const [students, setStudents] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
   const navigate = useNavigate();
   const { VITE_URL } = import.meta.env;
   const { auth } = useAuthContext();
@@ -98,6 +101,14 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     navigate(`/intranet/calendar/${studentId}`);
   };
 
+  const handlePageClick = (selectedPage) => {
+    setCurrentPage(selectedPage);
+  };
+
+  const offset = currentPage * itemsPerPage;
+  const currentPageData = students.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(students.length / itemsPerPage);
+
   return (
     <div className="flex flex-col justify-center w-full overflow-x-auto m-4 p-4 shadow-md sm:rounded-lg">
       <h2 className="text-3xl font-bold text-center mb-4">Registro Asistencia Desayunos</h2>
@@ -130,7 +141,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {students.map((student) => (
+          {currentPageData.map((student) => (
             <tr key={student._id} className="border-b border-gray-300 hover:bg-gray-100 transition duration-200">
               <td className="px-6 py-2 whitespace-nowrap">
                 <div className="text-m text-gray-900">{date}</div>
@@ -165,6 +176,72 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
           ))}
         </tbody>
       </table>
+      <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 rounded-b-lg shadow-lg">
+        <div className="flex flex-1 justify-between sm:hidden">
+          <button
+            onClick={() => handlePageClick(currentPage - 1)}
+            disabled={currentPage === 0}
+            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Anterior
+          </button>
+          <button
+            onClick={() => handlePageClick(currentPage + 1)}
+            disabled={currentPage >= pageCount - 1}
+            className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Siguiente
+          </button>
+        </div>
+        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm text-gray-700">
+              Mostrando <span className="font-medium">{offset + 1}</span> a{" "}
+              <span className="font-medium">
+                {Math.min(offset + itemsPerPage, students.length)}
+              </span>{" "}
+              de <span className="font-medium">{students.length}</span>{" "}
+              resultados
+            </p>
+          </div>
+          <div>
+            <nav
+              className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+              aria-label="Pagination"
+            >
+              <button
+                onClick={() => handlePageClick(currentPage - 1)}
+                disabled={currentPage === 0}
+                className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+              >
+                <span className="sr-only">Previous</span>
+                <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+              {[...Array(pageCount).keys()].map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageClick(page)}
+                  className={`relative inline-flex items-center px-4 py-2 text-sm font-medium ${
+                    page === currentPage
+                      ? "z-10 bg-indigo-50 border-indigo-500 text-indigo-600"
+                      : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+                  } ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0`}
+                >
+                  {page + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => handlePageClick(currentPage + 1)}
+                disabled={currentPage >= pageCount - 1}
+                className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+              >
+                <span className="sr-only">Next</span>
+                <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
       <div className="flex justify-end p-6">
         <button
           onClick={handleSaveAll}

@@ -59,13 +59,13 @@ const ActivitiesStudent = () => {
       <table className="divide-y divide-gray-600 border border-gray-300 rounded-lg">
         <thead className="bg-gray-200 gap-3 items-center">
           <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Actividad</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Categoría</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Monitor</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Horario</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Días</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Observaciones</th>
-            <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">Ajustes</th>
+            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Actividad</th>
+            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Categoría</th>
+            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Monitor</th>
+            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Horario</th>
+            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Días</th>
+            <th scope="col" className="px-6 py-3 text-left text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Observaciones</th>
+            <th scope="col" className="px-6 py-3 text-center text-m font-semibold text-black uppercase tracking-wider border-b border-gray-300">Ajustes</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">

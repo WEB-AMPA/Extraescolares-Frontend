@@ -29,10 +29,13 @@ import RequestPasswordReset from "./components/Web/password-reset/password-reset
 import ResetPassword from "./components/Web/password-reset/password-reset-form.jsx";
 import CreateActivityForm from "./components/Intranet/activities-CRUD/CreateActivity.jsx";
 import StudentsPartnerAdmin from "./components/Intranet/students-partner-CRUD/students-partner-admin.jsx";
+import IntranetStart from "./components/Intranet/intranet-start/intranet-start.jsx";
 
 // Import FontAwesome library and add icons
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import 'animate.css';
+
 
 library.add(fas);
 
@@ -55,6 +58,7 @@ function App() {
           {/* Layout de Intranet */}
           <Route element={<PrivateRoute roles={['admin', 'partner', 'monitor', 'coordinator']} />}>
             <Route path="/intranet" element={<IntranetLayout />}>
+             <Route index element={<IntranetStart />} />
               {/* Rutas generales dentro de la intranet */}
 
               {/* Rutas específicas para admin */}
