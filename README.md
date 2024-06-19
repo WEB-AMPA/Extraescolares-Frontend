@@ -4,7 +4,7 @@ Proyecto innovador del *Grupo Actividades ExtrasEscolares*, enfocado en ofrecer 
 
 
 <p align="center">
-  <img src="/logo.png" alt="Grupo Actividades ExtrasEscolares" width="20" height="20">
+  <img src="public/logo.png" alt="Grupo Actividades ExtrasEscolares" width="200" height="200">
 </p>
 
 ## Tabla de Contenidos
