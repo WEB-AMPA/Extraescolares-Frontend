@@ -6,7 +6,6 @@ import { useAuthContext } from '../../../context/authContext';
 const ActivitiesStudent = () => {
   const { studentId } = useParams();
   const [activities, setActivities] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -83,9 +82,6 @@ const ActivitiesStudent = () => {
     setIsConfirmModalOpen(false);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
 
   const closeAssignModal = () => {
     setIsAssignModalOpen(false);
