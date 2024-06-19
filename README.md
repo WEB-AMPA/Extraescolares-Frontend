@@ -3,7 +3,9 @@
 Proyecto innovador del *Grupo Actividades ExtrasEscolares*, enfocado en ofrecer una página que pueda mostrar información de las actividades que ofrece el Club Deportivo Ciudad de los Ángeles. Además, se quiere aportar una solución para gestionar asistencias, usuarios y actividades del club deportivo. Se puede ver una página compuesta por varias paginas que hablan de las actividades y el inicio al dashboard para los usuarios registrados. Teniendo en cuenta colores del logo Grupo Actividades ExtrasEscolares.
 
 
-![Grupo Actividades ExtrasEscolares](../Extraescolares-Frontend/public/logo.png)
+<p align="center">
+  <img src="/logo.png" alt="Grupo Actividades ExtrasEscolares" width="20" height="20">
+</p>
 
 ## Tabla de Contenidos
 
