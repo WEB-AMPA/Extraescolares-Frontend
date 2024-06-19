@@ -1,6 +1,8 @@
-# Front clientes Grupo Actividades ExtrasEscolares
+# Front clientes Grupo Actividades Extraescolares
 
-Proyecto innovador del *Grupo Actividades ExtrasEscolares*, enfocado en ofrecer una página que pueda mostrar información de las actividades que ofrece el Club Deportivo Ciudad de los Ángeles. Además, se quiere aportar una solución para gestionar asistencias, usuarios y actividades del club deportivo. Se puede ver una página compuesta por varias paginas que hablan de las actividades y el inicio al dashboard para los usuarios registrados. Teniendo en cuenta colores del logo Grupo Actividades ExtrasEscolares.
+El *Grupo Actividades Extraescolares* presenta un proyecto innovador diseñado para ofrecer una plataforma web informativa sobre las actividades del Club Deportivo Ciudad de los Ángeles. Este proyecto también proporciona una solución integral para la gestión de asistencias, usuarios y actividades del club deportivo.
+
+La página web se compone de varias secciones que detallan las diferentes actividades disponibles, además de un portal de acceso a la intranet para usuarios registrados. La estética de la web se basa en los colores del logo del Grupo Actividades Extraescolares.
 
 
 <p align="center">
@@ -15,10 +17,10 @@ Proyecto innovador del *Grupo Actividades ExtrasEscolares*, enfocado en ofrecer 
 - [Licencia](#licencia)
 
 ## Estado del Proyecto
-El proyecto se encuentra en estado de producción con posibles cambios de mejoras y actualizaciones..
+El proyecto se encuentra en estado de producción con posibles cambios de mejoras y actualizaciones.
 
-## Instalación
-💻 Al instalarse el proyecto en la consola se deben tener en cuenta las siguientes indicaciones: <br>
+## Instalación 💻
+Al instalarse el proyecto en la consola se deben tener en cuenta las siguientes indicaciones: <br>
 - Se debe instalar pnpm en el ordenador de manera global: npm install -g pnpm
 - Se debe instalar Node.js en el ordenador: pnpm install
 - Dentro de la carpeta debemos escribir en la terminal: pnpm run dev
@@ -65,10 +67,7 @@ Este proyecto está bajo la Licencia [CCO](LICENSE).
 
 Las fuentes utilizadas en este proyecto estan sujetas a licencia SIL con Copyright &copy; 2014, Indian Type Foundry (info@indiantypefoundry.com)
 
-## Test 
 
-Se han hecho varios test para el frontend
-![Enlace a los test](#)
 
 ## Auditoria de la página
-Documento drive <a href="https://docs.google.com/document/d/1DCitY6bdP-OATygXNuJkQNOHDs2ysGejdwPJjzjWZ1s/edit?usp=sharing">Auditoria</a>
+Documento drive <a href="https://www.canva.com/design/DAGIYnKxbeU/77qgm7eQ4CjO1-7p0E9InQ/edit?utm_content=DAGIYnKxbeU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton">Auditoria</a>
