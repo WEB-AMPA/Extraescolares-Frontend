@@ -75,12 +75,14 @@ function App() {
                 <Route path="asignactivities/:studentId" element={<AssignActivity />} />
                 <Route path="activities" element={<Activities />} />
                 <Route path="createactivity" element={<CreateActivityForm />} />
+                <Route path="activities-students/:studentId" element={<ActivitiesStudent />} />
+
               </Route>
 
               {/* Rutas específicas para partner */}
               <Route element={<PrivateRoute roles={['partner','admin']} />}>
                 <Route path="partner-students" element={<StudentsPartner />} />
-                <Route path="activities-student/:studentId" element={<ActivitiesStudentPartner />} />
+                <Route path="activities-student-partner/:studentId" element={<ActivitiesStudentPartner />} />
                 <Route path="allstudents" element={<Students />} />
               </Route>
 

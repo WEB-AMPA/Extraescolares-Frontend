@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuthContext } from '../../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 
-const UserForm = ({ closeModal }) => {
+const UserForm = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -58,9 +58,7 @@ const UserForm = ({ closeModal }) => {
       });
       setErrors({});
       console.log(response.data);
-      setTimeout(() => {
-        closeModal();
-      }, 2000); // Cierra el modal después de 2 segundos
+      
     } catch (error) {
       setSubmitted(false);
       if (error.response && error.response.data) {
@@ -77,7 +75,7 @@ const UserForm = ({ closeModal }) => {
   };
 
   const handleCancel = () => {
-    navigate(-1); // Navega a la página anterior
+    navigate("/intranet");
   };
 
   const { roleName } = formData;
@@ -85,13 +83,7 @@ const UserForm = ({ closeModal }) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
       <form onSubmit={handleSubmit} className="relative max-w-2xl w-full bg-white p-8 shadow-lg rounded-lg">
-        <button
-          type="button"
-          onClick={closeModal}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-        >
-          ✕
-        </button>
+      
         <h2 className="text-3xl font-bold mb-8 text-center text-gray-700">Crear un Usuario</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>

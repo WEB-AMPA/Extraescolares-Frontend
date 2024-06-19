@@ -149,7 +149,7 @@ const StudentsPartnerAdmin = () => {
   const currentPageData = filteredStudents.slice(offset, offset + itemsPerPage);
 
   const viewMore = (studentId) => {
-    window.location.href = `/intranet/activities-student/${studentId}`;
+    window.location.href = `/intranet/activities-students/${studentId}`;
   };
 
   return (

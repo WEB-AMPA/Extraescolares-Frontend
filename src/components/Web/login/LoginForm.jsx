@@ -54,10 +54,10 @@ const LoginForm = () => {
 
   return (
     <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content flex-col lg:flex-row-reverse">
+      <div className="hero-content flex-col pt-20">
         <div className="text-center lg:text">
-          <h1 className="text-5xl font-bold">¡Bienvenida!</h1>
-          <p className="py-6">Esperamos que te disfrutes tu visita</p>
+          <h1 className="text-5xl font-bold">INICIA SESIÓN</h1>
+          <p className="py-3">Esperamos que te disfrutes tu visita</p>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form className="card-body" onSubmit={handleSubmit}>
@@ -100,7 +100,7 @@ const LoginForm = () => {
                 <span className="label-text">Acepto los términos y condiciones</span>
                 <input 
                   type="checkbox" 
-                  className="checkbox checkbox-primary" 
+                  className="checkbox checkbox-primary ml-3" 
                   checked={termsAccepted} 
                   onChange={() => setTermsAccepted(!termsAccepted)} 
                 />

@@ -14,7 +14,7 @@ const ActivitiesStudent = () => {
   const [availableActivities, setAvailableActivities] = useState([]);
   const [selectedActivityId, setSelectedActivityId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [assignSuccess, setAssignSuccess] = useState(false); // Estado para manejar la confirmación de asignación exitosa
+  const [assignSuccess, setAssignSuccess] = useState(false); 
   const { VITE_URL } = import.meta.env;
   const { auth } = useAuthContext();
 
@@ -90,7 +90,7 @@ const ActivitiesStudent = () => {
   const closeAssignModal = () => {
     setIsAssignModalOpen(false);
     setSelectedActivityId('');
-    setAssignSuccess(false); // Resetear el estado de confirmación al cerrar el modal
+    setAssignSuccess(false); 
   };
 
   const deleteActivity = async () => {
@@ -139,7 +139,7 @@ const ActivitiesStudent = () => {
         throw new Error('Error asignando actividad');
       }
 
-      setAssignSuccess(true); // Establecer el estado de confirmación a true
+      setAssignSuccess(true); 
       setErrorMessage('');
       setSelectedActivityId('');
     } catch (error) {
@@ -199,7 +199,7 @@ const ActivitiesStudent = () => {
                   <button
                     title="Eliminar Actividad"
                     onClick={() => handleDelete(activity)}
-                    className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center transition duration-300 ease-in-out transform hover:scale-105"
+                    className="text-white bg-red-600 rounded-lg p-2 flex flex-col items-center w-20 sm:w-auto transition duration-300 ease-in-out transform hover:scale-105"
                   >
                     <MdDelete className="w-5 h-5 mb-1" />
                     <span className="text-xs font-light">Eliminar</span>
@@ -283,3 +283,4 @@ const ActivitiesStudent = () => {
 };
 
 export default ActivitiesStudent;
+
