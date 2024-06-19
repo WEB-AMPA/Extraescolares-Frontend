@@ -6,7 +6,7 @@ import { FaEye } from 'react-icons/fa';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { useAuthContext } from '../../../context/authContext';
 
-const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
+const BreakfastAttendanceTable = ({ onAttendanceAdded = () => {} }) => {
   const [students, setStudents] = useState([]);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [error, setError] = useState('');
@@ -33,7 +33,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
         });
 
         const studentsWithAttendance = responseStudents.data.map(student => {
-          const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id._id === student._id);
+          const studentAttendance = responseAttendances.data.find(attendance => attendance.student_id?._id === student._id);
           return {
             ...student,
             attendance: studentAttendance ? (studentAttendance.attendance === 1 ? 'present' : 'absent') : 'none',
@@ -49,7 +49,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
     };
 
     fetchStudentsAndAttendances();
-  }, [date]);
+  }, [date, VITE_URL, auth.token]);
 
   const handleDateChange = (event) => {
     setDate(event.target.value);
@@ -260,11 +260,7 @@ const BreakfastAttendanceTable = ({ onAttendanceAdded }) => {
 };
 
 BreakfastAttendanceTable.propTypes = {
-  onAttendanceAdded: PropTypes.func.isRequired,
-};
-
-BreakfastAttendanceTable.defaultProps = {
-  onAttendanceAdded: () => {}, // Valor por defecto si no se proporciona una función
+  onAttendanceAdded: PropTypes.func,
 };
 
 export default BreakfastAttendanceTable;

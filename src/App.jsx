@@ -8,7 +8,7 @@ import AboutUsPage from "./pages/AboutUsPage/aboutUsPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy/privacyPolicy";
 import Contact from "./pages/Contact/contact";
 import ActivitiesPage from "./pages/Activities/ActivitiesPage";
-import Breakfast from "./components/Intranet/breakfastAttendance/Breakfast";
+import Breakfast from "./components/Intranet/breakfastAttendance/Breakfast.jsx";
 import BreakfastCalendar from "./components/Intranet/calendar/breakfastCalendar";
 import ActivitiesAttendancePage from "./components/Intranet/activitiesAttendance/ActivitiesAttendance";
 import ActivitiesCalendar from "./components/Intranet/calendar/activitiesCalendar";
