@@ -44,7 +44,7 @@ function Navbar() {
                 <li><a href="/about-us" className={getLinkClass('/about-us')}>QUIENES SOMOS</a></li>
                 <li><a href="/activities" className={getLinkClass('/activities')}>ACTIVIDADES</a></li>
                 <li><a href="/centros" className={getLinkClass('/centros')}>CENTROS</a></li>
-                <li><a href="/contact" className={getLinkClass('/contact')}>CONTACTANOS</a></li>
+                <li><a href="/contact" className={getLinkClass('/contact')}>CONTÁCTANOS</a></li>
               </ul>
             )}
           </div>
@@ -61,7 +61,7 @@ function Navbar() {
             <li><a href="/about-us" className={getLinkClass('/about-us')}>QUIENES SOMOS</a></li>
             <li><a href="/activities" className={getLinkClass('/activities')}>ACTIVIDADES</a></li>
             <li><a href="/centros" className={getLinkClass('/centros')}>CENTROS</a></li>
-            <li><a href="/contact" className={getLinkClass('/contact')}>CONTACTANOS</a></li>
+            <li><a href="/contact" className={getLinkClass('/contact')}>CONTÁCTANOS</a></li>
           </ul>
         </div>
       </div>

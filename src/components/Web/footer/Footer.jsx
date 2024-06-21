@@ -1,13 +1,14 @@
+import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
+
 function Footer() {
   return (
-    <footer className="w-full" style={{ backgroundColor: "#3854A6" }}>
+    <footer className="w-full bg-blue-800 text-white">
       <div className="w-full flex justify-center">
-        <div className="w-full max-w-screen-xl px-4 py-6 lg:py-8 text-white text-center">
+        <div className="w-full max-w-screen-xl px-4 py-6 lg:py-8 text-center">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h2 className="mb-6 text-sm font-semibold uppercase">
-                
-                <a href="/about-us">Sobre Nosotros </a>
+                <a href="/about-us">Sobre Nosotros</a>
               </h2>
               <ul className="font-medium">
                 <li className="mb-4">
@@ -53,27 +54,28 @@ function Footer() {
               <h2 className="mb-6 text-sm font-semibold uppercase">
                 Redes Sociales
               </h2>
-              <ul className="font-medium">
-                <div className="flex justify-center space-x-4 mt-4">
-                  <a href="#" className="text-black hover:text-white">
-                    <svg
-                      className="w-6 h-6"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 8 19"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="sr-only">Facebook page</span>
-                  </a>
-                </div>
-              </ul>
+              <div className="flex justify-center space-x-4 mt-4">
+                <a href="https://www.facebook.com" className="text-white hover:text-gray-400">
+                  <FaFacebook className="w-6 h-6" />
+                  <span className="sr-only">Facebook page</span>
+                </a>
+                <a href="https://www.instagram.com" className="text-white hover:text-gray-400">
+                  <FaInstagram className="w-6 h-6" />
+                  <span className="sr-only">Instagram page</span>
+                </a>
+                <a href="https://www.twitter.com" className="text-white hover:text-gray-400">
+                  <FaTwitter className="w-6 h-6" />
+                  <span className="sr-only">Twitter page</span>
+                </a>
+                <a href="https://www.linkedin.com" className="text-white hover:text-gray-400">
+                  <FaLinkedin className="w-6 h-6" />
+                  <span className="sr-only">LinkedIn page</span>
+                </a>
+              </div>
             </div>
+          </div>
+          <div className="mt-8 text-sm text-gray-300">
+            © 2024 Ciudad de los Ángeles. Todos los derechos reservados.
           </div>
         </div>
       </div>
